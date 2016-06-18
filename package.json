@@ -1,0 +1,11 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "dependencies": {
+    "discord.js": "^7.0.1",
+    "node-opus": "^0.1.13",
+    "superagent": "^2.0.0",
+    "url": "^0.11.0",
+    "ytdl-core": "^0.7.15"
+  }
+}
