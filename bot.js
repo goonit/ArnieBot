@@ -80,30 +80,34 @@ client.on('message', m => {
     //
     // }
     // todo: will need to eventually implement a help section to list available commands
-    // if (m.content.startsWith(`${botMention} h`)) { // help
-    //     if (!checkCommand(m, 'help')) return;
-    //
-    //     if (Config.shouldUsePMs) {
-    //         client.sendMessage(m.author,
-    //             `Here are the commands I support:
-    //       **Queue a video:** yt [video ID/URL]
-    //       **List videos in queue:** list
-    //       **Create a shortcut:** save [video ID/URL] [shortcut name]
-    //       **Queue a playlist:** pl [playlist ID/URL]
-    //       **Shuffle queue:** shuffle
-    //       **Skip current video:** next
-    //       **Get YouTube URL:** link
-    //       **Get current playback time:** time
-    //       **Replay Video:** replay
-    //       **Search YouTube:** yq [search term]`
-    //         ).then(msg => {
-    //             client.reply(m, `I\'ve sent you my commands in PM`);
-    //         });
-    //     } else {
-    //         client.reply(m, 'Usage info can be found here: https://github.com/meew0/Lethe/wiki/Usage');
-    //     }
-    //
-    //     return;
+    if (m.content.startsWith(`${botMention} help`)) { // help
+        if (!checkCommand(m, 'help')) return;
+
+        // if (Config.shouldUsePMs) {
+            client.sendMessage(m.author,
+                `\`\`\`Here are the commands I support:
+          **BOO-DO-DO-DOOOOOO:** cena 
+          **BOO-DO-DO-DOOOOOO (with airhorns):** cenahorn 
+          **Random ASCII Dick:** dongerino
+          **\'You Son of a Bitch\':** sob
+          **\'Who killed the dinos?\':** dinos
+          **\'Fuck you asshole\':** fua
+          **\'break your god damn spine\':** spine
+          **\'Arnold laugh\':** haha
+          **\'SHUT UP\':** stfu
+          **\'I am INVINCIBLE\':** boris
+          **\'BULLSHIT\':** bs
+          **GRAPEFRUIT:** gfym
+          **ASCII salt:** sale\`\`\``
+
+            ).then(msg => {
+                client.reply(m, `I\'ve sent you my commands in PM`);
+            });
+        } else {
+            client.reply(m, 'Usage info can be found here: https://github.com/meew0/Lethe/wiki/Usage');
+        }
+
+        return;
     // }
 
     // if (m.content.startsWith(`${botMention} i`)) { // init
