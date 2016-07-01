@@ -60,13 +60,17 @@ client.on('ready', () => {
 });
 
 client.on('message', m => {
+    var attachmentUrl;
+    var channel;
+    var voiceChannel;
+
     console.log('botmention: ', botMention);
     if (!botMention) {
         console.log('returning because botmention isnt set');
         return;
     }
     if (client.user.id == m.author.id) {
-        console.log('returning becuse client id and user id are the same');
+        console.log('returning because client id and user id are the same');
         return;
     }
 
@@ -79,13 +83,12 @@ client.on('message', m => {
     //     if (!checkCommand(m, 'info')) return;
     //
     // }
-    // todo: will need to eventually implement a help section to list available commands
     if (m.content.startsWith(`${botMention} help`)) { // help
         if (!checkCommand(m, 'help')) return;
 
         // if (Config.shouldUsePMs) {
-            client.sendMessage(m.author,
-                `\`\`\`Here are the commands I support:
+        client.sendMessage(m.author,
+            `\`\`\`Here are the commands I support:
           **BOO-DO-DO-DOOOOOO:** cena 
           **BOO-DO-DO-DOOOOOO (with airhorns):** cenahorn 
           **Random ASCII Dick:** dongerino
@@ -93,21 +96,24 @@ client.on('message', m => {
           **\'Who killed the dinos?\':** dinos
           **\'Fuck you asshole\':** fua
           **\'break your god damn spine\':** spine
-          **\'Arnold laugh\':** haha
+          
           **\'SHUT UP\':** stfu
           **\'I am INVINCIBLE\':** boris
           **\'BULLSHIT\':** bs
           **GRAPEFRUIT:** gfym
           **ASCII salt:** sale\`\`\``
+        ).then(msg => {
+            client.reply(m, `I\'ve sent you my commands in PM`);
+        });
+    // **\'Arnold laugh\':** haha
 
-            ).then(msg => {
-                client.reply(m, `I\'ve sent you my commands in PM`);
-            });
-        } else {
-            client.reply(m, 'Usage info can be found here: https://github.com/meew0/Lethe/wiki/Usage');
-        }
 
-        return;
+    }
+    // } else {
+    //     client.reply(m, 'Usage info can be found here: https://github.com/meew0/Lethe/wiki/Usage');
+    // }
+
+    //     return;
     // }
 
     // if (m.content.startsWith(`${botMention} i`)) { // init
@@ -167,13 +173,12 @@ client.on('message', m => {
     // }
 
     if (m.content.startsWith(`${botMention} cena`)) {
-        console.log('entering cena command');
 
         // var videoId = '3utGASnOkeo';
         //
         // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -193,6 +198,10 @@ client.on('message', m => {
                 connection.playFile('./resources/cena.mp3', options).then((intent) => {
                     intent.on('end', () => {
                         client.leaveVoiceChannel(voiceChannel);
+                    });
+                    intent.on('error', (err) => {
+                        console.log('Playback Error: ' + err);
+                        client.leaveVoiceChannel(voiceChannel);
                     })
                 });
             }
@@ -202,16 +211,15 @@ client.on('message', m => {
             //         client.leaveVoiceChannel(voiceChannel);
             //     });
             // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} sob`)) {
-        console.log('entering sob command');
-        // var videoId = '3utGASnOkeo';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -222,52 +230,42 @@ client.on('message', m => {
             connection.playFile('./resources/sob.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} dinos`)) {
         console.log('entering dinos command');
-        // var videoId = 'tnD1IGd0mas';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
 
             connection.playFile('./resources/dinos.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} fua`)) {
-        console.log('entering fua command');
-        // var videoId = 'inTRblYTevk';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -278,24 +276,21 @@ client.on('message', m => {
             connection.playFile('./resources/fua.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} spine`)) {
-        console.log('entering fua command');
-        // var videoId = '5QfcKP1W6EM';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -306,43 +301,45 @@ client.on('message', m => {
             connection.playFile('./resources/spine.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
-    if (m.content.startsWith(`${botMention} haha`)) {
-        // var videoId = 'LEcGJe7rVPI';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
-
-        var voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-            connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-            });
-        });
-    }
+    // if (m.content.startsWith(`${botMention} haha`)) {
+    //
+    //     voiceChannel = m.author.voiceChannel;
+    //     client.joinVoiceChannel(voiceChannel).then((connection) => {
+    //
+    //         var options = {
+    //             filter: (format) => format.container === 'mp4',
+    //             quality: 'highest'
+    //         };
+    //         connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
+    //             intent.on('end', () => {
+    //                 client.leaveVoiceChannel(voiceChannel);
+    //             });
+    //             intent.on('error', (err) => {
+    //                 console.log('Playback Error: ' + err);
+    //                 client.leaveVoiceChannel(voiceChannel);
+    //             })
+    //         });
+    //     })
+    //     .catch(err => {
+    //         console.log('Error joining voice channel: ' + err);
+    //     });
+    // }
 
     if (m.content.startsWith(`${botMention} stfu`)) {
-        // var videoId = 'i4w4wGJjuYg';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -353,23 +350,21 @@ client.on('message', m => {
             connection.playFile('./resources/shutup.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} boris`)) {
-        // var videoId = 'b18DjXWyWuc';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -380,23 +375,21 @@ client.on('message', m => {
             connection.playFile('./resources/boris.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} bs`)) {
-        // var videoId = 'FaA1HrGNnwg';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -407,23 +400,21 @@ client.on('message', m => {
             connection.playFile('./resources/bullshit.mp3', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} gfym`)) {
-        // var videoId = '4HMzS1SXic8';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
 
-        var voiceChannel = m.author.voiceChannel;
+        voiceChannel = m.author.voiceChannel;
         client.joinVoiceChannel(voiceChannel).then((connection) => {
 
             var options = {
@@ -434,19 +425,19 @@ client.on('message', m => {
             connection.playFile('./resources/gfym.mp4', options).then((intent) => {
                 intent.on('end', () => {
                     client.leaveVoiceChannel(voiceChannel);
+                });
+                intent.on('error', (err) => {
+                    console.log('Playback Error: ' + err);
+                    client.leaveVoiceChannel(voiceChannel);
                 })
             });
-            // old youtube streaming way
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
+        })
+        .catch(err => {
+            console.log('Error joining voice channel: ' + err);
         });
     }
 
     if (m.content.startsWith(`${botMention} dongerino`)) {
-        // var number = Math.ceil((Math.random()));
         var number = Math.floor((Math.random() * 10) + 1);
 
         switch (number) {
@@ -626,14 +617,21 @@ client.on('message', m => {
     }
 
     if (m.content.startsWith(`${botMention} finishme`)) {
-        client.reply(m, 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png');
+        channel = m.channel;
+        attachmentUrl = 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png';
+
+        client.sendFile(channel, attachmentUrl).catch(err => {
+            console.log('Error posting image: ' + err);
+        });
     }
 
     if (m.content.startsWith(`${botMention} needful`)) {
-        var channel = m.channel;
-        var attachmentUrl = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
+        channel = m.channel;
+        attachmentUrl = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
 
-        client.sendFile(channel, attachmentUrl);
+        client.sendFile(channel, attachmentUrl).catch(err => {
+            console.log('Error posting image: ' + err);
+        });
     }
 });
 
