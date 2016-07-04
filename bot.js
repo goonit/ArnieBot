@@ -6,9 +6,13 @@ var url = require('url');
 
 var shouldDisallowQueues = require('./lib/permission-checks.js');
 var Saved = require('./lib/saved.js');
+var Sounds = require('./src/sounds.js');
+var Images = require('./src/images.js');
+var Ascii = require('./src/asciiPictures.js');
 Saved.read();
 
 var YoutubeTrack = require('./lib/youtube-track.js');
+var processCmd = require('./CommandHandler.js').commandHandler;
 
 var Util = require('./lib/util.js');
 var Config = require('./lib/config.js');
@@ -18,6 +22,9 @@ var client = new Discord.Client();
 
 client.on('warn', (m) => console.log('[warn]', m));
 client.on('debug', (m) => console.log('[debug]', m));
+
+Commands = {};
+Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures);
 
 var playQueue = [];
 var boundChannel = false;
@@ -59,25 +66,30 @@ client.on('ready', () => {
     }
 });
 
+//todo: CLEAN THIS FUCKING MESS UP
 client.on('message', m => {
-    var attachmentUrl;
-    var channel;
-    var voiceChannel;
+    var msgPrefix = "~";
 
-    console.log('botmention: ', botMention);
-    if (!botMention) {
-        console.log('returning because botmention isnt set');
-        return;
-    }
-    if (client.user.id == m.author.id) {
-        console.log('returning because client id and user id are the same');
-        return;
+    var formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
+    var cmdTxt = formattedMsg.split(" ")[0].toLowerCase();
+
+    if (Commands.hasOwnProperty(cmdTxt)){
+        processCmd(client, m, formattedMsg.substring((formattedMsg.split(" ")[0]).length + 1), cmdTxt, msgPrefix);
     }
 
-    if (!m.content.startsWith(`${botMention}`) || m.content.length <= botMention.length + 1) {
-        console.log('returning because of length');
-        return;
-    }
+    // if (!botMention) {
+    //     console.log('returning because botmention isnt set');
+    //     return;
+    // }
+    // if (client.user.id == m.author.id) {
+    //     console.log('returning because client id and user id are the same');
+    //     return;
+    // }
+    //
+    // if (!m.content.startsWith(`${botMention}`) || m.content.length <= botMention.length + 1) {
+    //     console.log('returning because of length');
+    //     return;
+    // }
 
     // if (m.content.startsWith(`${botMention} info`)) {
     //     if (!checkCommand(m, 'info')) return;
@@ -89,6 +101,7 @@ client.on('message', m => {
         // if (Config.shouldUsePMs) {
         client.sendMessage(m.author,
             `\`\`\`Here are the commands I support:
+          **To issue a command, use the \`~\` as a prefix!**   
           **BOO-DO-DO-DOOOOOO:** cena 
           **BOO-DO-DO-DOOOOOO (with airhorns):** cenahorn 
           **Random ASCII Dick:** dongerino
@@ -100,8 +113,12 @@ client.on('message', m => {
           **\'SHUT UP\':** stfu
           **\'I am INVINCIBLE\':** boris
           **\'BULLSHIT\':** bs
+          **\'COCAINUM\':** cocainum
           **GRAPEFRUIT:** gfym
-          **ASCII salt:** sale\`\`\``
+          **ASCII salt:** salt
+          **feelsgoodman meme:** feelsgood
+          **White Creamy Sauce:** finishme
+          **Do the needful:** needful\`\`\``
         ).then(msg => {
             client.reply(m, `I\'ve sent you my commands in PM`);
         });
@@ -172,467 +189,6 @@ client.on('message', m => {
     //     return;
     // }
 
-    if (m.content.startsWith(`${botMention} cena`)) {
-
-        // var videoId = '3utGASnOkeo';
-        //
-        // var requestUrl = 'http://www.youtube.com/watch?v=' + videoId;
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            if (m.content.indexOf('horn') > 0){
-                options.volume = 0.5;
-
-                connection.playFile('./resources/cenahorn.mp3', options).then((intent) => {
-                    intent.on('end', () => {
-                        client.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            }else {
-                connection.playFile('./resources/cena.mp3', options).then((intent) => {
-                    intent.on('end', () => {
-                        client.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        client.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            }
-
-            // connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-            //     intent.on('end', () => {
-            //         client.leaveVoiceChannel(voiceChannel);
-            //     });
-            // });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} sob`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/sob.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} dinos`)) {
-        console.log('entering dinos command');
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            connection.playFile('./resources/dinos.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} fua`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/fua.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} spine`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/spine.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    // if (m.content.startsWith(`${botMention} haha`)) {
-    //
-    //     voiceChannel = m.author.voiceChannel;
-    //     client.joinVoiceChannel(voiceChannel).then((connection) => {
-    //
-    //         var options = {
-    //             filter: (format) => format.container === 'mp4',
-    //             quality: 'highest'
-    //         };
-    //         connection.playRawStream(ytdl(requestUrl, options)).then((intent) => {
-    //             intent.on('end', () => {
-    //                 client.leaveVoiceChannel(voiceChannel);
-    //             });
-    //             intent.on('error', (err) => {
-    //                 console.log('Playback Error: ' + err);
-    //                 client.leaveVoiceChannel(voiceChannel);
-    //             })
-    //         });
-    //     })
-    //     .catch(err => {
-    //         console.log('Error joining voice channel: ' + err);
-    //     });
-    // }
-
-    if (m.content.startsWith(`${botMention} stfu`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/shutup.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} boris`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/boris.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} bs`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/bullshit.mp3', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} gfym`)) {
-
-        voiceChannel = m.author.voiceChannel;
-        client.joinVoiceChannel(voiceChannel).then((connection) => {
-
-            var options = {
-                filter: (format) => format.container === 'mp4',
-                quality: 'highest'
-            };
-
-            connection.playFile('./resources/gfym.mp4', options).then((intent) => {
-                intent.on('end', () => {
-                    client.leaveVoiceChannel(voiceChannel);
-                });
-                intent.on('error', (err) => {
-                    console.log('Playback Error: ' + err);
-                    client.leaveVoiceChannel(voiceChannel);
-                })
-            });
-        })
-        .catch(err => {
-            console.log('Error joining voice channel: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} dongerino`)) {
-        var number = Math.floor((Math.random() * 10) + 1);
-
-        switch (number) {
-            case 1:
-                client.reply(m, '\n\n░░░░░░░░░░░░░░░░░░░░░░░\n' +
-                                '░▄▄▄░░▄▄▄▄░░░▄▄▄▄░░░▄▄░\n' +
-                                '▐░░▐▄▀░░░░▀▄▀░░░░▀▄▐░░▌\n' +
-                                '▐░░░▌░░░░░▄▀▀▄░░░░░▌░░▌\n' +
-                                '▐░▐░▐░░░░░▌░▌░▌░░░▐░▌░▌\n' +
-                                '░▀▀░░▌░░▌░▀▌▐▀░▐░░▌░▀▀░\n' +
-                                '░░░▌░▐░░▐▄▀▌▐▀▄▌░▐░░▐░░\n' +
-                                '░░░▐░░░░▐░░▀▀░░▌░░░░▌░░\n' +
-                                '░░░░▌░░░▌░░▐░░░▐░░░▐░░░\n' +
-                                '░░░░▐░░▄▐░▀░░▀░▌▄░░▌░░░\n' +
-                                '░░░░░▀▀░░▀███▀░▀▀░░░░░\n');
-                break;
-
-            case 2:
-                client.reply(m , '\n\n───────────────▄▄▄▄▄▄▄───────────\n' +
-                                    '─────────────▄█▒▒▒█▒▒▒█▄─────────\n' +
-                                    '────────────█▒▒▒▒▒▒▒▒▒▒█▌────────\n' +
-                                    '───────────█▒▒▒▒▒▒▒▒▒▒▒▒█────────\n' +
-                                    '───────────█▒▒▒▒▒▒▒▒▒▒▒█▌────────\n' +
-                                    '──────────██████████████─────────\n' +
-                                    '──────────█▒▒▒▒▒▒▒▒▒▒▒█▌─────────\n' +
-                                    '─────────█▒████▒████▒▒█──────────\n' +
-                                    '─────────█▒▒▒▒▒▒▒▒▒▒▒▒█──────────\n' +
-                                    '─────────█▒────▒▒────▒█▌─────────\n' +
-                                    '─────────█▒██──▒▒██──▒▒█─────────\n' +
-                                    '─────────█▒────▒▒────▒▒█─────────\n' +
-                                    '────────▄█▒▒▒▒▒▒▒▒▒▒▒▒▒██────────\n' +
-                                    '───────██▒▒▒████████▒▒▒▒██───────\n' +
-                                    '─────██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██─────\n' +
-                                    '───██▒▒▒▒▒▒▒▒▒▒▒█▒▒▒▒▒▒▒▒▒▒▒██───\n' +
-                                    '─██▒▒▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▓██─\n' +
-                                    '█▒▒▒▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██\n' +
-                                    '█▒▒▒▒▒▒▒▒▒▒▒▒▓█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█\n' +
-                                    '█▓▒▒▒▒▒▒▒▒▒▒▒▓██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█\n' +
-                                    '▀██▒▒▒▒▒▒▒▒▒▒▒▓██▒▒▒▒▒▒▒▒▒▒▒▒▒██▀\n' +
-                                    '──██▒▒▒▒▒▒▒▒▒██████▒▒▒▒▒▒▒▒▒▒██──\n' +
-                                    '───███████████▌▌▌▌████████████───\n');
-
-                break;
-            case 3:
-                client.reply(m, '\n\n░░▄░░░▄▄███▄░░░▄▄░ \n' +
-                                    '░▀▀░░▄█░░█░█▄░░░▀█\n' +
-                                    '░░░░░█░░░░░░█░░░░░\n' +
-                                    '░░░░░████████░░░░░\n' +
-                                    '░░░░░█░░░░░░█░░░░░\n' +
-                                    '░░░░░█░░░░░░█░░░░░\n' +
-                                    '░░░░░█▀░░░░░█░░░░░\n' +
-                                    '▒▒▒▄█▄▄█▀░░▄░█▀▀▒▒▒▒\n' +
-                                    '▒▒▒█░░██▄░░▀░▀▀▀▄▒▒▒\n' +
-                                    '▒▒▒▀▄░░▀░▄█▄░░░▄▀▒▒▒\n' +
-                                    '▒▒▒▒▄██▄░░░▀▀█▀▒▒▒▒▒\n' +
-                                    '▒▒▒▄▀▓▓▀██▀▀▀▄▒▒▒▒▒▒\n' +
-                                    '▒▒▒█▓▓▓▓█░░░░░█▒▒▒▒▒\n' +
-                                    '▒▒▒██▄▓▓▓█▄▄▄█▀█▒▒▒▒\n' +
-                                    '▒▒▒▒██████▄▄██▄█▒▒▒▒\n' +
-                                    '▒▒▒▒▒█▀▀▀▀▀█▀▀▒▒▒▒▒▒\n' +
-                                    '▒▒▒▒▒█▄▄▄▄▄▄█▒▒▒▒▒\n');
-
-                break;
-
-            case 4:
-                client.reply(m, '\n\n░░░░░░░░░░▄▄▄▄░░░░░░ \n' +
-                                    '░░░░░░░▄▀▀▓▓▓▀█░░░░░\n' +
-                                    '░░░░░▄▀▓▓▄██████▄░░░\n' +
-                                    '░░░░▄█▄█▀░░▄░▄░█▀░░░\n' +
-                                    '░░░▄▀░██▄░░▀░▀░▀▄░░░\n' +
-                                    '░░░▀▄░░▀░▄█▄▄░░▄█▄░░\n' +
-                                    '░░░░░▀█▄▄░░▀▀▀█▀░░░░\n' +
-                                    '░░░░░░░█▄▄░░░░█░░░░░\n' +
-                                    '░░░░░░░█░░░░▀▀█░░░░░\n' +
-                                    '░░░░░░░█▀▀▀░▄▄█░░░░░\n' +
-                                    '░░░░░░░█░░░░░░█▄░░░░\n' +
-                                    '▄▄▄▄██▀▀░░░░░░░▀██░░\n' +
-                                    '░▄█▀░▀░░░░▄░░░░░░█▄▄\n' +
-                                    '▀▀█▄▄▄░░░▄██░░░░▄█░░\n');
-                break;
-
-            case 5:
-                client.reply(m, '\n\n░░▄▄░░░░▄░░░░▄░░░ \n' +
-                                    '░░░░░░█▄░░░█░░█▀░░░░\n' +
-                                    '░░░░░░░▀█▄░▀░░░░░░░░\n' +
-                                    '░░░░▄░░░▄▄███▄░░░▄▄░\n' +
-                                    '░░░▀▀░░▄█░░█░█▄░░░▀█\n' +
-                                    '░░░░░░░█░░░░░░█░░░░░\n' +
-                                    '░░░░░░░████████░░░░░\n' +
-                                    '░░░░░░░█▄▄░░░░█░░░░░\n' +
-                                    '░░░░░░░█░░░░▀▀█░░░░░\n' +
-                                    '░░░░░░░█▀▀▀░▄▄█░░░░░\n' +
-                                    '░░░░░░░█░░░░▀▀█░░░░░\n' +
-                                    '░░░░░░░█▀▀▀░▄▄█░░░░░\n' +
-                                    '░░░░░░░█░░░░░░█▄░░░░\n' +
-                                    '▄▄▄▄██▀▀░░░░░░░▀██░░\n' +
-                                    '░▄█▀░▀░░░░▄░░░░░░█▄▄\n' +
-                                    '▀▀█▄▄▄░░░▄██░░░░▄█░░\n' +
-                                    '░█▀█▄▄▄▄█▀░██▄▄██▄▄░\n' +
-                                    '░░░░▀░░░▀░░░▀░░░░░░░\n');
-
-                break;
-
-            case 6:
-                client.reply(m, '\n\n░░░░░░░░░▓▓▓▓▀█░░░░░░░░░░░░░\n' +
-                                    '░░░░░░▄▀▓▓▄██████▄\n' +
-                                    '░░░░░▄█▄█▀░░▄░▄░█▀\n' +
-                                    '░░░░▄▀░██▄░░▀░▀░▀▄\n' +
-                                    '░░░░▀▄░░▀░▄█▄▄░░▄█▄\n' +
-                                    '░░░░░░▀█▄▄░░▀▀▀█▀\n' +
-                                    '░░░░░░█░░░░░░░░▄▀▀░▐\n' +
-                                    '░░░░▄▀░░░░░░░░▐░▄▄▀\n' +
-                                    '░░▄▀░░░▐░░░░░█▄▀░▐\n' +
-                                    '░░█░░░▐░░░░░░░░▄░█\n' +
-                                    '░░░█▄░░▀▄░░░░▄▀▐░█\n' +
-                                    '░░░█▐▀▀▀░▀▀▀▀░░▐░█\n' +
-                                    '░░▐█▐▄░░▀░░░░░░▐░█▄▄\n' +
-                                    '░░░▀▀░BEN░░░░▐▄▄▄▀\n');
-
-                break;
-
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-                client.reply(m, '\n\n…………………...- *\" \\ - "::*\'\\\n' +
-                                    '………………„-^*\'\' : : „\'\' : : : :: *„\n' +
-                                    '…………..„-* : : :„„--/ : : : : : : : \'\\\n' +
-                                    '…………./ : : „-* . .| : : : : : : : : \'|\n' +
-                                    '……….../ : „-* . . . | : : : : : : : : |\n' +
-                                    '………...\\„-* . . . . .| : : : : : : : :\'|\n' +
-                                    '……….../ . . . . . . \'| : : : : : : : :|\n' +
-                                    '……..../ . . . . . . . .\'\\ : : : : : : : |\n' +
-                                    '……../ . . . . . . . . . .\\ : : : : : : :|\n' +
-                                    '……./ . . . . . . . . . . . \'\\ : : : : : /\n' +
-                                    '….../ . . . . . . . . . . . . . *-„„„„-*\'\n' +
-                                    '….\'/ . . . . . . . . . . . . . . \'|\n' +
-                                    '…/ . . . . . . . ./ . . . . . . .|\n' +
-                                    '../ . . . . . . . .\'/ . . . . . . .\'|\n' +
-                                    './ . . . . . . . . / . . . . . . .\'|\n' +
-                                    '\'/ . . . . . . . . . . . . . . . .\'|\n' +
-                                    '\'| . . . . . \ . . . . . . . . . .|\n' +
-                                    '\'| . . . . . . \\„_^- „ . . . . .\'|\n' +
-                                    '\'| . . . . . . . . .\'\\ .\\ ./ \'/ . |\n' +
-                                    '| .\ . . . . . . . . . \ .\'\' / . \'|\n' +
-                                    '| . . . . . . . . . . / .\'/ . . .|\n' +
-                                    '| . . . . . . .| . . / ./ ./ . .|\n' +
-                                    '\'| . . . . . . . . .\'\\ .\\ ./ \'/ . |\n' +
-                                    '| .\\ . . . . . . . . . \\ .\'\' / . \'|\n' +
-                                    '| . . . . . . . . . . / .\'/ . . .|\n' +
-                                    '| . . . . . . .| . . / ./ ./ . .|\n' +
-                                    '\'| . . . . . . . . .\'\\ .\\ ./ \'/ . |\n' +
-                                    '| .\\ . . . . . . . . . \\ .\'\' / . \'|\n' +
-                                    '| . . . . . . . . . . / .\'/ . . .|\n' +
-                                    '| . . . . . . .| . . / ./ ./ . .|\n' +
-                                    '\'| . . . . . . . . .\'\\ .\\ ./ \'/ . |\n');
-
-                break;
-
-        }
-    }
-
-    if (m.content.startsWith(`${botMention} salt`)) {
-
-        client.reply(m, '\n\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▄██████▄\n' +
-                            '▒▒▒▒▒▒▒▒▒▒▄▄████████████▄\n' +
-                            '▒▒▒▒▒▒▄▄██████████████████\n' +
-                            '▒▒▒▄████▀▀▀██▀██▌███▀▀▀████\n' +
-                            '▒▒▐▀████▌▀██▌▀▐█▌████▌█████▌\n' +
-                            '▒▒█▒▒▀██▀▀▐█▐█▌█▌▀▀██▌██████\n' +
-                            '▒▒█▒▒▒▒████████████████████▌\n' +
-                            '▒▒▒▌▒▒▒▒█████░░░░░░░██████▀\n' +
-                            '▒▒▒▀▄▓▓▓▒███░░░░░░█████▀▀\n' +
-                            '▒▒▒▒▀░▓▓▒▐█████████▀▀▒\n' +
-                            '▒▒▒▒▒░░▒▒▐█████▀▀▒▒▒▒▒▒\n' +
-                            '▒▒░░░░░▀▀▀▀▀▀▒▒▒▒▒▒▒▒▒\n');
-    }
-
-    if (m.content.startsWith(`${botMention} finishme`)) {
-        channel = m.channel;
-        attachmentUrl = 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png';
-
-        client.sendFile(channel, attachmentUrl).catch(err => {
-            console.log('Error posting image: ' + err);
-        });
-    }
-
-    if (m.content.startsWith(`${botMention} needful`)) {
-        channel = m.channel;
-        attachmentUrl = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
-
-        client.sendFile(channel, attachmentUrl).catch(err => {
-            console.log('Error posting image: ' + err);
-        });
-    }
 });
 
 function parseVidAndQueue(vid, m, suppress) {
