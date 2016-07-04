@@ -9,6 +9,7 @@ var Saved = require('./lib/saved.js');
 var Sounds = require('./src/sounds.js');
 var Images = require('./src/images.js');
 var Ascii = require('./src/asciiPictures.js');
+var Utilities = require('./src/utilities.js');
 Saved.read();
 
 var YoutubeTrack = require('./lib/youtube-track.js');
@@ -24,7 +25,8 @@ client.on('warn', (m) => console.log('[warn]', m));
 client.on('debug', (m) => console.log('[debug]', m));
 
 Commands = {};
-Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures);
+
+Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities);
 
 var playQueue = [];
 var boundChannel = false;
@@ -94,43 +96,6 @@ client.on('message', m => {
     // if (m.content.startsWith(`${botMention} info`)) {
     //     if (!checkCommand(m, 'info')) return;
     //
-    // }
-    if (m.content.startsWith(`${botMention} help`)) { // help
-        if (!checkCommand(m, 'help')) return;
-
-        // if (Config.shouldUsePMs) {
-        client.sendMessage(m.author,
-            `\`\`\`Here are the commands I support:
-          **To issue a command, use the \`~\` as a prefix!**   
-          **BOO-DO-DO-DOOOOOO:** cena 
-          **BOO-DO-DO-DOOOOOO (with airhorns):** cenahorn 
-          **Random ASCII Dick:** dongerino
-          **\'You Son of a Bitch\':** sob
-          **\'Who killed the dinos?\':** dinos
-          **\'Fuck you asshole\':** fua
-          **\'break your god damn spine\':** spine
-          
-          **\'SHUT UP\':** stfu
-          **\'I am INVINCIBLE\':** boris
-          **\'BULLSHIT\':** bs
-          **\'COCAINUM\':** cocainum
-          **GRAPEFRUIT:** gfym
-          **ASCII salt:** salt
-          **feelsgoodman meme:** feelsgood
-          **White Creamy Sauce:** finishme
-          **Do the needful:** needful\`\`\``
-        ).then(msg => {
-            client.reply(m, `I\'ve sent you my commands in PM`);
-        });
-    // **\'Arnold laugh\':** haha
-
-
-    }
-    // } else {
-    //     client.reply(m, 'Usage info can be found here: https://github.com/meew0/Lethe/wiki/Usage');
-    // }
-
-    //     return;
     // }
 
     // if (m.content.startsWith(`${botMention} i`)) { // init
