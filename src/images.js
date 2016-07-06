@@ -1,5 +1,5 @@
 var CONSTANTS = require('../constants.js');
-
+var woody = require('../resources/rapeywoody.json').rapeywoody;
 
 var images = {
     "feelsgood": {
@@ -26,7 +26,7 @@ var images = {
             })
         }
     },
-    "needful" : {
+    "needful": {
         usage: "Displays 'Do the needful' meme",
         delete: true,
         type: "image",
@@ -36,6 +36,20 @@ var images = {
             bot.sendFile(channel, CONSTANTS.NEEDFUL).catch(err => {
                 console.log('Error sending \'do the needful\': ' + err);
             })
+        }
+    },
+    "woody": {
+        usage: "Displays random 'rapey woody' meme",
+        delete: true,
+        type: "image",
+        process: function (bot, msg) {
+            var channel = msg.channel;
+
+            var number = Math.floor(Math.random() * (woody.length));
+
+            bot.sendFile(channel, woody[number]).catch(err => {
+                console.log('Error sending \'rapey woody\' meme: ' + err);
+            });
         }
     }
 };

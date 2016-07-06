@@ -20,7 +20,7 @@ var sounds = {
                     intent.on('end', () => {
                         bot.leaveVoiceChannel(voiceChannel);
                     });
-                    intent.on('error', (err) => {
+                    intent.on('error', (err) => { 
                         console.log('Playback Error: ' + err);
                         bot.leaveVoiceChannel(voiceChannel);
                     })

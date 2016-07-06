@@ -31,11 +31,7 @@ var asciiPictures = {
         process: function (bot, msg) {
             var channel = msg.channel;
 
-            console.log('preparing to print dongerino');
-
             var number = Math.floor(Math.random() * (dongerino.length));
-
-            console.log('random number chosen: ' + number);
 
             bot.sendMessage(channel, dongerino[number]);
         }

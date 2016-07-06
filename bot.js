@@ -101,7 +101,7 @@ client.on('message', m => {
     // if (m.content.startsWith(`${botMention} i`)) { // init
     //     if (!checkCommand(m, 'init')) return;
     //     if (boundChannel) return;
-    //     var userChannel = m.author.voiceChannel;
+    //     var userChannel = m.author.voiceChannel; 
     //     var channelToJoin = spliceArguments(m.content)[1];
     //     for (var channel of m.channel.server.channels) {
     //         if (channel instanceof Discord.VoiceChannel) {
