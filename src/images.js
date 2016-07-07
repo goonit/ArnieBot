@@ -51,6 +51,18 @@ var images = {
                 console.log('Error sending \'rapey woody\' meme: ' + err);
             });
         }
+    },
+    "fishmonster": {
+        usage: "Post fishmonster Ted Cruz",
+        delete: true,
+        type: "image",
+        process: function (bot, msg) {
+            var channel = msg.channel;
+
+            bot.sendFile(channel, CONSTANTS.FISHMONSTER).catch(err => {
+                console.log('Error sending fishmonster Ted: ' + err);
+            })
+        }
     }
 };
     

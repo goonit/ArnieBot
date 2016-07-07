@@ -3,6 +3,7 @@ var path = require('path');
 const FEELSGOOD  = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
 const FINISHME = 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png';
 const NEEDFUL = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
+const FISHMONSTER = 'http://i.imgur.com/Bqc3D5v.png';
 const CENAHORN = path.resolve('resources/', 'cenahorn.mp3');
 const CENA = path.resolve('resources/', 'cena.mp3');
 const SOB = path.resolve('resources/', 'sob.mp3');
@@ -19,6 +20,7 @@ module.exports = {
     FEELSGOOD: FEELSGOOD,
     FINISHME: FINISHME,
     NEEDFUL: NEEDFUL,
+    FISHMONSTER: FISHMONSTER,
     CENAHORN: CENAHORN,
     CENA: CENA,
     SOB: SOB,
