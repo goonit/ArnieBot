@@ -19,10 +19,9 @@ var Util = require('./lib/util.js');
 var Config = require('./lib/config.js');
 var CURRENT_REV = 5;
 
-var client = new Discord.Client();
-
-client.on('warn', (m) => console.log('[warn]', m));
-client.on('debug', (m) => console.log('[debug]', m));
+var client = new Discord.Client({
+    autoReconnect: true
+});
 
 Commands = {};
 
@@ -52,17 +51,22 @@ if (process.argv[4]) {
     apiKey = Config.auth.apiKey;
 }
 
-client.on('ready', () => {
-    if (Config.botHasNickname) {
-        // botMention = `<@!${client.user.id}>`;
-        botMention =  '!arnie';
-        
-    } else {
-        // botMention = `<@${client.user.id}>`;
-        botMention =  '!arnie';
-    }
+client.on('warn', (m) => console.log('[warn]', m));
+client.on('debug', (m) => console.log('[debug]', m));
+client.on('error', (m) => console.log('[error]', m));
 
-    console.log(`Bot mention: ${botMention}`);
+client.on('ready', () => {
+    // if (Config.botHasNickname) {
+    //     // botMention = `<@!${client.user.id}>`;
+    //     botMention =  '!arnie';
+    //
+    // } else {
+    //     // botMention = `<@${client.user.id}>`;
+    //     botMention =  '!arnie';
+    // }
+    //
+    // console.log(`Bot mention: ${botMention}`);
+
     if (Config.configRev !== CURRENT_REV) {
         console.log('WARNING: Your lethe-config.json is out of date relative to the code using it! Please update it from the git repository, otherwise things will break!');
     }
@@ -70,6 +74,12 @@ client.on('ready', () => {
 
 //todo: CLEAN THIS FUCKING MESS UP
 client.on('message', m => {
+
+    if (client.user.id == m.author.id) {
+        console.log('returning because client id and user id are the same');
+        return;
+    }
+    
     var msgPrefix = "~";
 
     var formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
@@ -83,10 +93,7 @@ client.on('message', m => {
     //     console.log('returning because botmention isnt set');
     //     return;
     // }
-    // if (client.user.id == m.author.id) {
-    //     console.log('returning because client id and user id are the same');
-    //     return;
-    // }
+    
     //
     // if (!m.content.startsWith(`${botMention}`) || m.content.length <= botMention.length + 1) {
     //     console.log('returning because of length');
@@ -331,25 +338,25 @@ function error(argument) {
 //     }
 // });
 
-// process.on('uncaughtException', function(err) {
-//     // Handle ECONNRESETs caused by `next` or `destroy`
-//     if (err.code == 'ECONNRESET') {
-//         // Yes, I'm aware this is really bad node code. However, the uncaught exception
-//         // that causes this error is buried deep inside either discord.js, ytdl or node
-//         // itself and after countless hours of trying to debug this issue I have simply
-//         // given up. The fact that this error only happens *sometimes* while attempting
-//         // to skip to the next video (at other times, I used to get an EPIPE, which was
-//         // clearly an error in discord.js and was now fixed) tells me that this problem
-//         // can actually be safely prevented using uncaughtException. Should this bother
-//         // you, you can always try to debug the error yourself and make a PR.
-//         console.log('Got an ECONNRESET! This is *probably* not an error. Stacktrace:');
-//         console.log(err.stack);
-//     } else {
-//         // Normal error handling
-//         console.log(err);
-//         console.log(err.stack);
-//         process.exit(0);
-//     }
-// });
+process.on('uncaughtException', function(err) {
+    // Handle ECONNRESETs caused by `next` or `destroy`
+    if (err.code == 'ECONNRESET') {
+        // Yes, I'm aware this is really bad node code. However, the uncaught exception
+        // that causes this error is buried deep inside either discord.js, ytdl or node
+        // itself and after countless hours of trying to debug this issue I have simply
+        // given up. The fact that this error only happens *sometimes* while attempting
+        // to skip to the next video (at other times, I used to get an EPIPE, which was
+        // clearly an error in discord.js and was now fixed) tells me that this problem
+        // can actually be safely prevented using uncaughtException. Should this bother
+        // you, you can always try to debug the error yourself and make a PR.
+        console.log('Got an ECONNRESET! This is *probably* not an error. Stacktrace:');
+        console.log(err.stack);
+    } else {
+        // Normal error handling
+        console.log(err);
+        console.log(err.stack);
+        process.exit(0);
+    }
+});
 
 client.loginWithToken('MjAwNzU0Mjk2ODY0NzY4MDAx.CmB2gg.7rLKOO1Fmc4g1QSL1qUvuo0kUms');
