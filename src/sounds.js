@@ -183,6 +183,58 @@ var sounds = {
 
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.SPINE, options);
         }
+    },
+    "pawnch": {
+        usae: "Plays Falcon Pawnch",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.PAWNCH, options);
+        }
+    },
+    "asslick": {
+        usae: "Plays John Cena Trainwreck quote",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest',
+                // volume: 0.5
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.ASSLICK, options);
+        }
+    },
+    "fuckenter": {
+        usae: "Plays John Cena Trainwreck quote",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.FUCKENTER, options);
+        }
+    },
+    "dickpunch": {
+        usae: "Plays John Cena Trainwreck quote",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.DICKPUNCH, options);
+        }
     }
 };
 

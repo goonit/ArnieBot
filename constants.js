@@ -15,6 +15,10 @@ const FUA = path.resolve('resources/', 'fua.mp3');
 const GFYM = path.resolve('resources/', 'gfym.mp4');
 const STFU = path.resolve('resources/', 'shutup.mp3');
 const SPINE = path.resolve('resources/', 'spine.mp3');
+const PAWNCH = path.resolve('resources/', 'pawnch.mp3');
+const ASSLICK = path.resolve('resources/', 'asslick.mp3');
+const FUCKENTER = path.resolve('resources/', 'fuckenter.mp3');
+const DICKPUNCH = path.resolve('resources/', 'dickpunch.mp3');
 
 module.exports = {
     FEELSGOOD: FEELSGOOD,
@@ -31,5 +35,9 @@ module.exports = {
     FUA: FUA,
     GFYM: GFYM,
     STFU: STFU,
-    SPINE: SPINE
+    SPINE: SPINE,
+    PAWNCH: PAWNCH,
+    ASSLICK: ASSLICK,
+    FUCKENTER: FUCKENTER,
+    DICKPUNCH: DICKPUNCH
 };
