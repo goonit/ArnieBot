@@ -1,33 +1,57 @@
 var CONSTANTS = require('../constants.js');
 
-//todo: refactor joinvoicechannel code to call another method. Too much duplicate code here.
+var joinVoiceChannelAndPlay = function (bot, msg, file, options) {
+
+    var user = msg.author;
+    var server = msg.server;
+
+    var channel = resolveVoiceChannel(user, server);
+
+    bot.joinVoiceChannel(channel).then( (connection) => {
+        connection.playFile(file, options).then(intent => {
+            intent.on('end', () => {
+                bot.leaveVoiceChannel(channel);
+            });
+
+            intent.on('error', () => {
+                console.log('Playback Error: ' + err);
+                bot.leaveVoiceChannel(channel);
+            })
+        });
+    }).catch(err => {
+        console.log("error: " + err);
+    });
+};
+
+var lastChannel = null;
+var resolveVoiceChannel = function (user, server) {
+
+    if ( user.voiceChannel ) {
+        return user.voiceChannel;
+    }
+    server.channels.filter( (channel) => {
+        return channel.type === 'voice';
+    })
+    .forEach( (channel) => {
+        if (channel.members.has('id', user.id))
+            lastChannel = channel;
+    });
+
+    return lastChannel;
+};
+
 var sounds = {
     "cenahorn": {
         usage: "Plays Cena Theme clip",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
+            var options = {
+                quality: "highest",
+                volume: 0.5
+            };
 
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
-                var options = {
-                    quality: "highest"
-                };
-
-                options.volume = 0.5;
-
-                connection.playFile(CONSTANTS.CENAHORN, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => { 
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                }).catch(err => {
-                    console.log("error: " + err);
-                });
-            })
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.CENAHORN, options);
         }
     },
     "cena": {
@@ -35,25 +59,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
+            var options = {
+                quality: "highest",
+                volume: 0.5
+            };
 
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
-                var options = {
-                    quality: "highest"
-                };
-
-                options.volume = 0.5;
-
-                connection.playFile(CONSTANTS.CENA, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.CENA, options);
         }
     },
     "sob": {
@@ -61,26 +72,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.SOB, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.SOB, options);
         }
     },
     "boris": {
@@ -88,26 +85,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.BORIS, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.BORIS, options);
         }
     },
     "bs": {
@@ -115,26 +98,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.BS, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.BS, options);
         }
     },
     "cocainum": {
@@ -142,26 +111,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.COCAINUM, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.COCAINUM, options);
         }
     },
     "dinos": {
@@ -169,26 +124,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.DINOS, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.DINOS, options);
         }
     },
     "fua": {
@@ -196,26 +137,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.FUA, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.FUA, options);
         }
     },
     "gfym": {
@@ -223,53 +150,25 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.GFYM, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.GFYM, options);
         }
     },
-    "shutup": {
+    "stfu": {
         usage: "Plays \'SHUT UP!\'",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.STFU, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.STFU, options);
         }
     },
     "spine": {
@@ -277,26 +176,12 @@ var sounds = {
         delete: true,
         type: "sound",
         process: function (bot, msg) {
-            var voiceChannel = msg.author.voiceChannel;
-            bot.joinVoiceChannel(voiceChannel).then((connection) => {
+            var options = {
+                quality: 'highest',
+                volume: 0.5
+            };
 
-                var options = {
-                    quality: 'highest'
-                };
-
-                connection.playFile(CONSTANTS.SPINE, options).then((intent) => {
-                    intent.on('end', () => {
-                        bot.leaveVoiceChannel(voiceChannel);
-                    });
-                    intent.on('error', (err) => {
-                        console.log('Playback Error: ' + err);
-                        bot.leaveVoiceChannel(voiceChannel);
-                    })
-                });
-            })
-            .catch(err => {
-                console.log('Error joining voice channel: ' + err);
-            });
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.SPINE, options);
         }
     }
 };
