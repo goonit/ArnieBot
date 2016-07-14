@@ -1,4 +1,6 @@
+var path = require('path');
 var CONSTANTS = require('../constants.js');
+var watermalone = require('../resources/random.json').watermalone;
 
 var joinVoiceChannelAndPlay = function (bot, msg, file, options) {
 
@@ -185,7 +187,7 @@ var sounds = {
         }
     },
     "pawnch": {
-        usae: "Plays Falcon Pawnch",
+        usage: "Plays Falcon Pawnch",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
@@ -198,42 +200,67 @@ var sounds = {
         }
     },
     "asslick": {
-        usae: "Plays John Cena Trainwreck quote",
+        usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
             var options = {
-                quality: 'highest',
-                // volume: 0.5
+                quality: 'highest'
             };
 
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.ASSLICK, options);
         }
     },
     "fuckenter": {
-        usae: "Plays John Cena Trainwreck quote",
+        usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
             var options = {
-                quality: 'highest',
-                volume: 0.5
+                quality: 'highest'
             };
 
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.FUCKENTER, options);
         }
     },
     "dickpunch": {
-        usae: "Plays John Cena Trainwreck quote",
+        usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
         process: function (bot, msg) {
             var options = {
-                quality: 'highest',
-                volume: 0.5
+                quality: 'highest'
             };
 
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.DICKPUNCH, options);
+        }
+    },
+    "yesnigga": {
+        usage: "Plays 'yes nigga!' from water malone clips",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest'
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.YESNIGGA, options);
+        }
+    },
+    "watermalone": {
+        usage: "Plays random 'watermalone' clip",
+        delete: true,
+        type: "sound",
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest'
+            };
+
+            var number = Math.floor(Math.random() * (watermalone.length));
+
+            var file = path.resolve('resources/', watermalone[number]);
+
+            joinVoiceChannelAndPlay(bot, msg, file, options);
         }
     }
 };

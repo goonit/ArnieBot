@@ -19,6 +19,15 @@ const PAWNCH = path.resolve('resources/', 'pawnch.mp3');
 const ASSLICK = path.resolve('resources/', 'asslick.mp3');
 const FUCKENTER = path.resolve('resources/', 'fuckenter.mp3');
 const DICKPUNCH = path.resolve('resources/', 'dickpunch.mp3');
+const YESNIGGA = path.resolve('resources/', 'yesnigga.mp3');
+// const WATERMALONE1 = path.resolve('resources/', 'watermalone1.mp3');
+// const WATERMALONE2 = path.resolve('resources/', 'watermalone2.mp3');
+// const WATERMALONE3 = path.resolve('resources/', 'watermalone3.mp3');
+// const WATERMALONE4 = path.resolve('resources/', 'watermalone4.mp3');
+// const WATERMALONE5 = path.resolve('resources/', 'watermalone5.mp3');
+// const WATERMALONE6 = path.resolve('resources/', 'watermalone6.mp3');
+// const WATERMALONE7 = path.resolve('resources/', 'watermalone7.mp3');
+// const WATERMALONE8 = path.resolve('resources/', 'watermalone8.mp3');
 
 module.exports = {
     FEELSGOOD: FEELSGOOD,
@@ -39,5 +48,14 @@ module.exports = {
     PAWNCH: PAWNCH,
     ASSLICK: ASSLICK,
     FUCKENTER: FUCKENTER,
-    DICKPUNCH: DICKPUNCH
+    DICKPUNCH: DICKPUNCH,
+    YESNIGGA: YESNIGGA
+    // WATERMALONE1: WATERMALONE1,
+    // WATERMALONE2: WATERMALONE2,
+    // WATERMALONE3: WATERMALONE3,
+    // WATERMALONE4: WATERMALONE4,
+    // WATERMALONE5: WATERMALONE5,
+    // WATERMALONE6: WATERMALONE6,
+    // WATERMALONE7: WATERMALONE7,
+    // WATERMALONE8: WATERMALONE8
 };

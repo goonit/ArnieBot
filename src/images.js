@@ -1,5 +1,5 @@
 var CONSTANTS = require('../constants.js');
-var woody = require('../resources/rapeywoody.json').rapeywoody;
+var woody = require('../resources/random.json').rapeywoody;
 
 var images = {
     "feelsgood": {
