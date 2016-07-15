@@ -26,7 +26,7 @@ var client = new Discord.Client({
 
 Commands = {};
 
-Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Admin.admin);
+Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities);
 
 var playQueue = [];
 var boundChannel = false;
