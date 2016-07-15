@@ -4,12 +4,14 @@ var ytdl = require('ytdl-core');
 var request = require('superagent');
 var url = require('url');
 
+var auth = require('./cuckbot-auth.json');
 var shouldDisallowQueues = require('./lib/permission-checks.js');
 var Saved = require('./lib/saved.js');
 var Sounds = require('./src/sounds.js');
 var Images = require('./src/images.js');
 var Ascii = require('./src/asciiPictures.js');
 var Utilities = require('./src/utilities.js');
+var Admin = require('./src/admin.js');
 Saved.read();
 
 var YoutubeTrack = require('./lib/youtube-track.js');
@@ -25,7 +27,7 @@ var client = new Discord.Client({
 
 Commands = {};
 
-Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities);
+Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Admin.admin);
 
 var playQueue = [];
 var boundChannel = false;
@@ -359,4 +361,4 @@ process.on('uncaughtException', function(err) {
     }
 });
 
-client.loginWithToken('MjAwNzU0Mjk2ODY0NzY4MDAx.CmB2gg.7rLKOO1Fmc4g1QSL1qUvuo0kUms');
+client.loginWithToken(auth.token);
