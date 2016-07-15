@@ -29,6 +29,36 @@ var utilities = {
             });
         }
     }
+    // ,"clear": {
+    //     usage: "Clears x number of messages",
+    //     delete: true,
+    //     process: function (bot, msg) {
+    //         var channel = msg.channel;
+    //
+    //         var msgArray = msg.content.split(" ");
+    //
+    //         if (msgArray.length > 2) {
+    //             bot.reply("Incorrect usage! There are too many parameters for that command.");
+    //             return;
+    //         }
+    //
+    //         var channelMessages = _.reverse(channel.messages);
+    //         var numberToDelete = msgArray[1]; // number of messages to delete should be 2nd item in array.
+    //
+    //         for (var i = 0; i < numberToDelete; i++) {
+    //
+    //         }
+    //
+    //
+    //         for (var i = 0; i < numberToDelete; i++) { // n is the number of commands to delete
+    //             bot.deleteMessage(channel.lastMessage, function(err) {
+    //                 if (err) {
+    //                     console.log("error trying to delete messages: " + err);
+    //                 }
+    //             });
+    //         }
+    //     }
+    // }
 };
 
 exports.utilities = utilities;

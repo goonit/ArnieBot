@@ -4,20 +4,19 @@ var ytdl = require('ytdl-core');
 var request = require('superagent');
 var url = require('url');
 
-var auth = require('./cuckbot-auth.json');
 var shouldDisallowQueues = require('./lib/permission-checks.js');
 var Saved = require('./lib/saved.js');
 var Sounds = require('./src/sounds.js');
 var Images = require('./src/images.js');
 var Ascii = require('./src/asciiPictures.js');
 var Utilities = require('./src/utilities.js');
-var Admin = require('./src/admin.js');
 Saved.read();
 
 var YoutubeTrack = require('./lib/youtube-track.js');
 var processCmd = require('./CommandHandler.js').commandHandler;
 
 var Util = require('./lib/util.js');
+var auth = require('./cuckbot-auth.json');
 var Config = require('./lib/config.js');
 var CURRENT_REV = 5;
 
