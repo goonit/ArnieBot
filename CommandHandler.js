@@ -2,6 +2,8 @@ var chalk = require("chalk"),
     c = new chalk.constructor({
         enabled: true
     });
+var admins = require('./admins.json').admins;
+
 var serverC = c.black.bold,
     channelC = c.green.bold,
     userC = c.cyan.bold,
@@ -16,7 +18,7 @@ setInterval(() => {
     lastExecTime = {}
 }, 3600000);
 
-exports.commandHandler = function(bot, msg, suffix, cmdTxt, msgPrefix) {
+exports.commandHandler = function(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
     
     // if (serverSettings.hasOwnProperty(msg.channel.guild.id) && serverSettings[msg.channel.guild.id][cmdTxt] === false)
     //     return;
@@ -26,12 +28,12 @@ exports.commandHandler = function(bot, msg, suffix, cmdTxt, msgPrefix) {
     //         return;
     // else if (Commands[cmdTxt].type === "admin" && admins.indexOf(msg.author.id) === -1) return;
     // else {
-        processCmd(bot, msg, suffix, cmdTxt, msgPrefix);
+        processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions);
         // Database.updateTimestamp(msg.channel.guild);
     // }
 };
 
-function processCmd(bot, msg, suffix, cmdTxt, msgPrefix) {
+function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
 
     var cmd = Commands[cmdTxt];
     
@@ -45,28 +47,38 @@ function processCmd(bot, msg, suffix, cmdTxt, msgPrefix) {
     // }
     else {
         // if (!(admins.indexOf(msg.author.id) > -1) && cmd.cooldown > 0) {
-        //     if (!lastExecTime.hasOwnProperty(cmdTxt))
-        //         lastExecTime[cmdTxt] = {};
-        //
-        //     if (!lastExecTime[cmdTxt].hasOwnProperty(msg.author.id))
-        //         lastExecTime[cmdTxt][msg.author.id] = new Date().valueOf();
-        //     else {
-        //         var currentTime = Date.now();
-        //
-        //         if (currentTime < (lastExecTime[cmdTxt][msg.author.id] + (cmd.cooldown * 1000))) {
-        //             bot.sendMessage(msg.channel.id, "**" + msg.author.username + "**-senpai that command is currently on cooldown for **" +
-        //                 Math.round(((lastExecTime[cmdTxt][msg.author.id] + cmd.cooldown * 1000) - currentTime) / 1000) + "** more seconds.");
-        //             return;
-        //         }
-        //         lastExecTime[cmdTxt][msg.author.id] = currentTime;
-        //     }
-        // }
-        // console.log(serverC("@" + msg.channel.guild.name + ":") + channelC(" #" + msg.channel.name) + ": " + botC("@WishBot") + " - " + warningC(msgPrefix + "" + cmdTxt) + " was used by " + userC(msg.author.username));
+        if (cmd.cooldown > 0) {
+            if (!lastExecTime.hasOwnProperty(cmdTxt))
+                lastExecTime[cmdTxt] = {};
+
+            if (!lastExecTime[cmdTxt].hasOwnProperty(msg.author.id))
+                lastExecTime[cmdTxt][msg.author.id] = new Date().valueOf();
+            else {
+                var currentTime = Date.now();
+
+                if (currentTime < (lastExecTime[cmdTxt][msg.author.id] + (cmd.cooldown * 1000))) {
+                    if (cmdTxt == "gfym") {
+                        bot.sendMessage(msg.channel.id, "**" + msg.author.username + " **give your jaw a rest for a bit!");
+                    } else {
+                        bot.sendMessage(msg.channel.id, "**" + msg.author.username + " **that command is currently on cooldown for **" +
+                            Math.round(((lastExecTime[cmdTxt][msg.author.id] + cmd.cooldown * 1000) - currentTime) / 1000) + "** more seconds.");
+                    }
+
+                    return;
+                }
+                lastExecTime[cmdTxt][msg.author.id] = currentTime;
+            }
+        }
+        // serverC("@" + msg.channel.guild.name + ":") +
+        console.log(channelC(" #" + msg.channel.name) + ": " + botC("@WishBot") + " - " + warningC(msgPrefix + "" + cmdTxt) + " was used by " + userC(msg.author.username));
         try {
-            cmd.process(bot, msg, suffix, cmdIndex, cmdUsage);
+            cmd.process(bot, msg, suffix, cmdIndex, cmdUsage, commandOptions);
             
-            if (cmd.delete) 
-                bot.deleteMessage(msg.channel.id, msg.id);
+            if (cmd.delete) {
+                bot.deleteMessage(msg).catch(err => {
+                    console.log("error when deleting message: " + err);
+                });
+            }
         } catch (err) {
             bot.sendMessage(msg.channel.id, "```" + err + "```");
             console.log(errorC(err.stack));

@@ -47,6 +47,7 @@ var sounds = {
         usage: "Plays Cena Theme clip",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: "highest",
@@ -60,6 +61,7 @@ var sounds = {
         usage: "Plays Cena Theme clip",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: "highest",
@@ -73,6 +75,7 @@ var sounds = {
         usage: "Plays \'You son of a bitch\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -86,6 +89,7 @@ var sounds = {
         usage: "Plays \'I am invincible!\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -99,6 +103,7 @@ var sounds = {
         usage: "Plays \'BULLSHIT\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -112,6 +117,7 @@ var sounds = {
         usage: "Plays \'COCAINUM\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -125,6 +131,7 @@ var sounds = {
         usage: "Plays \'Who killed the dinosaurs?\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -138,6 +145,7 @@ var sounds = {
         usage: "Plays \'fuck you asshole\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -151,6 +159,7 @@ var sounds = {
         usage: "Plays \'The worst sound ever\'",
         delete: true,
         type: "sound",
+        cooldown: 15,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -164,6 +173,7 @@ var sounds = {
         usage: "Plays \'SHUT UP!\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -177,6 +187,7 @@ var sounds = {
         usage: "Plays \'But I hope you leave enough room for mah fist...\'",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -190,6 +201,7 @@ var sounds = {
         usage: "Plays Falcon Pawnch",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest',
@@ -203,6 +215,7 @@ var sounds = {
         usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest'
@@ -215,6 +228,7 @@ var sounds = {
         usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest'
@@ -227,6 +241,7 @@ var sounds = {
         usage: "Plays John Cena Trainwreck quote",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest'
@@ -239,6 +254,7 @@ var sounds = {
         usage: "Plays 'yes nigga!' from water malone clips",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest'
@@ -247,10 +263,24 @@ var sounds = {
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.YESNIGGA, options);
         }
     },
+    "yeslawd": {
+        usage: "Plays 'yes lawd!' from water malone clips",
+        delete: true,
+        type: "sound",
+        cooldown: 5,
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest'
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.YESLAWD, options);
+        }
+    },
     "watermalone": {
         usage: "Plays random 'watermalone' clip",
         delete: true,
         type: "sound",
+        cooldown: 5,
         process: function (bot, msg) {
             var options = {
                 quality: 'highest'
@@ -261,6 +291,19 @@ var sounds = {
             var file = path.resolve('resources/', watermalone[number]);
 
             joinVoiceChannelAndPlay(bot, msg, file, options);
+        }
+    },
+    "ohshit": {
+        usage: "Plays 'oh shiiiiiit'",
+        delete: true,
+        type: "sound",
+        cooldown: 5,
+        process: function (bot, msg) {
+            var options = {
+                quality: 'highest'
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.OHSHIT, options);
         }
     }
 };

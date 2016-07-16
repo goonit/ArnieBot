@@ -2,15 +2,27 @@ var CONSTANTS = require('../constants.js');
 var woody = require('../resources/random.json').rapeywoody;
 
 var images = {
-    "feelsgood": {
-        usage: "Displays feelsgood meme in chat",
+    "feelsgoodman": {
+        usage: "Displays feelsgoodman meme in chat",
         delete: true,
         type: "image",
         process: function (bot, msg) {
             channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.FEELSGOOD).catch(err => {
-                console.log('Error sending \'feelsgood meme\': ' + err);
+            bot.sendFile(channel, CONSTANTS.FEELSGOODMAN).catch(err => {
+                console.log('Error sending \'feelsgoodman meme\': ' + err);
+            });
+        }
+    },
+    "feelsbadman": {
+        usage: "Displays feelsbadman meme in chat",
+        delete: true,
+        type: "image",
+        process: function (bot, msg) {
+            channel = msg.channel;
+
+            bot.sendFile(channel, CONSTANTS.FEELSBADMAN).catch(err => {
+                console.log('Error sending \'feelsbadman meme\': ' + err);
             });
         }
     },

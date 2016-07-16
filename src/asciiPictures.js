@@ -1,4 +1,3 @@
-var CONSTANTS = require("../constants.js");
 var dongerino = require("../resources/dongerinos.json").dongerino;
 
 
@@ -34,6 +33,16 @@ var asciiPictures = {
             var number = Math.floor(Math.random() * (dongerino.length));
 
             bot.sendMessage(channel, dongerino[number]);
+        }
+    },
+    "lenny": {
+        usage: "Post lenny face meme in chat",
+        delete: false,
+        type: "image",
+        process: function (bot, msg) {
+            var channel = msg.channel;
+
+            bot.sendMessage(channel, "( ͡° ͜ʖ ͡°)");
         }
     }
 };

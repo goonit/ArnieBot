@@ -3,6 +3,7 @@ var Discord = require("discord.js");
 var ytdl = require('ytdl-core');
 var request = require('superagent');
 var url = require('url');
+var _ = require('lodash');
 
 var shouldDisallowQueues = require('./lib/permission-checks.js');
 var Saved = require('./lib/saved.js');
@@ -17,6 +18,7 @@ var processCmd = require('./CommandHandler.js').commandHandler;
 
 var Util = require('./lib/util.js');
 var auth = require('./cuckbot-auth.json');
+var admins = require('./admins.json').admins;
 var Config = require('./lib/config.js');
 var CURRENT_REV = 5;
 
@@ -80,14 +82,27 @@ client.on('message', m => {
         console.log('returning because client id and user id are the same');
         return;
     }
+
+    if (m.content.startsWith("(╯°□°）╯︵ ┻━┻")) {
+        client.sendMessage(m.channel, "┬─┬﻿ ノ( ゜-゜ノ)");
+        client.reply(m, "Calm your shit!");
+
+        return;
+    }
     
     var msgPrefix = "~";
 
     var formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
+    var commandOptions = _.drop(formattedMsg.split(" "));
     var cmdTxt = formattedMsg.split(" ")[0].toLowerCase();
 
     if (Commands.hasOwnProperty(cmdTxt)){
-        processCmd(client, m, formattedMsg.substring((formattedMsg.split(" ")[0]).length + 1), cmdTxt, msgPrefix);
+        if (commandOptions.length > 2) {
+            commandOptions.shift();
+        }
+
+        console.log("commandOptions: " + commandOptions.toString());
+        processCmd(client, m, formattedMsg.substring((formattedMsg.split(" ")[0]).length + 1), cmdTxt, msgPrefix, commandOptions);
     }
 
     // if (!botMention) {

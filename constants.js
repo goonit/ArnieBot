@@ -1,6 +1,7 @@
 var path = require('path');
 
-const FEELSGOOD  = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
+const FEELSGOODMAN  = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
+const FEELSBADMAN = 'https://openclipart.org/image/2400px/svg_to_png/222252/feels.png';
 const FINISHME = 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png';
 const NEEDFUL = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
 const FISHMONSTER = 'http://i.imgur.com/Bqc3D5v.png';
@@ -20,17 +21,12 @@ const ASSLICK = path.resolve('resources/', 'asslick.mp3');
 const FUCKENTER = path.resolve('resources/', 'fuckenter.mp3');
 const DICKPUNCH = path.resolve('resources/', 'dickpunch.mp3');
 const YESNIGGA = path.resolve('resources/', 'yesnigga.mp3');
-// const WATERMALONE1 = path.resolve('resources/', 'watermalone1.mp3');
-// const WATERMALONE2 = path.resolve('resources/', 'watermalone2.mp3');
-// const WATERMALONE3 = path.resolve('resources/', 'watermalone3.mp3');
-// const WATERMALONE4 = path.resolve('resources/', 'watermalone4.mp3');
-// const WATERMALONE5 = path.resolve('resources/', 'watermalone5.mp3');
-// const WATERMALONE6 = path.resolve('resources/', 'watermalone6.mp3');
-// const WATERMALONE7 = path.resolve('resources/', 'watermalone7.mp3');
-// const WATERMALONE8 = path.resolve('resources/', 'watermalone8.mp3');
+const YESLAWD = path.resolve('resources/', 'yeslawd.mp3');
+const OHSHIT = path.resolve('resources/', 'ohshit.mp4');
 
 module.exports = {
-    FEELSGOOD: FEELSGOOD,
+    FEELSGOODMAN: FEELSGOODMAN,
+    FEELSBADMAN: FEELSBADMAN,
     FINISHME: FINISHME,
     NEEDFUL: NEEDFUL,
     FISHMONSTER: FISHMONSTER,
@@ -49,13 +45,7 @@ module.exports = {
     ASSLICK: ASSLICK,
     FUCKENTER: FUCKENTER,
     DICKPUNCH: DICKPUNCH,
-    YESNIGGA: YESNIGGA
-    // WATERMALONE1: WATERMALONE1,
-    // WATERMALONE2: WATERMALONE2,
-    // WATERMALONE3: WATERMALONE3,
-    // WATERMALONE4: WATERMALONE4,
-    // WATERMALONE5: WATERMALONE5,
-    // WATERMALONE6: WATERMALONE6,
-    // WATERMALONE7: WATERMALONE7,
-    // WATERMALONE8: WATERMALONE8
+    YESNIGGA: YESNIGGA,
+    YESLAWD: YESLAWD,
+    OHSHIT: OHSHIT
 };
