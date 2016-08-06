@@ -1,19 +1,21 @@
-var chalk = require("chalk"),
+"use strict";
+
+const chalk = require("chalk"),
     c = new chalk.constructor({
         enabled: true
     });
-var admins = require('./admins.json').admins;
+const admins = require('./admins.json').admins;
 
-var serverC = c.black.bold,
+let serverC = c.black.bold,
     channelC = c.green.bold,
     userC = c.cyan.bold,
     warningC = c.yellow.bold,
     errorC = c.red.bold,
     botC = c.magenta.bold;
 
-var cmdIndex = [];
-var cmdUsage = [];
-var lastExecTime = {};
+let cmdIndex = [];
+let cmdUsage = [];
+let lastExecTime = {};
 setInterval(() => {
     lastExecTime = {}
 }, 3600000);
@@ -35,7 +37,7 @@ exports.commandHandler = function(bot, msg, suffix, cmdTxt, msgPrefix, commandOp
 
 function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
 
-    var cmd = Commands[cmdTxt];
+    let cmd = Commands[cmdTxt];
     
     commandUsage(cmdTxt);
     
@@ -54,7 +56,7 @@ function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
             if (!lastExecTime[cmdTxt].hasOwnProperty(msg.author.id))
                 lastExecTime[cmdTxt][msg.author.id] = new Date().valueOf();
             else {
-                var currentTime = Date.now();
+                let currentTime = Date.now();
 
                 if (currentTime < (lastExecTime[cmdTxt][msg.author.id] + (cmd.cooldown * 1000))) {
                     if (cmdTxt == "gfym") {

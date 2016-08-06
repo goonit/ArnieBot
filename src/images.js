@@ -1,7 +1,9 @@
-var CONSTANTS = require('../constants.js');
-var woody = require('../resources/random.json').rapeywoody;
+"use strict";
 
-var images = {
+const CONSTANTS = require('../constants.js');
+const woody = require('../resources/random.json').rapeywoody;
+
+let images = {
     "feelsgoodman": {
         usage: "Displays feelsgoodman meme in chat",
         delete: true,
@@ -55,9 +57,9 @@ var images = {
         delete: true,
         type: "image",
         process: function (bot, msg) {
-            var channel = msg.channel;
+            let channel = msg.channel;
 
-            var number = Math.floor(Math.random() * (woody.length));
+            let number = Math.floor(Math.random() * (woody.length));
 
             bot.sendFile(channel, woody[number]).catch(err => {
                 console.log('Error sending \'rapey woody\' meme: ' + err);
@@ -69,7 +71,7 @@ var images = {
         delete: true,
         type: "image",
         process: function (bot, msg) {
-            var channel = msg.channel;
+            let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FISHMONSTER).catch(err => {
                 console.log('Error sending fishmonster Ted: ' + err);

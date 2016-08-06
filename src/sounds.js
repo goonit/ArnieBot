@@ -1,13 +1,15 @@
-var path = require('path');
-var CONSTANTS = require('../constants.js');
-var watermalone = require('../resources/random.json').watermalone;
+"use strict";
 
-var joinVoiceChannelAndPlay = function (bot, msg, file, options) {
+const path = require('path');
+const CONSTANTS = require('../constants.js');
+const watermalone = require('../resources/random.json').watermalone;
 
-    var user = msg.author;
-    var server = msg.server;
+let joinVoiceChannelAndPlay = function (bot, msg, file, options) {
 
-    var channel = resolveVoiceChannel(user, server);
+    let user = msg.author;
+    let server = msg.server;
+
+    let channel = resolveVoiceChannel(user, server);
 
     bot.joinVoiceChannel(channel).then( (connection) => {
         connection.playFile(file, options).then(intent => {
@@ -25,8 +27,8 @@ var joinVoiceChannelAndPlay = function (bot, msg, file, options) {
     });
 };
 
-var lastChannel = null;
-var resolveVoiceChannel = function (user, server) {
+let lastChannel = null;
+let resolveVoiceChannel = function (user, server) {
 
     if ( user.voiceChannel ) {
         return user.voiceChannel;
@@ -42,7 +44,7 @@ var resolveVoiceChannel = function (user, server) {
     return lastChannel;
 };
 
-var sounds = {
+let sounds = {
     "cenahorn": {
         usage: "Plays Cena Theme clip",
         delete: true,

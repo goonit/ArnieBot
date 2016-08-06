@@ -1,4 +1,6 @@
-var path = require('path');
+"use strict";
+
+const path = require('path');
 
 const FEELSGOODMAN  = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
 const FEELSBADMAN = 'https://openclipart.org/image/2400px/svg_to_png/222252/feels.png';

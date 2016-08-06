@@ -1,4 +1,6 @@
-var utilities = {
+"use strict";
+
+let utilities = {
     "cuckhelp": {
         usage: "Send user a PM with a list of commands",
         delete: false,
@@ -48,7 +50,7 @@ var utilities = {
         delete: true,
         type: "utilities",
         process: function (bot, msg, commandOptions) {
-            var channel = msg.channel;
+            let channel = msg.channel;
 
             console.log('commandOptions: ' + commandOptions);
             if (commandOptions.length > 2) {
@@ -56,7 +58,7 @@ var utilities = {
                 return;
             }
 
-            var numberToDelete = Number(commandOptions) + 1; // add one so it deletes the clear message as well
+            let numberToDelete = Number(commandOptions) + 1; // add one so it deletes the clear message as well
 
             bot.getChannelLogs(channel, numberToDelete).then( messages => {
                 bot.deleteMessages(messages).catch( err => {
