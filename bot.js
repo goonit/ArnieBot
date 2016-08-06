@@ -4,14 +4,10 @@ const Discord = require("discord.js");
 
 const url = require('url');
 const _ = require('lodash');
-
 const Sounds = require('./src/sounds.js');
 const Images = require('./src/images.js');
 const Ascii = require('./src/asciiPictures.js');
 const Utilities = require('./src/utilities.js');
-
-// Saved.read();
-
 const processCmd = require('./CommandHandler.js').commandHandler;
 
 const auth = require('./cuckbot-auth.json');
@@ -24,6 +20,8 @@ const client = new Discord.Client({
 let Commands = {};
 
 Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities);
+
+exports.Commands = Commands;
 
 client.on('warn', (m) => console.log('[warn]', m));
 client.on('debug', (m) => console.log('[debug]', m));
@@ -58,7 +56,7 @@ client.on('message', m => {
     if (Commands.hasOwnProperty(cmdTxt)){
         if (commandOptions.length > 2) {
             commandOptions.shift();
-        }s
+        }
 
         console.log("commandOptions: " + commandOptions.toString());
         processCmd(client, m, formattedMsg.substring((formattedMsg.split(" ")[0]).length + 1), cmdTxt, msgPrefix, commandOptions);

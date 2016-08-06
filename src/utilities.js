@@ -5,7 +5,7 @@ let utilities = {
         usage: "Send user a PM with a list of commands",
         delete: false,
         type: "utilities",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             bot.sendMessage(msg.author,
                 "Here's a list of my commands\n\n" +
                 "Command prefix (trigger) character is **\'~\'**\n\n" +
@@ -49,7 +49,7 @@ let utilities = {
         usage: "Clears x number of messages",
         delete: true,
         type: "utilities",
-        process: function (bot, msg, commandOptions) {
+        process: (bot, msg, commandOptions) => {
             let channel = msg.channel;
 
             console.log('commandOptions: ' + commandOptions);

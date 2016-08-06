@@ -8,7 +8,7 @@ let asciiPictures = {
         usage: "Displays salt ascii picture in chat",
         delete: true,
         type: "ascii",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             let channel = msg.channel;
 
             bot.sendMessage(channel, '\n\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▄██████▄\n' +
@@ -29,7 +29,7 @@ let asciiPictures = {
         usage: "Prints a random ascii dongerino in chat",
         delete: true,
         type: "ascii",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             let channel = msg.channel;
 
             let number = Math.floor(Math.random() * (dongerino.length));
@@ -41,7 +41,7 @@ let asciiPictures = {
         usage: "Post lenny face meme in chat",
         delete: false,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             let channel = msg.channel;
 
             bot.sendMessage(channel, "( ͡° ͜ʖ ͡°)");

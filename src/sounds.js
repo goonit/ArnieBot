@@ -4,7 +4,7 @@ const path = require('path');
 const CONSTANTS = require('../constants.js');
 const watermalone = require('../resources/random.json').watermalone;
 
-let joinVoiceChannelAndPlay = function (bot, msg, file, options) {
+let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
 
     let user = msg.author;
     let server = msg.server;
@@ -28,7 +28,7 @@ let joinVoiceChannelAndPlay = function (bot, msg, file, options) {
 };
 
 let lastChannel = null;
-let resolveVoiceChannel = function (user, server) {
+let resolveVoiceChannel = (user, server) => {
 
     if ( user.voiceChannel ) {
         return user.voiceChannel;
@@ -50,7 +50,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: "highest",
                 volume: 0.5
@@ -64,7 +64,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: "highest",
                 volume: 0.5
@@ -78,7 +78,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -92,7 +92,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -106,7 +106,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -120,7 +120,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -134,7 +134,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -148,7 +148,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -162,7 +162,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 15,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -176,7 +176,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -190,7 +190,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -204,7 +204,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest',
                 volume: 0.5
@@ -218,7 +218,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -231,7 +231,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -244,7 +244,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -257,7 +257,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -270,7 +270,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -283,7 +283,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };
@@ -300,7 +300,7 @@ let sounds = {
         delete: true,
         type: "sound",
         cooldown: 5,
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             var options = {
                 quality: 'highest'
             };

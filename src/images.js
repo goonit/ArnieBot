@@ -8,7 +8,7 @@ let images = {
         usage: "Displays feelsgoodman meme in chat",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FEELSGOODMAN).catch(err => {
@@ -20,7 +20,7 @@ let images = {
         usage: "Displays feelsbadman meme in chat",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FEELSBADMAN).catch(err => {
@@ -32,7 +32,7 @@ let images = {
         usage: "Displays White Creamy Finishing Sauce",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FINISHME).catch(err => {
@@ -44,7 +44,7 @@ let images = {
         usage: "Displays 'Do the needful' meme",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.NEEDFUL).catch(err => {
@@ -56,7 +56,7 @@ let images = {
         usage: "Displays random 'rapey woody' meme",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             let channel = msg.channel;
 
             let number = Math.floor(Math.random() * (woody.length));
@@ -70,7 +70,7 @@ let images = {
         usage: "Post fishmonster Ted Cruz",
         delete: true,
         type: "image",
-        process: function (bot, msg) {
+        process: (bot, msg) => {
             let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FISHMONSTER).catch(err => {
