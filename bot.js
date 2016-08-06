@@ -8,6 +8,7 @@ const Sounds = require('./src/sounds.js');
 const Images = require('./src/images.js');
 const Ascii = require('./src/asciiPictures.js');
 const Utilities = require('./src/utilities.js');
+const Urban = require('./src/urban.js');
 const processCmd = require('./CommandHandler.js').commandHandler;
 
 const auth = require('./cuckbot-auth.json');
@@ -19,7 +20,7 @@ const client = new Discord.Client({
 
 let Commands = {};
 
-Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities);
+Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban);
 
 exports.Commands = Commands;
 
