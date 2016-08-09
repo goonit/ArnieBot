@@ -25,6 +25,7 @@ const DICKPUNCH = path.resolve('resources/', 'dickpunch.mp3');
 const YESNIGGA = path.resolve('resources/', 'yesnigga.mp3');
 const YESLAWD = path.resolve('resources/', 'yeslawd.mp3');
 const OHSHIT = path.resolve('resources/', 'ohshit.mp4');
+const DICKSOUT = path.resolve('resources/', 'dicksout.mp3');
 
 module.exports = {
     FEELSGOODMAN: FEELSGOODMAN,
@@ -49,5 +50,6 @@ module.exports = {
     DICKPUNCH: DICKPUNCH,
     YESNIGGA: YESNIGGA,
     YESLAWD: YESLAWD,
-    OHSHIT: OHSHIT
+    OHSHIT: OHSHIT,
+    DICKSOUT: DICKSOUT
 };

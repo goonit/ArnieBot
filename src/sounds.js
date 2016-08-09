@@ -307,6 +307,19 @@ let sounds = {
 
             joinVoiceChannelAndPlay(bot, msg, CONSTANTS.OHSHIT, options);
         }
+    },
+    "dicksout": {
+        usage: "Plays 'dicks out for harambe'",
+        delete: true,
+        type: "sound",
+        cooldown: 5,
+        process: (bot, msg) => {
+            var options = {
+                quality: 'highest'
+            };
+
+            joinVoiceChannelAndPlay(bot, msg, CONSTANTS.DICKSOUT, options);
+        }
     }
 };
 
