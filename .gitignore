@@ -1,3 +1,4 @@
 node_modules
 cuckbot-auth.json
 .idea
+.gitignore

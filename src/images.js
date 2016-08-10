@@ -9,7 +9,7 @@ let images = {
         delete: true,
         type: "image",
         process: (bot, msg) => {
-            channel = msg.channel;
+            let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FEELSGOODMAN).catch(err => {
                 console.log('Error sending \'feelsgoodman meme\': ' + err);
@@ -21,7 +21,7 @@ let images = {
         delete: true,
         type: "image",
         process: (bot, msg) => {
-            channel = msg.channel;
+            let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FEELSBADMAN).catch(err => {
                 console.log('Error sending \'feelsbadman meme\': ' + err);
@@ -33,7 +33,7 @@ let images = {
         delete: true,
         type: "image",
         process: (bot, msg) => {
-            channel = msg.channel;
+            let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.FINISHME).catch(err => {
                 console.log('Error sending \'finishing sauce\': ' + err);
@@ -45,7 +45,7 @@ let images = {
         delete: true,
         type: "image",
         process: (bot, msg) => {
-            channel = msg.channel;
+            let channel = msg.channel;
 
             bot.sendFile(channel, CONSTANTS.NEEDFUL).catch(err => {
                 console.log('Error sending \'do the needful\': ' + err);
