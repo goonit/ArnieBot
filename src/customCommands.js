@@ -28,7 +28,14 @@ let serverC = c.black.bold,
     botC = c.magenta.bold;
 
 let removeFile = (file) => {
+    console.log(`file to remove: ${file}`);
     fs.unlink(file);
+};
+
+let commandExists = (trigger, serverId) => {
+    CustomCommand.filter({ serverId, commandText: trigger }).run({readMode: 'majority'}).then((result) => {
+        return result.length > 0;
+    });
 };
 
 let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
@@ -58,7 +65,7 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
         let duration = `00:00:${seconds}`;
         // create a child process to run the ffmpeg command to convert the downloaded file to an mp3 and store it on the server
         //todo: possibly change \\ to / for windows vs linux directory navigation
-        let childProcess = exec(`ffmpeg -i ${__dirname}\\temp.mp4 -acodec libmp3lame -ac 2 -ab 160k -ar 48000 -ss ${startTime} -t ${duration} ${resourcesPath}\\${cmdNoTrigger}.mp3`,
+        let childProcess = exec(`ffmpeg -i ${__dirname}/temp.mp4 -acodec libmp3lame -ac 2 -ab 160k -ar 48000 -ss ${startTime} -t ${duration} ${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`,
             (error, stdout, stderr) => {
                 if (error !== null) {
                     console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`There was an error trying to encode the command: ${cmdName}`)}`);
@@ -81,9 +88,9 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
             }
 
             // making sure the file was created successfully
-            fs.stat(`${resourcesPath}/${cmdNoTrigger}.mp3`, (err, stats) => {
+            fs.stat(`${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`, (err, stats) => {
                 if (err || !stats.isFile()) {
-                    console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`The file cannot be found after ffmpeg conversion: ${cmdNoTrigger}.mp3`)}`);
+                    console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`The file cannot be found after ffmpeg conversion: ${cmdNoTrigger}${msg.server.id}.mp3`)}`);
                     console.log(`Removing temp file downloaded from ytdl-core.`);
 
                     removeFile(`${__dirname}/temp.mp4`);
@@ -110,24 +117,30 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
 
 let customCommands = {
     "createcommand": {
-        usage: "~createcommand ~[commandName]|[type ('text', 'sound', 'image')]|[(imageUrl, textResponse, or youtubeUrl)]|[startTime (ex:00:00:00)]|[duration (ex: 15)}]",
+        usage: "~createcommand ~[commandName]|[type ('text', 'sound', 'image')]|[(imageUrl, textResponse, or youtubeUrl)]|[startTime (ex:00:00:00)]|[duration (ex: 07)}]",
         delete: true,
         type: "customCommand",
         process: (bot, msg, suffix) => {
             let adminsArray = Array.from(admins);
+
+            let commandInfo = suffix.split('|');
+            let trigger = commandInfo[0];
 
             if (!_.includes(adminsArray, msg.author.id.toString())) {
                 bot.reply(`Sorry, you don't have permissions to execute this command!`);
                 return;
             }
 
-            let commandInfo = suffix.split('|');
+            if(commandExists(trigger, msg.server.id)) {
+                bot.reply(msg, `Command '${trigger}' already exists!`);
+                return;
+            }
+
             if (commandInfo.length < 3) {
                 bot.reply(`Incorrect number of parameters passed into the command. Correct usage: ${this.usage}`);
                 return;
             }
 
-            let trigger = commandInfo[0];
             if (!trigger.startsWith('~')) {
                 bot.reply(`The new command must start with a prefix of '~'`);
                 return;
@@ -200,14 +213,22 @@ let customCommands = {
             }
 
             CustomCommand.filter({ serverId: msg.server.id, commandText: suffix}).run({readMode: 'majority'}).then((result) => {
-                result[0].delete().then((result) => {
-                    if (result.type == 'sound')
-                        removeFile(path.resolve('resources/', `${suffix.slice(1)}.mp3`));
+                console.log(`result: ${util.inspect(result)}`);
+                if(result.length > 0) {
+                    result[0].delete().then((result) => {
+                        if (result.commandType == 'sound') {
+                            removeFile(path.resolve('resources/', `${suffix.slice(1)}${msg.server.id}.mp3`));
+                        }
 
-                    bot.reply(msg, `Custom command '${suffix}' was successfully deleted`);
-                }).catch((err) => {
-                    console.log(`error: ${err}`);
-                });
+                        bot.reply(msg, `Custom command '${suffix}' was successfully deleted`);
+                    }).catch((err) => {
+                        console.log(`error: ${err}`);
+                    });
+                } else {
+                    bot.reply(msg, `Command '${suffix}' was not found!`);
+                    return;
+                }
+
             });
         }
     },
@@ -240,7 +261,7 @@ let customCommands = {
                 volume: 0.5
             };
 
-            let filename = `${dbCommand.commandText.substring(1)}.mp3`;
+            let filename = `${dbCommand.commandText.substring(1)}${msg.server.id}.mp3`;
 
             let file = path.resolve('resources/', filename);
 
