@@ -6,6 +6,12 @@ const chalk = require("chalk"),
     });
 const admins = require('./admins.json').admins;
 
+// import databaseModels
+const CustomCommand = require('./dbModels/customCommand.js');
+const thinky = require('./dbModels/thinky.js');
+const Query = thinky.Query;
+const util = require('util');
+
 let serverC = c.black.bold,
     channelC = c.green.bold,
     userC = c.cyan.bold,
@@ -24,15 +30,16 @@ exports.commandHandler = (bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) =
         processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions);
 };
 
-function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
+let processCmd = (bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) => {
 
-    var cmd = require('./bot.js').Commands[cmdTxt];
+    let Commands = require('./bot.js').Commands;
+    let cmd = Commands[cmdTxt];
     
     commandUsage(cmdTxt);
-    
-    if (cmd == null) bot.sendMessage(msg.channel.id, "There was an error with that command, Please try again");
+
+    if (cmd == null)
+        bot.sendMessage(msg.channel.id, "There was an error with that command, Please try again");
     else {
-        // if (!(admins.indexOf(msg.author.id) > -1) && cmd.cooldown > 0) {
         if (cmd.cooldown > 0) {
             if (!lastExecTime.hasOwnProperty(cmdTxt))
                 lastExecTime[cmdTxt] = {};
@@ -55,10 +62,21 @@ function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
                 lastExecTime[cmdTxt][msg.author.id] = currentTime;
             }
         }
-        // serverC("@" + msg.channel.guild.name + ":") +
-        console.log(channelC(" #" + msg.channel.name) + ": " + botC("@WishBot") + " - " + warningC(msgPrefix + "" + cmdTxt) + " was used by " + userC(msg.author.username));
+        console.log(channelC(" #" + msg.channel.name) + ": " + botC("@CuckBot") + " - " + warningC(msgPrefix + "" + cmdTxt) + " was used by " + userC(msg.author.username));
         try {
-            cmd.process(bot, msg, suffix, cmdIndex, cmdUsage, commandOptions);
+            if (cmd.type == "dbCommand") {
+                let cmdFromDb = CustomCommand.filter({ serverId: msg.server.id, commandText: `~${cmdTxt}` }).run().then((result) => {
+                    if (result == null || result.length == 0) {
+                        bot.reply(`DbCommand '~${cmdTxt} wasn't found in the database!`);
+                        return;
+                    } else {
+                        cmd.process(bot, msg, result[0]);
+                    }
+
+                });
+
+            } else
+                cmd.process(bot, msg, suffix, cmdIndex, cmdUsage, commandOptions);
             
             if (cmd.delete) {
                 bot.deleteMessage(msg).catch(err => {
@@ -70,15 +88,15 @@ function processCmd(bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) {
             console.log(errorC(err.stack));
         }
     }
-}
+};
 
 exports.processCmd = processCmd;
 
-function commandUsage(cmdTxt) {
+let commandUsage = (cmdTxt) => {
     if (cmdIndex.indexOf(cmdTxt) > -1) {
         cmdUsage[cmdIndex.indexOf(cmdTxt)]++;
     } else {
         cmdIndex.push(cmdTxt);
         cmdUsage.push(1);
     }
-}
+};

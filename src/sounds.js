@@ -27,6 +27,8 @@ let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
     });
 };
 
+exports.joinVoiceChannelAndPlay = joinVoiceChannelAndPlay;
+
 let lastChannel = null;
 let resolveVoiceChannel = (user, server) => {
 

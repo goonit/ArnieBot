@@ -4,12 +4,12 @@ const Discord = require("discord.js");
 
 const url = require('url');
 const _ = require('lodash');
-const Sounds = require('./src/sounds.js');
-const Images = require('./src/images.js');
-const Ascii = require('./src/asciiPictures.js');
-const Utilities = require('./src/utilities.js');
-const Urban = require('./src/urban.js');
+
 const processCmd = require('./CommandHandler.js').commandHandler;
+const util = require('util');
+const loadDbCommands = require('./src/loadDbCommands.js').loadDbCommands;
+
+const thinky = require('./dbModels/thinky.js');
 
 const auth = require('./cuckbot-auth.json');
 const admins = require('./admins.json').admins;
@@ -20,8 +20,6 @@ const client = new Discord.Client({
 
 let Commands = {};
 
-Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban);
-
 exports.Commands = Commands;
 
 client.on('warn', (m) => console.log('[warn]', m));
@@ -29,7 +27,10 @@ client.on('debug', (m) => console.log('[debug]', m));
 client.on('error', (m) => console.log('[error]', m));
 
 client.on('ready', () => {
-    console.log("Cuckbot is ready!");
+
+    // retrieve all custom commands from the database
+    loadDbCommands();
+
 });
 
 client.on('message', m => {
@@ -53,6 +54,8 @@ client.on('message', m => {
     let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
     let commandOptions = _.drop(formattedMsg.split(" "));
     let cmdTxt = formattedMsg.split(" ")[0].toLowerCase();
+
+    console.log(cmdTxt);
 
     if (Commands.hasOwnProperty(cmdTxt)){
         if (commandOptions.length > 2) {
