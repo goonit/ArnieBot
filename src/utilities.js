@@ -3,6 +3,8 @@
 const thinky = require('../dbModels/thinky.js');
 const CustomCommand = require('../dbModels/customCommand.js');
 const util = require('util');
+const admins = require('../admins.json');
+const _ = require('lodash');
 
 let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
     let message = "Here\'s a list of my commands:\n\n" +
@@ -101,6 +103,13 @@ let utilities = {
         type: "utilities",
         process: (bot, msg, commandOptions) => {
             let channel = msg.channel;
+
+            let adminsArray = Array.from(admins["admins"]);
+
+            if (!_.includes(adminsArray, msg.author.id.toString())) {
+                bot.reply(msg, "You don't have access to this command.  :middle_finger:");
+                return;
+            }
 
             console.log('commandOptions: ' + commandOptions);
             if (commandOptions.length > 2) {

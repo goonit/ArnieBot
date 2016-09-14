@@ -64,7 +64,6 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
 
         let duration = `00:00:${seconds}`;
         // create a child process to run the ffmpeg command to convert the downloaded file to an mp3 and store it on the server
-        //todo: possibly change \\ to / for windows vs linux directory navigation
         let childProcess = exec(`ffmpeg -i ${__dirname}/temp.mp4 -acodec libmp3lame -ac 2 -ab 160k -ar 48000 -ss ${startTime} -t ${duration} ${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`,
             (error, stdout, stderr) => {
                 if (error !== null) {
@@ -226,7 +225,6 @@ let customCommands = {
                     });
                 } else {
                     bot.reply(msg, `Command '${suffix}' was not found!`);
-                    return;
                 }
 
             });

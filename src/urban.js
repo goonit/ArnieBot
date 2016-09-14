@@ -19,7 +19,7 @@ let urban = {
 
                     let result = JSON.parse(json.res.text).list[0];
 
-                    if (result == null) {
+                    if (result === null) {
                         bot.sendMessage(channel, `\`\`\`\n${suffix} has no definition!\n\`\`\``);
                         return;
                     }
