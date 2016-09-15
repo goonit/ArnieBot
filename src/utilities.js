@@ -12,8 +12,13 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
         "To create a custom command, use the following format:\n" +
         "\`\`\`xl\n" +
         "~createcommand ~[commandname]|[commandtype ex: image, text, sound]|[imageurl, responsetext, yturl]|[starttime (format: 00:00:00)]|[duration (07 (seconds))\n" +
-        "Examples:\n\nsound:\n~createcommand ~test|sound|https://www.youtube.com/watch?v=dQw4w9WgXcQ|00:00:43|07\n" +
-        "image:\n~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif\n" +
+        "Examples:\n\nSound:\n~createcommand ~test|sound|https://www.youtube.com/watch?v=dQw4w9WgXcQ|00:00:43|07\n" +
+        "Image:\n~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif\n" +
+        "\`\`\`\n\n" +
+        "To delete a command, use the following command\n" +
+        "\`\`\`xl\n" +
+        "~deletecommand ~[commandname]\n" +
+        "Example:\n\nto delete a command that is triggered by typing ~facepalm, type '~deletecommand ~facepalm'\n" +
         "\`\`\`\n\n" +
         "__**Sounds**__\n\n\`\`\`xl\n" +
         "cena: BOO-DO-DO-DOOOOOO\n" +

@@ -253,6 +253,7 @@ let customCommands = {
     "dbsoundcommand": {
         usage: "~command",
         delete: true,
+        cooldown: 5,
         type: "dbCommand",
         process: (bot, msg, dbCommand) => {
             let options = {
