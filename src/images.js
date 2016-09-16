@@ -3,6 +3,12 @@
 const CONSTANTS = require('../constants.js');
 const woody = require('../resources/random.json').rapeywoody;
 
+let sendFileToChannel = (channel, file) => {
+    channel.sendFile(file).catch(err => {
+        console.log(`Error sending file: ${file} to channel. Error: ${err}`);
+    });
+};
+
 let images = {
     "feelsgoodman": {
         usage: "Displays feelsgoodman meme in chat",
@@ -11,9 +17,10 @@ let images = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.FEELSGOODMAN).catch(err => {
-                console.log('Error sending \'feelsgoodman meme\': ' + err);
-            });
+            sendFileToChannel(channel, CONSTANTS.FEELSGOODMAN);
+            // channel.sendFile(CONSTANTS.FEELSGOODMAN).catch(err => {
+            //     console.log('Error sending \'feelsgoodman meme\': ' + err);
+            // });
         }
     },
     "feelsbadman": {
@@ -23,9 +30,7 @@ let images = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.FEELSBADMAN).catch(err => {
-                console.log('Error sending \'feelsbadman meme\': ' + err);
-            });
+            sendFileToChannel(channel, CONSTANTS.FEELSBADMAN);
         }
     },
     "finishme": {
@@ -35,9 +40,7 @@ let images = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.FINISHME).catch(err => {
-                console.log('Error sending \'finishing sauce\': ' + err);
-            })
+            sendFileToChannel(channel, CONSTANTS.FINISHME);
         }
     },
     "needful": {
@@ -47,9 +50,7 @@ let images = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.NEEDFUL).catch(err => {
-                console.log('Error sending \'do the needful\': ' + err);
-            })
+            sendFileToChannel(channel, CONSTANTS.NEEDFUL);
         }
     },
     "woody": {
@@ -61,9 +62,7 @@ let images = {
 
             let number = Math.floor(Math.random() * (woody.length));
 
-            bot.sendFile(channel, woody[number]).catch(err => {
-                console.log('Error sending \'rapey woody\' meme: ' + err);
-            });
+            sendFileToChannel(channel, woody[number]);
         }
     },
     "fishmonster": {
@@ -73,9 +72,7 @@ let images = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendFile(channel, CONSTANTS.FISHMONSTER).catch(err => {
-                console.log('Error sending fishmonster Ted: ' + err);
-            })
+            sendFileToChannel(channel, CONSTANTS.FISHMONSTER);
         }
     }
 };

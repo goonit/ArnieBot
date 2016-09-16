@@ -22,15 +22,12 @@ let Commands = {};
 
 exports.Commands = Commands;
 
-client.on('warn', (m) => console.log('[warn]', m));
-client.on('debug', (m) => console.log('[debug]', m));
 client.on('error', (m) => console.log('[error]', m));
 
 client.on('ready', () => {
 
     // retrieve all custom commands from the database
     loadDbCommands();
-
 });
 
 client.on('message', m => {
@@ -41,8 +38,8 @@ client.on('message', m => {
     }
 
     if (m.content.startsWith("(╯°□°）╯︵ ┻━┻")) {
-        client.sendMessage(m.channel, "┬─┬﻿ ノ( ゜-゜ノ)");
-        client.reply(m, "Calm your shit!");
+        m.channel.sendMessage(m.channel, "┬─┬﻿ ノ( ゜-゜ノ)");
+        m.reply("Calm your shit!");
 
         return;
     }
@@ -54,8 +51,6 @@ client.on('message', m => {
     let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
     let commandOptions = _.drop(formattedMsg.split(" "));
     let cmdTxt = formattedMsg.split(" ")[0].toLowerCase();
-
-    console.log(cmdTxt);
 
     if (Commands.hasOwnProperty(cmdTxt)){
         if (commandOptions.length > 2) {
@@ -88,4 +83,4 @@ process.on('uncaughtException', function(err) {
     }
 });
 
-client.loginWithToken(auth.token);
+client.login(auth.token);

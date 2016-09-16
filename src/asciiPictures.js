@@ -2,7 +2,6 @@
 
 const dongerino = require("../resources/dongerinos.json").dongerino;
 
-
 let asciiPictures = {
     "salt": {
         usage: "Displays salt ascii picture in chat",
@@ -11,7 +10,7 @@ let asciiPictures = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendMessage(channel, '\n\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▄██████▄\n' +
+            channel.sendMessage('\n\n▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▄██████▄\n' +
                 '▒▒▒▒▒▒▒▒▒▒▄▄████████████▄\n' +
                 '▒▒▒▒▒▒▄▄██████████████████\n' +
                 '▒▒▒▄████▀▀▀██▀██▌███▀▀▀████\n' +
@@ -34,7 +33,7 @@ let asciiPictures = {
 
             let number = Math.floor(Math.random() * (dongerino.length));
 
-            bot.sendMessage(channel, dongerino[number]);
+            channel.sendMessage(dongerino[number]);
         }
     },
     "lenny": {
@@ -44,7 +43,7 @@ let asciiPictures = {
         process: (bot, msg) => {
             let channel = msg.channel;
 
-            bot.sendMessage(channel, "( ͡° ͜ʖ ͡°)");
+            channel.sendMessage("( ͡° ͜ʖ ͡°)");
         }
     }
 };

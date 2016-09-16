@@ -9,7 +9,6 @@ const admins = require('./admins.json').admins;
 // import databaseModels
 const CustomCommand = require('./dbModels/customCommand.js');
 const thinky = require('./dbModels/thinky.js');
-const Query = thinky.Query;
 const util = require('util');
 
 let serverC = c.black.bold,
@@ -51,10 +50,9 @@ let processCmd = (bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) => {
 
                 if (currentTime < (lastExecTime[cmdTxt][msg.author.id] + (cmd.cooldown * 1000))) {
                     if (cmdTxt == "gfym") {
-                        bot.sendMessage(msg.channel.id, "**" + msg.author.username + " **give your jaw a rest for a bit!");
+                        msg.channel.sendMessage("**" + msg.author.username + " **give your jaw a rest for a bit!");
                     } else {
-                        bot.sendMessage(msg.channel.id, "**" + msg.author.username + " **that command is currently on cooldown for **" +
-                            Math.round(((lastExecTime[cmdTxt][msg.author.id] + cmd.cooldown * 1000) - currentTime) / 1000) + "** more seconds.");
+                        msg.channel.sendMessage(`**${msg.author.username}** that command is currently on cooldown for **${Math.round(((lastExecTime[cmdTxt][msg.author.id] + cmd.cooldown * 1000) - currentTime) / 1000)}** more seconds.`);
                     }
 
                     return;
@@ -65,10 +63,10 @@ let processCmd = (bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) => {
         console.log(channelC(" #" + msg.channel.name) + ": " + botC("@CuckBot") + " - " + warningC(msgPrefix + "" + cmdTxt) + " was used by " + userC(msg.author.username));
         try {
             if (cmd.type == "dbCommand") {
-                let cmdFromDb = CustomCommand.filter({ serverId: msg.server.id, commandText: `~${cmdTxt}` }).run().then((result) => {
+                let cmdFromDb = CustomCommand.filter({ serverId: msg.guild.id, commandText: `~${cmdTxt}` }).run().then((result) => {
                     if (result == null || result.length == 0) {
-                        bot.reply(`DbCommand '~${cmdTxt} wasn't found in the database!`);
-                        return;
+                        msg.reply(`DbCommand '~${cmdTxt} wasn't found in the database!`);
+
                     } else {
                         cmd.process(bot, msg, result[0]);
                     }
@@ -79,12 +77,12 @@ let processCmd = (bot, msg, suffix, cmdTxt, msgPrefix, commandOptions) => {
                 cmd.process(bot, msg, suffix, cmdIndex, cmdUsage, commandOptions);
             
             if (cmd.delete) {
-                bot.deleteMessage(msg).catch(err => {
+                msg.delete().catch(err => {
                     console.log("error when deleting message: " + err);
                 });
             }
         } catch (err) {
-            bot.sendMessage(msg.channel.id, "```" + err + "```");
+            msg.channel.sendMessage("```" + err + "```");
             console.log(errorC(err.stack));
         }
     }

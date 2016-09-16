@@ -12,8 +12,13 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
         "To create a custom command, use the following format:\n" +
         "\`\`\`xl\n" +
         "~createcommand ~[commandname]|[commandtype ex: image, text, sound]|[imageurl, responsetext, yturl]|[starttime (format: 00:00:00)]|[duration (07 (seconds))\n" +
-        "Examples:\n\nsound:\n~createcommand ~test|sound|https://www.youtube.com/watch?v=dQw4w9WgXcQ|00:00:43|07\n" +
-        "image:\n~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif\n" +
+        "Examples:\n\nSound:\n~createcommand ~test|sound|https://www.youtube.com/watch?v=dQw4w9WgXcQ|00:00:43|07\n" +
+        "Image:\n~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif\n" +
+        "\`\`\`\n\n" +
+        "To delete a command, use the following command\n" +
+        "\`\`\`xl\n" +
+        "~deletecommand ~[commandname]\n" +
+        "Example:\n\nto delete a command that is triggered by typing ~facepalm, type '~deletecommand ~facepalm'\n" +
         "\`\`\`\n\n" +
         "__**Sounds**__\n\n\`\`\`xl\n" +
         "cena: BOO-DO-DO-DOOOOOO\n" +
@@ -93,7 +98,7 @@ let utilities = {
 
                 let message = buildHelpMessage(imageCommands, textCommands, soundCommands);
 
-                bot.sendMessage(msg.author, message).then(() => {bot.reply(msg, `I've sent you my commands via PM`)});
+                msg.author.sendMessage(message).then(() => { msg.reply(`I've sent you my commands via PM`)});
             });
         }
     },
@@ -107,25 +112,29 @@ let utilities = {
             let adminsArray = Array.from(admins["admins"]);
 
             if (!_.includes(adminsArray, msg.author.id.toString())) {
-                bot.reply(msg, "You don't have access to this command.  :middle_finger:");
+                msg.reply("You don't have access to this command.  :middle_finger:");
                 return;
             }
 
             console.log('commandOptions: ' + commandOptions);
             if (commandOptions.length > 2) {
-                bot.reply("Incorrect usage! There are too many parameters for that command.");
+                msg.reply("Incorrect usage! There are too many parameters for that command.");
                 return;
             }
 
             let numberToDelete = Number(commandOptions) + 1; // add one so it deletes the clear message as well
 
-            bot.getChannelLogs(channel, numberToDelete).then( messages => {
-                bot.deleteMessages(messages).catch( err => {
-                    console.log("there was a problem deleting messages: " + err);
-                });
-            }).catch(err => {
-                console.log('error collecting messages for removal: ' + err);
+            msg.channel.fetchMessages({limit: numberToDelete}).then(messages => {
+                msg.channel.bulkDelete(messages);
             });
+
+            // bot.getChannelLogs(channel, numberToDelete).then( messages => {
+            //     bot.deleteMessages(messages).catch( err => {
+            //         console.log("there was a problem deleting messages: " + err);
+            //     });
+            // }).catch(err => {
+            //     console.log('error collecting messages for removal: ' + err);
+            // });
         }
     },
     "reloadcommands": {

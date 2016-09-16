@@ -60,11 +60,11 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
     let tempFileDir = `${__dirname}/temp.mp4`;
 
     stream.on('finish', () => {
-        bot.reply(msg, `Converting command from video -> audio`);
+        msg.reply(`Converting command from video -> audio`);
 
         let duration = `00:00:${seconds}`;
         // create a child process to run the ffmpeg command to convert the downloaded file to an mp3 and store it on the server
-        let childProcess = exec(`ffmpeg -i ${__dirname}/temp.mp4 -acodec libmp3lame -ac 2 -ab 160k -ar 48000 -ss ${startTime} -t ${duration} ${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`,
+        let childProcess = exec(`ffmpeg -i ${__dirname}/temp.mp4 -acodec libmp3lame -ac 2 -ab 160k -ar 48000 -ss ${startTime} -t ${duration} ${resourcesPath}/${cmdNoTrigger}${msg.guild.id}.mp3`,
             (error, stdout, stderr) => {
                 if (error !== null) {
                     console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`There was an error trying to encode the command: ${cmdName}`)}`);
@@ -78,7 +78,7 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
         childProcess.on('exit', (code) => {
             if (code != 0) {
                 console.log(`${errorC(`ffmpeg exited with an error. Uh oh.`)}`);
-                bot.reply(msg, `Shit hit the fan when trying to convert the video to an audio file`);
+                msg.reply(`Shit hit the fan when trying to convert the video to an audio file`);
 
                 removeFile(tempFileDir);
                 removeFile(`${resourcesPath}\\${cmdNoTrigger}.mp3`);
@@ -89,11 +89,11 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
             // making sure the file was created successfully
             fs.stat(`${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`, (err, stats) => {
                 if (err || !stats.isFile()) {
-                    console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`The file cannot be found after ffmpeg conversion: ${cmdNoTrigger}${msg.server.id}.mp3`)}`);
+                    console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`The file cannot be found after ffmpeg conversion: ${cmdNoTrigger}${msg.guild.id}.mp3`)}`);
                     console.log(`Removing temp file downloaded from ytdl-core.`);
 
                     removeFile(`${__dirname}/temp.mp4`);
-                    bot.reply(msg, 'Something happened when trying to find the converted audio file.');
+                    msg.reply('Something happened when trying to find the converted audio file.');
 
                     return; // return because we don't want the database command to be created if the sound file to play cannot be found
                 } else {
@@ -107,7 +107,7 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
                 customCmd.save().then((result) => {
                     console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(cmdName)} was created by ${userC(msg.author.username)}`);
 
-                    bot.reply(msg, `New command '${cmdName}' was successfully created! Commands must be reloaded before the new commands may be used!`);
+                    msg.reply(`New command '${cmdName}' was successfully created! Commands must be reloaded before the new commands may be used!`);
                 });
             });
         });
@@ -126,32 +126,32 @@ let customCommands = {
             let trigger = commandInfo[0];
 
             if (!_.includes(adminsArray, msg.author.id.toString())) {
-                bot.reply(`Sorry, you don't have permissions to execute this command!`);
+                msg.reply(`Sorry, you don't have permissions to execute this command!`);
                 return;
             }
 
             if(commandExists(trigger, msg.server.id)) {
-                bot.reply(msg, `Command '${trigger}' already exists!`);
+                msg.reply(`Command '${trigger}' already exists!`);
                 return;
             }
 
             if (commandInfo.length < 3) {
-                bot.reply(`Incorrect number of parameters passed into the command. Correct usage: ${this.usage}`);
+                msg.reply(`Incorrect number of parameters passed into the command. Correct usage: ${this.usage}`);
                 return;
             }
 
             if (!trigger.startsWith('~')) {
-                bot.reply(`The new command must start with a prefix of '~'`);
+                msg.reply(`The new command must start with a prefix of '~'`);
                 return;
             }
 
             let commandType = commandInfo[1];
             if (commandType != 'text' || commandType != 'sound' || commandType != 'image') {
-                bot.reply(`Incorrect custom command type was passed in. Types accepted: 'text', 'image', 'sound'`);
+                msg.reply(`Incorrect custom command type was passed in. Types accepted: 'text', 'image', 'sound'`);
             }
 
             let customCmd = new CustomCommand({
-                serverId: msg.server.id,
+                serverId: msg.guild.id,
                 commandText: trigger,
                 createDate: moment().format("MM/DD/YYYY hh:mm:ss"),
                 createUser: msg.author.username
@@ -167,7 +167,7 @@ let customCommands = {
                     customCmd.save().then((result) => {
                         console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(trigger)} was created by ${userC(msg.author.username)}`);
 
-                        bot.reply(msg, `New command '${trigger}' was successfully created! Commands must be reloaded before the new commands may be used!`);
+                        msg.reply(`New command '${trigger}' was successfully created! Commands must be reloaded before the new commands may be used!`);
                     });
 
                     break;
@@ -177,7 +177,7 @@ let customCommands = {
                     let duration = commandInfo[4];
 
                     if (Date.parse(`01/01/2016 ${duration.toString()}`) > Date.parse("01/01/2016 00:00:07")) {
-                        bot.reply(msg, `The maximum duration for a sound command is 7 seconds!`);
+                        msg.reply(`The maximum duration for a sound command is 7 seconds!`);
                         return;
                     }
 
@@ -192,7 +192,7 @@ let customCommands = {
                     customCmd.save().then(() => {
                         console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(trigger)} was created by ${userC(msg.author.username)}`);
 
-                        bot.reply(msg, `New command '${trigger}' was successfully created! Commands must be reloaded before the new commands may be used!`);
+                        msg.reply(`New command '${trigger}' was successfully created! Commands must be reloaded before the new commands may be used!`);
                     });
 
                     break;
@@ -207,24 +207,24 @@ let customCommands = {
             let adminsArray = Array.from(admins);
 
             if (!_.includes(adminsArray, msg.author.id.toString())) {
-                bot.reply(`Sorry, you don't have permissions to execute this command!`);
+                msg.reply(`Sorry, you don't have permissions to execute this command!`);
                 return;
             }
 
-            CustomCommand.filter({ serverId: msg.server.id, commandText: suffix}).run({readMode: 'majority'}).then((result) => {
+            CustomCommand.filter({ serverId: msg.guild.id, commandText: suffix}).run({readMode: 'majority'}).then((result) => {
                 console.log(`result: ${util.inspect(result)}`);
                 if(result.length > 0) {
                     result[0].delete().then((result) => {
                         if (result.commandType == 'sound') {
-                            removeFile(path.resolve('resources/', `${suffix.slice(1)}${msg.server.id}.mp3`));
+                            removeFile(path.resolve('resources/', `${suffix.slice(1)}${msg.guild.id}.mp3`));
                         }
 
-                        bot.reply(msg, `Custom command '${suffix}' was successfully deleted`);
+                        msg.reply(`Custom command '${suffix}' was successfully deleted`);
                     }).catch((err) => {
                         console.log(`error: ${err}`);
                     });
                 } else {
-                    bot.reply(msg, `Command '${suffix}' was not found!`);
+                    msg.reply(`Command '${suffix}' was not found!`);
                 }
 
             });
@@ -235,7 +235,7 @@ let customCommands = {
         delete: true,
         type: "dbCommand",
         process: (bot, msg, dbCommand) => {
-            bot.sendFile(msg.channel, dbCommand.imageUrl).catch(err => {
+            msg.channel.sendFile(dbCommand.imageUrl).catch(err => {
                 console.log(`Error sending \'${dbCommand.commandText}\' from database: ${err}`);
             });
         }
@@ -245,7 +245,7 @@ let customCommands = {
         delete: true,
         type: "dbCommand",
         process: (bot, msg, dbCommand) => {
-            bot.sendMessage(msg.channel, dbCommand.commandResponse).catch(err => {
+            msg.channel.sendMessage(dbCommand.commandResponse).catch(err => {
                 console.log(`Error sending \'${dbCommand.commandText}\' from database: ${err}`);
             })
         }
@@ -259,7 +259,7 @@ let customCommands = {
                 volume: 0.5
             };
 
-            let filename = `${dbCommand.commandText.substring(1)}${msg.server.id}.mp3`;
+            let filename = `${dbCommand.commandText.substring(1)}${msg.guild.id}.mp3`;
 
             let file = path.resolve('resources/', filename);
 

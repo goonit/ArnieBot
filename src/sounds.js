@@ -3,48 +3,68 @@
 const path = require('path');
 const CONSTANTS = require('../constants.js');
 const watermalone = require('../resources/random.json').watermalone;
+const util = require('util');
 
 let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
 
-    let user = msg.author;
-    let server = msg.server;
+    // let user = msg.author;
+    // let server = msg.server;
 
-    let channel = resolveVoiceChannel(user, server);
+    // let channel = resolveVoiceChannel(user, server);
 
-    bot.joinVoiceChannel(channel).then( (connection) => {
-        connection.playFile(file, options).then(intent => {
-            intent.on('end', () => {
-                bot.leaveVoiceChannel(channel);
-            });
+    const voiceChannel = msg.author.voiceChannel;
+    if (!voiceChannel)
+        return msg.reply(`Please be in a voice channel first!`);
 
-            intent.on('error', () => {
-                console.log('Playback Error: ' + err);
-                bot.leaveVoiceChannel(channel);
-            })
+    voiceChannel.join().then((connection) => {
+        const dispatcher = connection.playFile(file, options);
+
+        dispatcher.on('end', () => {
+            voiceChannel.leave();
+        });
+
+        dispatcher.on('error', (err) => {
+           console.log(`Playback Error: ${util.inspect(err)}`);
+            voiceChannel.leave();
         });
     }).catch(err => {
         console.log("error: " + err);
     });
+
+    // bot.joinVoiceChannel(channel).then( (connection) => {
+    //     connection.playFile(file, options).then(intent => {
+    //         intent.on('end', () => {
+    //             bot.leaveVoiceChannel(channel);
+    //         });
+    //
+    //         intent.on('error', () => {
+    //             console.log('Playback Error: ' + err);
+    //             bot.leaveVoiceChannel(channel);
+    //         })
+    //     });
+    // }).catch(err => {
+    //     console.log("error: " + err);
+    // });
 };
 
 exports.joinVoiceChannelAndPlay = joinVoiceChannelAndPlay;
 
-let lastChannel = null;
-let resolveVoiceChannel = (user, server) => {
-
-    if ( user.voiceChannel ) {
-        return user.voiceChannel;
-    }
-    server.channels.filter( (channel) => {
-        return channel.type === 'voice';
-    })
-    .forEach( (channel) => {
-        if (channel.members.has('id', user.id))
-            lastChannel = channel;
-    });
-
-    return lastChannel;
-};
+// let lastChannel = null;
+// let resolveVoiceChannel = (user, server) => {
+//
+//     if ( user.voiceChannel ) {
+//         return user.voiceChannel;
+//     }
+//     server.channels.filter( (channel) => {
+//         return channel.type === 'voice';
+//     })
+//     .forEach( (channel) => {
+//         if (channel.members.has('id', user.id))
+//             lastChannel = channel;
+//     });
+//
+//     return lastChannel;
+// };
 
 let sounds = {
     "cenahorn": {

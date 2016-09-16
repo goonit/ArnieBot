@@ -15,17 +15,15 @@ let urban = {
         process: (bot, msg, suffix) => {
             agent('GET', `${urbanApi}${suffix}`)
                 .then(json => {
-                    let channel = msg.channel;
-
                     let result = JSON.parse(json.res.text).list[0];
 
                     if (result === null) {
-                        bot.sendMessage(channel, `\`\`\`\n${suffix} has no definition!\n\`\`\``);
+                        msg.channel.sendMessage(`\`\`\`\n${suffix} has no definition!\n\`\`\``);
                         return;
                     }
 
                     let response = `**${suffix}**\n\n\`\`\`\n${result.definition}\n\`\`\`\n\n**Example:** ${result.example}\n<${result.permalink}>`;
-                    bot.sendMessage(channel, response);
+                    msg.channel.sendMessage(response);
                 });
         }
     }
