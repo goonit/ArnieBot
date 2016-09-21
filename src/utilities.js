@@ -106,8 +106,8 @@ let utilities = {
         usage: "~clear (number of messages to remove from the chat log)",
         delete: true,
         type: "utilities",
-        process: (bot, msg, commandOptions) => {
-            let channel = msg.channel;
+        process: (bot, msg, suffix) => {
+            let args = suffix.split(" ");
 
             let adminsArray = Array.from(admins["admins"]);
 
@@ -116,17 +116,36 @@ let utilities = {
                 return;
             }
 
-            console.log('commandOptions: ' + commandOptions);
-            if (commandOptions.length > 2) {
+            console.log('commandOptions: ' + suffix);
+            if (args.length > 2) {
                 msg.reply("Incorrect usage! There are too many parameters for that command.");
                 return;
             }
 
-            let numberToDelete = Number(commandOptions) + 1; // add one so it deletes the clear message as well
 
-            msg.channel.fetchMessages({limit: numberToDelete}).then(messages => {
-                msg.channel.bulkDelete(messages);
-            });
+            let numberToDelete = Number(args[0]);
+
+            // there was a user mentioned, so we delete that specific users messages.
+            if (args.length == 2) {
+                let user = msg.mentions.users.first();
+                let counter = 0;
+                msg.channel.fetchMessages({limit: numberToDelete * 3}).then(messages => {
+                    let deleteMessages = messages.filter(message => {
+                        if (counter < numberToDelete && user.id == message.author.id) {
+                            return message;
+                        } else {
+                        }
+                    });
+
+                    msg.channel.bulkDelete(deleteMessages).then(msgs => {
+                        console.log(`Removed the last ${msgs.size()} messages from ${user.username}`);
+                    });
+                });
+            } else { // do a regular bulk delete
+                msg.channel.fetchMessages({limit: numberToDelete}).then(messages => {
+                    msg.channel.bulkDelete(messages);
+                });
+            }
 
             // bot.getChannelLogs(channel, numberToDelete).then( messages => {
             //     bot.deleteMessages(messages).catch( err => {

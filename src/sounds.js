@@ -12,19 +12,25 @@ let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
 
     // let channel = resolveVoiceChannel(user, server);
 
-    const voiceChannel = msg.author.voiceChannel;
+    const voiceChannel = msg.member.voiceChannel;
     if (!voiceChannel)
         return msg.reply(`Please be in a voice channel first!`);
 
     voiceChannel.join().then((connection) => {
+        console.log(`joined voiceChannel`);
         const dispatcher = connection.playFile(file, options);
 
+        dispatcher.on('start', () => {
+            console.log(`playing has started`);
+        });
+
         dispatcher.on('end', () => {
+            console.log(`playing has 'ended'`);
             voiceChannel.leave();
         });
 
         dispatcher.on('error', (err) => {
-           console.log(`Playback Error: ${util.inspect(err)}`);
+            console.log(`Playback Error: ${util.inspect(err)}`);
             voiceChannel.leave();
         });
     }).catch(err => {
