@@ -1,19 +1,10 @@
-"use strict";
-
-const Discord = require("discord.js");
-
-const url = require('url');
+const Discord = require('discord.js');
 const _ = require('lodash');
 
 const processCmd = require('./CommandHandler.js').commandHandler;
-const util = require('util');
 const loadDbCommands = require('./src/loadDbCommands.js').loadDbCommands;
 
-const thinky = require('./dbModels/thinky.js');
-
 const auth = require('./cuckbot-auth.json');
-const admins = require('./admins.json').admins;
-
 const client = new Discord.Client();
 
 let Commands = {};
@@ -23,41 +14,39 @@ exports.Commands = Commands;
 client.on('error', (m) => console.log('[error]', m));
 
 client.on('ready', () => {
-
-    // retrieve all custom commands from the database
-    loadDbCommands();
+  // retrieve all custom commands from the database
+  loadDbCommands();
 });
 
 client.on('message', m => {
+  if (client.user.id === m.author.id) {
+    console.log('returning because client id and user id are the same');
+    return;
+  }
 
-    if (client.user.id == m.author.id) {
-        console.log('returning because client id and user id are the same');
-        return;
+  if (m.content.startsWith('(╯°□°）╯︵ ┻━┻')) {
+    m.channel.sendMessage(m.channel, '┬─┬﻿ ノ( ゜-゜ノ)');
+    m.reply('Calm your shit!');
+
+    return;
+  }
+
+  const msgPrefix = '~';
+
+  if (!m.content.startsWith(msgPrefix)) return;
+
+  let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
+  let commandOptions = _.drop(formattedMsg.split(' '));
+  let cmdTxt = formattedMsg.split(' ')[0].toLowerCase();
+
+  if (Commands.hasOwnProperty(cmdTxt)) {
+    if (commandOptions.length > 2) {
+      commandOptions.shift();
     }
 
-    if (m.content.startsWith("(╯°□°）╯︵ ┻━┻")) {
-        m.channel.sendMessage(m.channel, "┬─┬﻿ ノ( ゜-゜ノ)");
-        m.reply("Calm your shit!");
-
-        return;
-    }
-
-    const msgPrefix = "~";
-
-    if (!m.content.startsWith(msgPrefix)) return;
-
-    let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
-    let commandOptions = _.drop(formattedMsg.split(" "));
-    let cmdTxt = formattedMsg.split(" ")[0].toLowerCase();
-
-    if (Commands.hasOwnProperty(cmdTxt)){
-        if (commandOptions.length > 2) {
-            commandOptions.shift();
-        }
-
-        console.log("commandOptions: " + commandOptions.toString());
-        processCmd(client, m, formattedMsg.substring((formattedMsg.split(" ")[0]).length + 1), cmdTxt, msgPrefix, commandOptions);
-    }
+    console.log(`commandOptions: ${commandOptions.toString()}`);
+    processCmd(client, m, formattedMsg.substring((formattedMsg.split(' ')[0]).length + 1), cmdTxt, msgPrefix, commandOptions);
+  }
 });
 
 // process.on('uncaughtException', function(err) {

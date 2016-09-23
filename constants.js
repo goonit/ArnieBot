@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 const path = require('path');
 
-const FEELSGOODMAN  = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
+const FEELSGOODMAN = 'http://i1.kym-cdn.com/photos/images/newsfeed/000/591/928/94f.png';
 const FEELSBADMAN = 'https://openclipart.org/image/2400px/svg_to_png/222252/feels.png';
 const FINISHME = 'https://cdn.discordapp.com/attachments/144607997740449792/197791531719983106/CpBzK69.png';
 const NEEDFUL = 'https://cdn.discordapp.com/attachments/144560280125308928/197830548570243073/67391367.png';
@@ -28,28 +28,28 @@ const OHSHIT = path.resolve('resources/', 'ohshit.mp4');
 const DICKSOUT = path.resolve('resources/', 'dicksout.mp3');
 
 module.exports = {
-    FEELSGOODMAN: FEELSGOODMAN,
-    FEELSBADMAN: FEELSBADMAN,
-    FINISHME: FINISHME,
-    NEEDFUL: NEEDFUL,
-    FISHMONSTER: FISHMONSTER,
-    CENAHORN: CENAHORN,
-    CENA: CENA,
-    SOB: SOB,
-    BORIS: BORIS,
-    BS: BS,
-    COCAINUM: COCAINUM,
-    DINOS: DINOS,
-    FUA: FUA,
-    GFYM: GFYM,
-    STFU: STFU,
-    SPINE: SPINE,
-    PAWNCH: PAWNCH,
-    ASSLICK: ASSLICK,
-    FUCKENTER: FUCKENTER,
-    DICKPUNCH: DICKPUNCH,
-    YESNIGGA: YESNIGGA,
-    YESLAWD: YESLAWD,
-    OHSHIT: OHSHIT,
-    DICKSOUT: DICKSOUT
+  FEELSGOODMAN: FEELSGOODMAN,
+  FEELSBADMAN: FEELSBADMAN,
+  FINISHME: FINISHME,
+  NEEDFUL: NEEDFUL,
+  FISHMONSTER: FISHMONSTER,
+  CENAHORN: CENAHORN,
+  CENA: CENA,
+  SOB: SOB,
+  BORIS: BORIS,
+  BS: BS,
+  COCAINUM: COCAINUM,
+  DINOS: DINOS,
+  FUA: FUA,
+  GFYM: GFYM,
+  STFU: STFU,
+  SPINE: SPINE,
+  PAWNCH: PAWNCH,
+  ASSLICK: ASSLICK,
+  FUCKENTER: FUCKENTER,
+  DICKPUNCH: DICKPUNCH,
+  YESNIGGA: YESNIGGA,
+  YESLAWD: YESLAWD,
+  OHSHIT: OHSHIT,
+  DICKSOUT: DICKSOUT
 };
