@@ -89,7 +89,7 @@ let utilities = {
     delete: false,
     type: 'utilities',
     process: (bot, msg) => {
-      CustomCommand.filter({serverId: msg.server.id}).run({readMode: 'majority'}).then((result) => {
+      CustomCommand.filter({serverId: msg.guild.id}).run({readMode: 'majority'}).then((result) => {
         let imageCommands = result.filter((cmd) => {
           return cmd.commandType === 'image';
         });
