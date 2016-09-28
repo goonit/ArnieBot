@@ -6,26 +6,18 @@ const watermalone = require('../resources/random.json').watermalone;
 const util = require('util');
 
 let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
-  // let user = msg.author;
-  // let server = msg.server;
-
-  // let channel = resolveVoiceChannel(user, server);
-
   const voiceChannel = msg.member.voiceChannel;
   if (!voiceChannel) {
     return msg.reply(`Please be in a voice channel first!`);
   }
 
   voiceChannel.join().then((connection) => {
-    console.log(`joined voiceChannel`);
     const dispatcher = connection.playFile(file, options);
 
     dispatcher.on('start', () => {
-      console.log(`playing has started`);
     });
 
     dispatcher.on('end', () => {
-      console.log(`playing has 'ended'`);
       voiceChannel.leave();
     });
 
@@ -36,41 +28,9 @@ let joinVoiceChannelAndPlay = (bot, msg, file, options) => {
   }).catch(err => {
     console.log(`error: ${err}`);
   });
-
-  // bot.joinVoiceChannel(channel).then( (connection) => {
-  //     connection.playFile(file, options).then(intent => {
-  //         intent.on('end', () => {
-  //             bot.leaveVoiceChannel(channel);
-  //         });
-  //
-  //         intent.on('error', () => {
-  //             console.log('Playback Error: ' + err);
-  //             bot.leaveVoiceChannel(channel);
-  //         })
-  //     });
-  // }).catch(err => {
-  //     console.log('error: ' + err);
-  // });
 };
 
 exports.joinVoiceChannelAndPlay = joinVoiceChannelAndPlay;
-
-// let lastChannel = null;
-// let resolveVoiceChannel = (user, server) => {
-//
-//     if ( user.voiceChannel ) {
-//         return user.voiceChannel;
-//     }
-//     server.channels.filter( (channel) => {
-//         return channel.type === 'voice';
-//     })
-//     .forEach( (channel) => {
-//         if (channel.members.has('id', user.id))
-//             lastChannel = channel;
-//     });
-//
-//     return lastChannel;
-// };
 
 let sounds = {
   'cenahorn': {

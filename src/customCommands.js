@@ -26,7 +26,6 @@ let errorC = c.red.bold;
 let botC = c.magenta.bold;
 
 let removeFile = (file) => {
-  console.log(`file to remove: ${file}`);
   fs.unlink(file);
 };
 
@@ -85,7 +84,7 @@ let newSoundCommand = (bot, msg, commandInfo, customCmd) => {
       }
 
       // making sure the file was created successfully
-      fs.stat(`${resourcesPath}/${cmdNoTrigger}${msg.server.id}.mp3`, (err, stats) => {
+      fs.stat(`${resourcesPath}/${cmdNoTrigger}${msg.guild.id}.mp3`, (err, stats) => {
         if (err || !stats.isFile()) {
           console.log(`${channelC(` # ${msg.channel.name}`)}: ${botC(`@CuckBot`)} - ${errorC(`The file cannot be found after ffmpeg conversion: ${cmdNoTrigger}${msg.guild.id}.mp3`)}`);
           console.log(`Removing temp file downloaded from ytdl-core.`);
@@ -127,7 +126,7 @@ let customCommands = {
         return;
       }
 
-      if (commandExists(trigger, msg.server.id)) {
+      if (commandExists(trigger, msg.guild.id)) {
         msg.reply(`Command '${trigger}' already exists!`);
         return;
       }
@@ -142,9 +141,10 @@ let customCommands = {
         return;
       }
 
-      let commandType = commandInfo[1];
-      if (commandType !== 'text' || commandType !== 'sound' || commandType !== 'image') {
+      let commandType = commandInfo[1].toString();
+      if (commandType !== 'text' && commandType !== 'sound' && commandType !== 'image') {
         msg.reply(`Incorrect custom command type was passed in. Types accepted: 'text', 'image', 'sound'`);
+        return;
       }
 
       let customCmd = new CustomCommand({
@@ -153,8 +153,6 @@ let customCommands = {
         createDate: moment().format('MM/DD/YYYY hh:mm:ss'),
         createUser: msg.author.username
       });
-
-      console.log(`commandInfo: ${commandInfo}`);
 
       switch (commandType) {
         case 'text':
@@ -209,7 +207,6 @@ let customCommands = {
       }
 
       CustomCommand.filter({serverId: msg.guild.id, commandText: suffix}).run({readMode: 'majority'}).then((result) => {
-        console.log(`result: ${util.inspect(result)}`);
         if (result.length > 0) {
           result[0].delete().then((result) => {
             if (result.commandType === 'sound') {
