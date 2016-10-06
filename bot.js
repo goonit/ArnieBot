@@ -27,7 +27,7 @@ client.on('message', m => {
   }
 
   if (m.content.startsWith('(╯°□°）╯︵ ┻━┻')) {
-    m.channel.sendMessage(m.channel, '┬─┬﻿ ノ( ゜-゜ノ)');
+    m.channel.sendMessage('┬─┬﻿ ノ( ゜-゜ノ)');
     m.reply('Calm your shit!');
 
     return;

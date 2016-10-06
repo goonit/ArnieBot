@@ -151,14 +151,6 @@ let utilities = {
           msg.channel.bulkDelete(messages);
         });
       }
-
-      // bot.getChannelLogs(channel, numberToDelete).then( messages => {
-      //     bot.deleteMessages(messages).catch( err => {
-      //         console.log("there was a problem deleting messages: " + err);
-      //     });
-      // }).catch(err => {
-      //     console.log('error collecting messages for removal: ' + err);
-      // });
     }
   },
   'reloadcommands': {
