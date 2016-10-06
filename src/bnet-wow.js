@@ -3,6 +3,8 @@
 const bnet = require('battlenet-api')();
 const apikey = require('../cuckbot-auth.json').bnetApiKey;
 const util = require('util');
+const wowClasses = require('../resources/wow-static-info.json').classes;
+const wowRaces = require('../resources/wow-static-info.json').races;
 // const superagent = require('superagent');
 
 let WowArmory = {
@@ -11,7 +13,7 @@ let WowArmory = {
     delete: true,
     type: 'battle.net api',
     process: (bot, msg) => {
-      let commandOptions = msg.split(' ')[1].split('|');
+      let commandOptions = msg.content.split(' ')[1].split('|');
       if (commandOptions.length > 2 || commandOptions.length < 2) {
         msg.reply(`Incorrect number of parameters passed into the command. Correct usage: ${this.usage}`);
         return;
@@ -25,11 +27,25 @@ let WowArmory = {
         realm,
         name
       };
-      bnet.wow.character.profile(params, {apikey}, function (err, body, res) {
+      bnet.wow.character.items(params, {apikey}, function (err, body, res) {
         if (err) {
           console.log(`err: ${util.inspect(err)}`);
+          msg.reply(`Something happened when trying to retrieve data, I blame Ben`);
+          return;
         }
-        console.log(util.inspect(body));
+        let playerItemLvl = body.items.averageItemLevel;
+        let playerEqItemLvl = body.items.averageItemLevelEquipped;
+        let playerClass = wowClasses.find(c => { return c.id === body.class; }).name;
+        let playerRace = wowRaces.find(race => { return race.id === body.race; }).name;
+        msg.channel.sendMessage(`__**Player Information**__
+        
+\`\`\`Realm: ${body.realm}
+Player Name: ${body.name}
+Character: ${body.gender === 0 ? 'Male' : 'Female'} ${playerRace} ${playerClass}
+Average Item Level: ${playerItemLvl}
+Average Equipped Item Level: ${playerEqItemLvl}
+\`\`\``);
+        // console.log(util.inspect(body));
       });
     }
   }

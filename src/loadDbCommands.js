@@ -7,6 +7,7 @@ const Ascii = require('./asciiPictures.js');
 const Utilities = require('./utilities.js');
 const Urban = require('./urban.js');
 const CustomCommands = require('./customCommands.js');
+const WowArmory = require('./bnet-wow.js');
 
 let loadDbCommands = () => {
   CustomCommandModel.run({readMode: 'majority'}).then((dbCommands) => {
@@ -30,7 +31,7 @@ let loadDbCommands = () => {
 
     const Commands = require('../bot.js').Commands;
 
-    Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban, CustomCommands.customCommands, dbCmdObj);
+    Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban, CustomCommands.customCommands, WowArmory.WowArmory, dbCmdObj);
     // console.log(`Commands: ${util.inspect(Commands)}`);
     console.log('Cuckbot is ready!');
   });
