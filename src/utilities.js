@@ -79,6 +79,9 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
 
     message += '```\n';
   }
+  message += '__**MISC**__\n\n```xl\n';
+  message += 'wowarmory: World of Warcraft character information.\n' +
+      'Usage: ~wowarmory (realm)|(character name)```\n';
 
   return message;
 };

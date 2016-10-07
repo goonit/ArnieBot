@@ -27,7 +27,7 @@ let WowArmory = {
         realm,
         name
       };
-      bnet.wow.character.items(params, {apikey}, function (err, body, res) {
+      bnet.wow.character.items(params, {apikey}, function (err, body) {
         if (err) {
           console.log(`err: ${util.inspect(err)}`);
           msg.reply(`Something happened when trying to retrieve data, I blame Ben`);
@@ -37,15 +37,18 @@ let WowArmory = {
         let playerEqItemLvl = body.items.averageItemLevelEquipped;
         let playerClass = wowClasses.find(c => { return c.id === body.class; }).name;
         let playerRace = wowRaces.find(race => { return race.id === body.race; }).name;
+        let baseArmoryUrl = 'http://us.battle.net/wow/character/';
         msg.channel.sendMessage(`__**Player Information**__
         
-\`\`\`Realm: ${body.realm}
+\`\`\`ldif
+Realm: ${body.realm}
 Player Name: ${body.name}
 Character: ${body.gender === 0 ? 'Male' : 'Female'} ${playerRace} ${playerClass}
 Average Item Level: ${playerItemLvl}
 Average Equipped Item Level: ${playerEqItemLvl}
-\`\`\``);
-        // console.log(util.inspect(body));
+\`\`\`
+
+Armory Link: <${baseArmoryUrl}${body.realm}/${body.name}/simple>`);
       });
     }
   }
