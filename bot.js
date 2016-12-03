@@ -20,6 +20,15 @@ client.on('ready', () => {
   loadDbCommands();
 });
 
+client.on('guildMemberAdd', (guild, member) => {
+  let role = guild.roles.find('name', 'Member');
+  if (!role) {
+    guild.defaultChannel.sendMessage(`Failure when attemping to assign ${member.user.username} a default role!`);
+    return member.user.sendMessage(`Welcome to No Senpai Yamete you cuck!`);
+  }
+  member.addRole(role);
+});
+
 client.on('message', m => {
   if (client.user.id === m.author.id) {
     console.log('returning because client id and user id are the same');
