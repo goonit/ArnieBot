@@ -15,20 +15,20 @@ let columnify = (arr, cols, fields, type) => {
 
   // const columnWidth = Math.floor(maxChars / cols);
 
-  let counter = 1;
+	let counter = 1;
   // let returnString = '';
   // let table = new AsciiTable();
   // let tableRow = [];
   // let fields = [];
-  cols += 1;
-  for (let ele of arr) {
-    console.log(`counter: ${counter}`);
-    counter++;
-    if (arr.indexOf(ele) === 0) {
-      fields.push({name: type, value: ele, inline: true});
-    } else {
-      fields.push({name: '\u200b', value: ele, inline: true});
-    }
+	cols += 1;
+	for(let ele of arr) {
+		console.log(`counter: ${counter}`);
+		counter++;
+		if(arr.indexOf(ele) === 0) {
+			fields.push({ name: type, value: ele, inline: true });
+		} else {
+			fields.push({ name: '\u200b', value: ele, inline: true });
+		}
     // if (counter % cols === 0) {
     //   fields.push(tableRow);
     //   tableRow = [];
@@ -43,16 +43,16 @@ let columnify = (arr, cols, fields, type) => {
       // tableRow = [];
       // returnString += '\n';
     // }
-  }
+	}
   // return returnString;
 };
 
 let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
-  let creatingCommands = '*~createcommand ~[commandname]|[commandtype (image, text, sound)]|[imageurl, text, yturl]|[starttime (format: 00:00:00)]|[duration (seconds)*\n' +
+	let creatingCommands = '*~createcommand ~[commandname]|[commandtype (image, text, sound)]|[imageurl, text, yturl]|[starttime (format: 00:00:00)]|[duration (seconds)*\n' +
     'Ex:\t\t\t*~createcommand ~test|sound|<youtube link>|00:00:43|07*\n' +
     '\t\t\t*~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif*';
 
-  let deletingCommands = '*~deletecommand ~[commandname]*\n' +
+	let deletingCommands = '*~deletecommand ~[commandname]*\n' +
     'Ex:    *~deletecommand ~facepalm*';
 
   // let defaultSounds = 'cena: BOO-DO-DO-DOOOOOO\n' +
@@ -84,39 +84,37 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
   // console.log(util.inspect(soundCommands));
 
   // let customSounds = '';
-  let allSoundsText = [];
-  if (soundCommands.length > 0) {
-    let customSoundsText = soundCommands.map((customSound) => {
-      return customSound.commandText.slice(1);
-    });
+	let allSoundsText = [];
+	if(soundCommands.length > 0) {
+		let customSoundsText = soundCommands.map((customSound) => customSound.commandText.slice(1));
 
-    allSoundsText = customSoundsText.concat(Object.keys(sounds));
+		allSoundsText = customSoundsText.concat(Object.keys(sounds));
     // for (let sound of allSoundsText) {
     //   // customSounds += `${sound}\t\t`;
     // }
-  }
-  let embed = {
-    title: 'Cuckbot Commands',
-    type: 'rich',
-    color: 0x4286f4,
+	}
+	let embed = {
+		title: 'Cuckbot Commands',
+		type: 'rich',
+		color: 0x4286f4,
     // description: 'This is a test embed',
-    fields: [
-      {
-        name: 'Prefix',
-        value: 'Command prefix (trigger) character is \'~\''
-      },
-      {
-        name: 'Creating Custom Commands',
-        value: creatingCommands
-      },
-      {
-        name: 'Deleting Commands',
-        value: deletingCommands
-      },
-      {
-        name: '\u200b',
-        value: '\u200b'
-      }
+		fields: [
+			{
+				name: 'Prefix',
+				value: 'Command prefix (trigger) character is \'~\''
+			},
+			{
+				name: 'Creating Custom Commands',
+				value: creatingCommands
+			},
+			{
+				name: 'Deleting Commands',
+				value: deletingCommands
+			},
+			{
+				name: '\u200b',
+				value: '\u200b'
+			}
       // {
       //   name: 'Sounds',
       //   value: defaultSounds
@@ -142,11 +140,11 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
       //   name: 'Custom Text/ASCII',
       //   value: customText
       // }
-    ]
-  };
+		]
+	};
 
-  columnify(allSoundsText, 3, embed.fields, 'Sounds');
-  embed.fields.push({name: '\u200b', value: '\u200b'});
+	columnify(allSoundsText, 3, embed.fields, 'Sounds');
+	embed.fields.push({ name: '\u200b', value: '\u200b' });
   // console.log(soundTable);
 
   // console.log(`soundFields: ${embed.fields}`);
@@ -189,93 +187,82 @@ let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
   // message += 'wowarmory: World of Warcraft character information.\n' +
   //     'Usage: ~wowarmory (realm)|(character name)\n';
 
-  return embed;
+	return embed;
 };
 
 let utilities = {
-  'cuckhelp': {
-    usage: '~cuckhelp',
-    delete: false,
-    type: 'utilities',
-    process: (bot, msg) => {
-      CustomCommand.filter({serverId: msg.guild.id}).run({readMode: 'majority'}).then((result) => {
-        let imageCommands = result.filter((cmd) => {
-          return cmd.commandType === 'image';
-        });
-        let textCommands = result.filter((cmd) => {
-          return cmd.commandType === 'text';
-        });
-        let soundCommands = result.filter((cmd) => {
-          return cmd.commandType === 'sound';
-        });
+	cuckhelp: {
+		usage: '~cuckhelp',
+		delete: false,
+		type: 'utilities',
+		process: (bot, msg) => {
+			CustomCommand.filter({ serverId: msg.guild.id }).run({ readMode: 'majority' }).then((result) => {
+				let imageCommands = result.filter((cmd) => cmd.commandType === 'image');
+				let textCommands = result.filter((cmd) => cmd.commandType === 'text');
+				let soundCommands = result.filter((cmd) => cmd.commandType === 'sound');
 
-        let embed = buildHelpMessage(imageCommands, textCommands, soundCommands);
+				let embed = buildHelpMessage(imageCommands, textCommands, soundCommands);
 
         // console.log(util.inspect(embed));
 
-        msg.author.sendMessage('', {embed}).then(() => {
-          msg.reply(`I've sent you my commands via PM`);
-        }).catch(err => {
-          console.log(err);
-        });
-      });
-    }
-  },
-  'clear': {
-    usage: '~clear (number of messages to remove from the chat log)',
-    delete: true,
-    type: 'utilities',
-    process: (bot, msg, suffix) => {
-      let args = suffix.split(' ');
+				msg.author.sendMessage('', { embed }).then(() => {
+					msg.reply(`I've sent you my commands via PM`);
+				}).catch(err => {
+					console.log(err);
+				});
+			});
+		}
+	},
+	clear: {
+		usage: '~clear (number of messages to remove from the chat log)',
+		delete: true,
+		type: 'utilities',
+		process: (bot, msg, suffix) => {
+			let args = suffix.split(' ');
 
-      let adminsArray = Array.from(admins['admins']);
+			let adminsArray = Array.from(admins.admins);
 
-      if (!_.includes(adminsArray, msg.author.id.toString())) {
-        msg.reply('You don\'t have access to this command.  :middle_finger:');
-        return;
-      }
+			if(!_.includes(adminsArray, msg.author.id.toString())) {
+				msg.reply('You don\'t have access to this command.  :middle_finger:');
+				return;
+			}
 
-      console.log('commandOptions: ' + suffix);
-      if (args.length > 2) {
-        msg.reply('Incorrect usage! There are too many parameters for that command.');
-        return;
-      }
+			console.log(`commandOptions: ${suffix}`);
+			if(args.length > 2) {
+				msg.reply('Incorrect usage! There are too many parameters for that command.');
+				return;
+			}
 
-      let numberToDelete = Number(args[0]);
+			let numberToDelete = Number(args[0]);
 
       // there was a user mentioned, so we delete that specific users messages.
-      if (args.length === 2) {
-        let user = msg.mentions.users.first();
-        let counter = 0;
-        msg.channel.fetchMessages({limit: numberToDelete * 3}).then(messages => {
-          let deleteMessages = messages.filter(message => {
-            if (counter < numberToDelete && user.id === message.author.id) {
-              return message;
-            } else {
-            }
-          });
+			if(args.length === 2) {
+				let user = msg.mentions.users.first();
+				let counter = 0;
+				msg.channel.fetchMessages({ limit: numberToDelete * 3 }).then(messages => {
+					let deleteMessages = messages.filter(message => counter < numberToDelete && user.id === message.author.id);
 
-          msg.channel.bulkDelete(deleteMessages).then(msgs => {
-            console.log(`Removed the last ${msgs.size()} messages from ${user.username}`);
-          });
-        });
-      } else { // do a regular bulk delete
-        msg.channel.fetchMessages({limit: numberToDelete}).then(messages => {
-          msg.channel.bulkDelete(messages);
-        });
-      }
-    }
-  },
-  'reloadcommands': {
-    usage: '~reloadcommands',
-    delete: true,
-    type: 'utilities',
-    process: () => {
-      const loadDbCommands = require('./loadDbCommands.js').loadDbCommands;
+					msg.channel.bulkDelete(deleteMessages).then(msgs => {
+						console.log(`Removed the last ${msgs.size()} messages from ${user.username}`);
+					});
+				});
+			} else { // do a regular bulk delete
+				msg.channel.fetchMessages({ limit: numberToDelete }).then(messages => {
+					msg.channel.bulkDelete(messages);
+				});
+			}
+		}
+	},
+	reloadcommands: {
+		usage: '~reloadcommands',
+		delete: true,
+		type: 'utilities',
+		process: () => {
+			const loadDbCommands = require('./loadDbCommands.js').loadDbCommands;
 
-      loadDbCommands();
-    }
-  }
+			loadDbCommands();
+		}
+	}
 };
 
 exports.utilities = utilities;
