@@ -5,7 +5,7 @@ const apikey = require('../cuckbot-auth.json').bnetApiKey;
 const util = require('util');
 const wowClasses = require('../resources/wow-static-info.json').classes;
 const wowRaces = require('../resources/wow-static-info.json').races;
-// const superagent = require('superagent');
+const Discord = require('discord.js');
 
 let WowArmory = {
 	wowarmory: {
