@@ -10,31 +10,30 @@ const CustomCommands = require('./customCommands.js');
 const WowArmory = require('./bnet-wow.js');
 
 let loadDbCommands = () => {
-  CustomCommandModel.run({readMode: 'majority'}).then((dbCommands) => {
-    let dbCmdObj = {};
+	CustomCommandModel.run({ readMode: 'majority' }).then((dbCommands) => {
+		let dbCmdObj = {};
 
-    for (let cmd of dbCommands) {
-      switch (cmd.commandType) {
-        case 'image':
-          dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands['dbimagecommand'];
-          break;
+		for(let cmd of dbCommands) {
+			switch(cmd.commandType) {
+				case 'image':
+					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbimagecommand;
+					break;
 
-        case 'text':
-          dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands['dbtextcommand'];
-          break;
+				case 'text':
+					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbtextcommand;
+					break;
 
-        case 'sound':
-          dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands['dbsoundcommand'];
-          break;
-      }
-    }
+				case 'sound':
+					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbsoundcommand;
+					break;
+			}
+		}
 
-    const Commands = require('../bot.js').Commands;
+		const Commands = require('../bot.js').Commands;
 
-    Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban, CustomCommands.customCommands, WowArmory.WowArmory, dbCmdObj);
-    // console.log(`Commands: ${util.inspect(Commands)}`);
-    console.log('Cuckbot is ready!');
-  });
+		Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban, CustomCommands.customCommands, WowArmory.WowArmory, dbCmdObj);
+		console.log('Cuckbot is ready!');
+	});
 };
 
 exports.loadDbCommands = loadDbCommands;

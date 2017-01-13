@@ -3,169 +3,154 @@
 const CustomCommand = require('../dbModels/customCommand.js');
 const admins = require('../admins.json');
 const _ = require('lodash');
+const sounds = require('./sounds.js').sounds;
+const Embed = require('discord.js').RichEmbed;
+const images = require('./images.js').images;
+const asciiText = require('./asciiPictures').asciiPictures;
 
-let buildHelpMessage = (imageCommands, textCommands, soundCommands) => {
-  let message = 'Here\'s a list of my commands:\n\n' +
-    'Command prefix (trigger) character is **\'~\'**\n\n' +
-    'To create a custom command, use the following format:\n' +
-    '```xl\n' +
-    '~createcommand ~[commandname]|[commandtype ex: image, text, sound]|[imageurl, responsetext, yturl]|[starttime (format: 00:00:00)]|[duration (07 (seconds))\n' +
-    'Examples:\n\nSound:\n~createcommand ~test|sound|https://www.youtube.com/watch?v=dQw4w9WgXcQ|00:00:43|07\n' +
-    'Image:\n~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif\n' +
-    '```\n\n' +
-    'To delete a command, use the following command\n' +
-    '```xl\n' +
-    '~deletecommand ~[commandname]\n' +
-    'Example:\n\nto delete a command that is triggered by typing ~facepalm, type \'~deletecommand ~facepalm\'\n' +
-    '```\n\n' +
-    '__**Sounds**__\n\n```xl\n' +
-    'cena: BOO-DO-DO-DOOOOOO\n' +
-    'cenahorn: BOO-DO-DO-DOOOOOO (with airhorns)\n' +
-    'yeslawd: YES LAWD\n' +
-    'yesnigga: YES NIGGA\n' +
-    'watermalone: Random \'watermalone\' \n' +
-    'asslick/dickpunch/fuckenter: John Cena Quotes From \'Trainwreck\'\n' +
-    'pawnch: Heavys Falcon Punch (TF2)\n' +
-    'ohshit: Oh Shiiiiiiit\n' +
-    'sob: \'You Son Of A Bitch\'\n' +
-    'dinos: \'Who Killed The Dinos?\'\n' +
-    'fua: \'Fuck You Asshole\'\n' +
-    'spine: \'Break Your God Damn Spine\'\n' +
-    'stfu: \'SHUT UP\'\n' +
-    'boris: \'I Am INVINCIBLE\'\n' +
-    'bs: \'BULLSHIT\'\n' +
-    'cocainum: \'COCAINUM\'\n' +
-    'gfym: GRAPEFRUIT\n' +
-    'dicksout: DICKS OUT FOR HARAMBE\n```\n\n';
+let buildCommandsHelp = (imageCommands, textCommands, soundCommands) => {
+	let embed = new Embed();
 
-  if (soundCommands.length > 0) {
-    message += '__**Custom Sounds**__\n\n```xl\n';
+	embed.title = 'Cuckbot Commands';
+	embed.color = 0x4286f4;
 
-    for (let sound of soundCommands) {
-      message += `${sound.commandText.slice(1)}\n`;
-    }
+	let allTextCommands = [];
+	if(textCommands.length > 0) {
+		let customTextCommands = textCommands.map((customText) => customText.commandText.slice(1));
 
-    message += `\`\`\`\n\n`;
-  }
+		allTextCommands = customTextCommands.concat(Object.keys(asciiText));
 
-  message += '__**Images**__\n\n```xl\n' +
-    'feelsgoodman: Feelsgoodman Meme\n' +
-    'feelsbadman: Feelsbadman Meme\n' +
-    'woody: Random \'Rapey Woody\' Meme\n' +
-    'finishme: White Creamy Sauce\n' +
-    'needful: Do The Needful```\n\n';
+		embed.addField('Text Commands', allTextCommands.join(', '), false);
+	}
 
-  if (imageCommands.length > 0) {
-    message += '__**Custom Images**__\n\n```xl\n';
+	let allImageCommands = [];
+	if(imageCommands.length > 0) {
+		let customImageCommands = imageCommands.map((customImage) => customImage.commandText.slice(1));
 
-    for (let image of imageCommands) {
-      message += `${image.commandText.slice(1)}\n`;
-    }
+		allImageCommands = customImageCommands.concat(Object.keys(images));
 
-    message += '```\n\n';
-  }
+		embed.addField('Image Commands', allImageCommands.join(', '), false);
+	}
 
-  message += '__**Text**__\n\n```xl\n';
-  message += 'dongerino: Random ASCII Dick\n' +
-    'salt: ASCII Salt\n' +
-    'lenny: Lenny Face Meme```\n\n';
+	let allSoundsText = [];
+	if(soundCommands.length > 0) {
+		let customSoundsText = soundCommands.map((customSound) => customSound.commandText.slice(1));
 
-  if (textCommands.length > 0) {
-    message += '__**Custom Text**__\n\n```xl\n';
+		allSoundsText = customSoundsText.concat(Object.keys(sounds));
 
-    for (let text of textCommands) {
-      message += `${text.commandText.slice(1)}\n`;
-    }
+		embed.addField('Sound Commands', allSoundsText.join(', '), false);
+	}
 
-    message += '```\n';
-  }
-  message += '__**MISC**__\n\n```xl\n';
-  message += 'wowarmory: World of Warcraft character information.\n' +
-      'Usage: ~wowarmory (realm)|(character name)```\n';
+	return embed;
+};
 
-  return message;
+let buildCreationHelp = () => {
+	let creatingCommands = 'For creating commands, use the following format:\n' +
+		'*~createcommand ~[commandname]|[commandtype (image, text, sound)]|[imageurl, text, yturl]|[starttime (format: 00:00:00)]|[duration (seconds)*\n' +
+		'Ex:\t\t*~createcommand ~test|sound|<youtube link>|00:00:43|07*\n' +
+		'\t\t*~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif*';
+
+	let deletingCommands = '*~deletecommand ~[commandname]*\n' +
+		'Ex:\t\t*~deletecommand ~facepalm*';
+
+	let embed = new Embed();
+
+	embed.title = 'Cuckbot Commands';
+	embed.color = 0x4286f4;
+	embed.addField('Prefix', 'Command prefix (trigger) character is \'~\'', false);
+	embed.addField('Creating Custom Commands', creatingCommands, false);
+	embed.addField('Deleting Commands', deletingCommands, false);
+
+	return embed;
 };
 
 let utilities = {
-  'cuckhelp': {
-    usage: '~cuckhelp',
-    delete: false,
-    type: 'utilities',
-    process: (bot, msg) => {
-      CustomCommand.filter({serverId: msg.guild.id}).run({readMode: 'majority'}).then((result) => {
-        let imageCommands = result.filter((cmd) => {
-          return cmd.commandType === 'image';
-        });
-        let textCommands = result.filter((cmd) => {
-          return cmd.commandType === 'text';
-        });
-        let soundCommands = result.filter((cmd) => {
-          return cmd.commandType === 'sound';
-        });
+	cuckhelp: {
+		usage: '~cuckhelp',
+		delete: false,
+		type: 'utilities',
+		process: (bot, msg, suffix) => {
+			if(suffix.length === 0) {
+				return msg.reply(`To view a list of current commands, type '~cuckhelp commands'. For help with creating commands, type '~cuckhelp creation'`)
+					.then((message) => {
+						message.delete(10000);
+					});
+			}
 
-        let message = buildHelpMessage(imageCommands, textCommands, soundCommands);
+			let args = suffix.split(' ');
 
-        msg.author.sendMessage(message).then(() => {
-          msg.reply(`I've sent you my commands via PM`);
-        });
-      });
-    }
-  },
-  'clear': {
-    usage: '~clear (number of messages to remove from the chat log)',
-    delete: true,
-    type: 'utilities',
-    process: (bot, msg, suffix) => {
-      let args = suffix.split(' ');
+			CustomCommand.filter({ serverId: msg.guild.id }).run({ readMode: 'majority' }).then((result) => {
+				let imageCommands = result.filter((cmd) => cmd.commandType === 'image');
+				let textCommands = result.filter((cmd) => cmd.commandType === 'text');
+				let soundCommands = result.filter((cmd) => cmd.commandType === 'sound');
+				let embed = {};
 
-      let adminsArray = Array.from(admins['admins']);
+				if(args[0] === 'commands') {
+					embed = buildCommandsHelp(imageCommands, textCommands, soundCommands);
+				} else if(args[0] === 'creation') {
+					embed = buildCreationHelp();
+				} else {
+					msg.reply(`That help command is not supported`);
+				}
 
-      if (!_.includes(adminsArray, msg.author.id.toString())) {
-        msg.reply('You don\'t have access to this command.  :middle_finger:');
-        return;
-      }
+				return msg.author.sendEmbed(embed).then(() => {
+					msg.reply(`Check your DM's`);
+				}).catch(err => {
+					console.log(err);
+				});
+			});
+		}
+	},
+	clear: {
+		usage: '~clear (number of messages to remove from the chat log)',
+		delete: true,
+		type: 'utilities',
+		process: (bot, msg, suffix) => {
+			let args = suffix.split(' ');
 
-      console.log('commandOptions: ' + suffix);
-      if (args.length > 2) {
-        msg.reply('Incorrect usage! There are too many parameters for that command.');
-        return;
-      }
+			let adminsArray = Array.from(admins.admins);
 
-      let numberToDelete = Number(args[0]);
+			if(!_.includes(adminsArray, msg.author.id.toString())) {
+				msg.reply('You don\'t have access to this command.  :middle_finger:');
+				return;
+			}
+
+			console.log(`commandOptions: ${suffix}`);
+			if(args.length > 2) {
+				msg.reply('Incorrect usage! There are too many parameters for that command.');
+				return;
+			}
+
+			let numberToDelete = Number(args[0]);
 
       // there was a user mentioned, so we delete that specific users messages.
-      if (args.length === 2) {
-        let user = msg.mentions.users.first();
-        let counter = 0;
-        msg.channel.fetchMessages({limit: numberToDelete * 3}).then(messages => {
-          let deleteMessages = messages.filter(message => {
-            if (counter < numberToDelete && user.id === message.author.id) {
-              return message;
-            } else {
-            }
-          });
+			if(args.length === 2) {
+				let user = msg.mentions.users.first();
+				let counter = 0;
+				msg.channel.fetchMessages({ limit: numberToDelete * 3 }).then(messages => {
+					let deleteMessages = messages.filter(message => counter < numberToDelete && user.id === message.author.id);
 
-          msg.channel.bulkDelete(deleteMessages).then(msgs => {
-            console.log(`Removed the last ${msgs.size()} messages from ${user.username}`);
-          });
-        });
-      } else { // do a regular bulk delete
-        msg.channel.fetchMessages({limit: numberToDelete}).then(messages => {
-          msg.channel.bulkDelete(messages);
-        });
-      }
-    }
-  },
-  'reloadcommands': {
-    usage: '~reloadcommands',
-    delete: true,
-    type: 'utilities',
-    process: () => {
-      const loadDbCommands = require('./loadDbCommands.js').loadDbCommands;
+					msg.channel.bulkDelete(deleteMessages).then(msgs => {
+						console.log(`Removed the last ${msgs.size()} messages from ${user.username}`);
+					});
+				});
+			} else { // do a regular bulk delete
+				msg.channel.fetchMessages({ limit: numberToDelete }).then(messages => {
+					msg.channel.bulkDelete(messages);
+				});
+			}
+		}
+	},
+	reloadcommands: {
+		usage: '~reloadcommands',
+		delete: true,
+		type: 'utilities',
+		process: () => {
+			const loadDbCommands = require('./loadDbCommands.js').loadDbCommands;
 
-      loadDbCommands();
-    }
-  }
+			loadDbCommands();
+		}
+	}
 };
 
 exports.utilities = utilities;

@@ -17,38 +17,49 @@ client.on('error', (m) => console.log('[error]', m));
 
 client.on('ready', () => {
   // retrieve all custom commands from the database
-  loadDbCommands();
+	loadDbCommands();
+});
+
+client.on('guildMemberAdd', (guild, member) => {
+	let role = guild.roles.find('name', 'Member');
+	if(!role) {
+		guild.defaultChannel.sendMessage(`Failure when attemping to assign ${member.user.username} a default role!`);
+		return;
+	}
+	member.addRole(role).then(gMember => {
+		gMember.sendMessage(`Welcome to No Senpai Yamete you cuck!`);
+	});
 });
 
 client.on('message', m => {
-  if (client.user.id === m.author.id) {
-    console.log('returning because client id and user id are the same');
-    return;
-  }
+	if(client.user.id === m.author.id) {
+		console.log('returning because client id and user id are the same');
+		return;
+	}
 
-  if (m.content.startsWith('(╯°□°）╯︵ ┻━┻')) {
-    m.channel.sendMessage('┬─┬﻿ ノ( ゜-゜ノ)');
-    m.reply('Calm your shit!');
+	if(m.content.startsWith('(╯°□°）╯︵ ┻━┻')) {
+		m.channel.sendMessage('┬─┬﻿ ノ( ゜-゜ノ)');
+		m.reply('Calm your shit!');
 
-    return;
-  }
+		return;
+	}
 
-  const msgPrefix = '~';
+	const msgPrefix = '~';
 
-  if (!m.content.startsWith(msgPrefix)) return;
+	if(!m.content.startsWith(msgPrefix)) return;
 
-  let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
-  let commandOptions = _.drop(formattedMsg.split(' '));
-  let cmdTxt = formattedMsg.split(' ')[0].toLowerCase();
+	let formattedMsg = m.content.substring(msgPrefix.length, m.content.length);
+	let commandOptions = _.drop(formattedMsg.split(' '));
+	let cmdTxt = formattedMsg.split(' ')[0].toLowerCase();
 
-  if (Commands.hasOwnProperty(cmdTxt)) {
-    if (commandOptions.length > 2) {
-      commandOptions.shift();
-    }
+	if(Commands.hasOwnProperty(cmdTxt)) {
+		if(commandOptions.length > 2) {
+			commandOptions.shift();
+		}
 
-    console.log(`commandOptions: ${commandOptions.toString()}`);
-    processCmd(client, m, formattedMsg.substring((formattedMsg.split(' ')[0]).length + 1), cmdTxt, msgPrefix, commandOptions);
-  }
+		console.log(`commandOptions: ${commandOptions.toString()}`);
+		processCmd(client, m, formattedMsg.substring(formattedMsg.split(' ')[0].length + 1), cmdTxt, msgPrefix, commandOptions);
+	}
 });
 
 // process.on('uncaughtException', function(err) {
