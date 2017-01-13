@@ -15,7 +15,7 @@ const BS = path.resolve('resources/', 'bullshit.mp3');
 const COCAINUM = path.resolve('resources/', 'cocainum.mp3');
 const DINOS = path.resolve('resources/', 'dinos.mp3');
 const FUA = path.resolve('resources/', 'fua.mp3');
-const GFYM = path.resolve('resources/', 'gfym.mp4');
+const GFYM = path.resolve('resources/', 'gfym.mp3');
 const STFU = path.resolve('resources/', 'shutup.mp3');
 const SPINE = path.resolve('resources/', 'spine.mp3');
 const PAWNCH = path.resolve('resources/', 'pawnch.mp3');
@@ -24,7 +24,7 @@ const FUCKENTER = path.resolve('resources/', 'fuckenter.mp3');
 const DICKPUNCH = path.resolve('resources/', 'dickpunch.mp3');
 const YESNIGGA = path.resolve('resources/', 'yesnigga.mp3');
 const YESLAWD = path.resolve('resources/', 'yeslawd.mp3');
-const OHSHIT = path.resolve('resources/', 'ohshit.mp4');
+const OHSHIT = path.resolve('resources/', 'ohshit.mp3');
 const DICKSOUT = path.resolve('resources/', 'dicksout.mp3');
 
 module.exports = {
