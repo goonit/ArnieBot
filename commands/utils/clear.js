@@ -9,8 +9,8 @@ module.exports = class Clear extends Command {
 			description: 'Clears x messages from the channel',
 			args: [
 				{
-					key: 'clearNum',
-					label: 'clearNum',
+					key: 'clearnum',
+					label: 'clearnum',
 					prompt: 'How many messages would you like to remove from chat?',
 					type: 'integer',
 					default: 1,
@@ -21,7 +21,7 @@ module.exports = class Clear extends Command {
 	}
 
 	async run(msg, args) {
-		let deleteNum = args.clearNum + 1;
+		let deleteNum = args.clearnum + 1;
 
 		msg.channel.fetchMessages({ limit: deleteNum }).then(messages => {
 			msg.channel.bulkDelete(messages);
