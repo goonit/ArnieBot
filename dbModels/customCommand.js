@@ -3,7 +3,7 @@
 const thinky = require('./thinky.js');
 const type = thinky.type;
 
-var CustomCommand = thinky.createModel('CustomCommand', {
+let CustomCommand = thinky.createModel('CustomCommand', {
 	id: type.string(),
 	serverId: type.string(),
 	commandText: type.string(), // text that triggers the command (must have prefix ~)

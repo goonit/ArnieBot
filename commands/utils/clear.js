@@ -1,4 +1,4 @@
-const {Command} = require('discord.js-commando');
+const { Command } = require('discord.js-commando');
 
 module.exports = class Clear extends Command {
 	constructor(client) {
@@ -6,10 +6,25 @@ module.exports = class Clear extends Command {
 			name: 'clear',
 			group: 'utils',
 			memberName: 'clear',
-			description: 'Clears x messages from the channel'
+			description: 'Clears x messages from the channel',
+			args: [
+				{
+					key: 'clearNum',
+					label: 'clearNum',
+					prompt: 'How many messages would you like to remove from chat?',
+					type: 'integer',
+					default: 1,
+					infinite: false
+				}
+			]
 		});
 	}
 
-	async run(msg) {
+	async run(msg, args) {
+		let deleteNum = args.clearNum + 1;
+
+		msg.channel.fetchMessages({ limit: deleteNum }).then(messages => {
+			msg.channel.bulkDelete(messages);
+		});
 	}
 };

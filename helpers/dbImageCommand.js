@@ -18,7 +18,7 @@ module.exports = class DBImageCommand extends Command {
 	}
 
 	async run(msg) {
-		console.log(`dbImageCommand obj: ${util.inspect(this.customCommand)}`);
-		msg.channel.sendFile(this.customCommand.imageUrl);
+		let channel = msg.channel;
+		return msg.delete().then((message) => channel.sendFile(this.customCommand.imageUrl));
 	}
 };

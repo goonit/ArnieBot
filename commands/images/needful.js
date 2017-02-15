@@ -1,4 +1,5 @@
-const {Command} = require('discord.js-commando');
+const { Command } = require('discord.js-commando');
+const CONSTANTS = require('../../constants.js');
 
 module.exports = class Needful extends Command {
 	constructor(client) {
@@ -11,5 +12,7 @@ module.exports = class Needful extends Command {
 	}
 
 	async run(msg) {
+		let channel = msg.channel;
+		return msg.delete().then((message) => channel.sendFile(CONSTANTS.NEEDFUL));
 	}
 };

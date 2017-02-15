@@ -1,39 +1,50 @@
-'use strict';
+const CustomCommandModel = require('./customCommand');
+// const Sounds = require('../src/sounds.js');
+// const Images = require('../src/images.js');
+// const Ascii = require('../src/asciiPictures.js');
+// const Utilities = require('../src/utilities.js');
+// const Urban = require('../src/urban.js');
+// const CustomCommands = require('../src/customCommands.js').customCommands;
+// const WowArmory = require('../src/bnet-wow.js');
+const util = require('util');
+const ImageCommand = require('../helpers/dbImageCommand.js');
+const SoundCommand = require('../helpers/dbSoundCommand.js');
+const TextCommand = require('../helpers/dbTextCommand.js');
 
-const CustomCommandModel = require('../dbModels/customCommand');
-const Sounds = require('../sounds.js');
-const Images = require('./images.js');
-const Ascii = require('./asciiPictures.js');
-const Utilities = require('./utilities.js');
-const Urban = require('./urban.js');
-const CustomCommands = require('./customCommands.js');
-const WowArmory = require('./bnet-wow.js');
+let loadDbCommands = async (client) => {
+	let dbCommands = await CustomCommandModel.run({ readMode: 'majority' });
+	let dbCmdArr = [];
 
-let loadDbCommands = () => {
-	CustomCommandModel.run({ readMode: 'majority' }).then((dbCommands) => {
-		let dbCmdObj = {};
+	for(let cmd of dbCommands) {
+		cmd.commandText = cmd.commandText.slice(1);
 
-		for(let cmd of dbCommands) {
-			switch(cmd.commandType) {
-				case 'image':
-					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbimagecommand;
-					break;
+		let command = {};
 
-				case 'text':
-					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbtextcommand;
-					break;
+		switch(cmd.commandType) {
+			case 'image':
+				command = new ImageCommand(client, cmd);
 
-				case 'sound':
-					dbCmdObj[cmd.commandText.slice(1).toString()] = CustomCommands.customCommands.dbsoundcommand;
-					break;
-			}
+				dbCmdArr.push(command);
+				break;
+
+			case 'text':
+				command = new TextCommand(client, cmd);
+
+				dbCmdArr.push(command);
+				break;
+
+			case 'sound':
+				command = new SoundCommand(client, cmd);
+
+				dbCmdArr.push(command);
+				break;
 		}
+	}
 
-		const Commands = require('../bot.js').Commands;
-
-		Object.assign(Commands, Images.images, Sounds.sounds, Ascii.asciiPictures, Utilities.utilities, Urban.urban, CustomCommands.customCommands, WowArmory.WowArmory, dbCmdObj);
-		console.log('Cuckbot is ready!');
-	});
+	if(dbCmdArr.length > 0) {
+		client.registry.registerGroup('custom');
+		client.registry.registerCommands(dbCmdArr);
+	}
 };
 
 exports.loadDbCommands = loadDbCommands;
