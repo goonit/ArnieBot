@@ -45,7 +45,7 @@ module.exports = class CuckHelp extends Command {
 		});
 	}
 
-	static buildCommandsHelp(imageCommandsFromDb, textCommandsFromDb, soundCommandsFromDb) {
+	buildCommandsHelp(imageCommandsFromDb, textCommandsFromDb, soundCommandsFromDb) {
 		let embed = new Embed();
 
 		embed.title = 'Cuckbot Commands';
@@ -96,11 +96,11 @@ module.exports = class CuckHelp extends Command {
 		return embed;
 	}
 
-	static buildCreationHelp() {
+	buildCreationHelp() {
 		let creatingCommands = 'For creating commands, use the following format:\n' +
-			'*~createcommand ~[commandname]|[commandtype (image, text, sound)]|[imageurl, text, yturl]|[starttime (format: 00:00:00)]|[duration (seconds)*\n' +
-			'Ex:\t\t*~createcommand ~test|sound|<youtube link>|00:00:43|07*\n' +
-			'\t\t*~createcommand ~imagetest|image|http://i.imgur.com/kTRCbX0.gif*';
+			'*~createcommand ~[commandname] [commandtype (image, text, sound)] [imageurl, text, yturl] [starttime (format: 00:00:00)] [duration (seconds)*\n' +
+			'Ex:\t\t*~createcommand ~test sound <youtube link> 00:00:43 07*\n' +
+			'\t\t*~createcommand ~imagetest image http://i.imgur.com/kTRCbX0.gif*';
 
 		let deletingCommands = '*~deletecommand ~[commandname]*\n' +
 			'Ex:\t\t*~deletecommand ~facepalm*';
