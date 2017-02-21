@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const request = require('superagent-promise')(require('superagent'), Promise);
+const Embed = require('discord.js').RichEmbed;
 
 const urbanApi = 'http://api.urbandictionary.com/v0/define?term=';
 
@@ -31,10 +32,14 @@ module.exports = class Urban extends Command {
 				return;
 			}
 
-			let response = `**${args.searchTerm}**\n\n\`\`\`\n${result.definition}\n\`\`\`\n\n**Example:** ${result.example}\n<${result.permalink}>`;
+			let embed = new Embed();
+			embed.color = 0x00ff00;
+			embed.addField(args.searchTerm, result.definition);
+			embed.addField('Example', result.example);
+			embed.addField('Link', `<${result.permalink}>`);
 
 			let channel = msg.channel;
-			return msg.delete().then((message) => channel.sendMessage(response));
+			return msg.delete().then((message) => channel.sendEmbed(embed));
 		});
 	}
 };
