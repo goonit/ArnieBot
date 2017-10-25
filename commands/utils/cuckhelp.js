@@ -28,20 +28,27 @@ module.exports = class CuckHelp extends Command {
 			let textCommands = result.filter((cmd) => cmd.commandType === 'text');
 			let soundCommands = result.filter((cmd) => cmd.commandType === 'sound');
 			let embed = {};
+			let embedList = [];
 
 			if(args.type === 'commands') {
-				embed = this.buildCommandsHelp(imageCommands, textCommands, soundCommands);
+				embedList = this.buildCommandsHelp(imageCommands, textCommands, soundCommands);
+				msg.author.sendEmbed(embedList[0]).then(() => {
+					msg.author.sendEmbed(embedList[1]).then(() => {
+						msg.author.sendEmbed(embedList[2]).then(() => {
+							msg.reply(`Check your DM's`);
+						});
+					});
+				});
 			} else if(args.type === 'creation') {
 				embed = this.buildCreationHelp();
+				msg.author.sendEmbed(embed).then(() => {
+					msg.reply(`Check your DM's`);
+				}).catch(err => {
+					console.log(err);
+				});
 			} else {
 				msg.reply(`That help command is not supported`);
 			}
-
-			return msg.author.sendEmbed(embed).then(() => {
-				msg.reply(`Check your DM's`);
-			}).catch(err => {
-				console.log(err);
-			});
 		});
 	}
 
@@ -50,6 +57,18 @@ module.exports = class CuckHelp extends Command {
 
 		embed.title = 'Cuckbot Commands';
 		embed.color = 0x4286f4;
+
+		let textEmbed = new Embed();
+		textEmbed.title = 'Text Commands';
+		textEmbed.color = 0x4286f4;
+
+		let soundEmbed = new Embed();
+		soundEmbed.title = 'Sound Commands';
+		soundEmbed.color = 0x4286f4;
+
+		let imageEmbed = new Embed();
+		imageEmbed.title = 'Image Commands';
+		imageEmbed.color = 0x4286f4;
 
 		// ----- TEXT COMMANDS ----- //
 
@@ -60,10 +79,12 @@ module.exports = class CuckHelp extends Command {
 		if(textCommandsFromDb.length > 0) {
 			let customTextCommands = textCommandsFromDb.map((customText) => customText.commandText.slice(1));
 
-			allTextCommands = allTextCommands.concat(customTextCommands);
+			allTextCommands = allTextCommands.concat(customTextCommands).join(', ');
 		}
 
-		embed.addField('Text Commands', allTextCommands.join(', '), false);
+		this.buildCommandString(allTextCommands, textEmbed);
+
+		// embed.addField('Text Commands', allTextCommands, false);
 
 		// ----- IMAGE COMMANDS ----- //
 
@@ -74,10 +95,10 @@ module.exports = class CuckHelp extends Command {
 		if(imageCommandsFromDb.length > 0) {
 			let customImageCommands = imageCommandsFromDb.map((customImage) => customImage.commandText.slice(1));
 
-			allImageCommands = allImageCommands.concat(customImageCommands);
+			allImageCommands = allImageCommands.concat(customImageCommands).join(', ');
 		}
 
-		embed.addField('Image Commands', allImageCommands.join(', '), false);
+		this.buildCommandString(allImageCommands, imageEmbed);
 
 		// ----- SOUND COMMANDS ----- //
 
@@ -88,12 +109,12 @@ module.exports = class CuckHelp extends Command {
 		if(soundCommandsFromDb.length > 0) {
 			let customSoundCommands = soundCommandsFromDb.map((customSound) => customSound.commandText.slice(1));
 
-			allSoundCommands = allSoundCommands.concat(customSoundCommands);
+			allSoundCommands = allSoundCommands.concat(customSoundCommands).join(', ');
 		}
 
-		embed.addField('Sound Commands', allSoundCommands.join(', '), false);
+		this.buildCommandString(allSoundCommands, soundEmbed);
 
-		return embed;
+		return [textEmbed, imageEmbed, soundEmbed];
 	}
 
 	buildCreationHelp() {
@@ -114,5 +135,41 @@ module.exports = class CuckHelp extends Command {
 		embed.addField('Deleting Commands', deletingCommands, false);
 
 		return embed;
+	}
+
+	buildCommandString(commandString, embedObject) {
+		if(commandString.length <= 2048) {
+			embedObject.description = commandString;
+		} else {
+			let commandArray = commandString.split(',');
+			let tempArray = [];
+			let charCount = 0;
+			let descriptionSet = false;
+
+			for(let commandName of commandArray) {
+				charCount += commandName.length;
+				tempArray.push(commandName);
+
+				if(charCount >= 1900) {
+					embedObject.description = tempArray.join(', ');
+					charCount = 0;
+					tempArray = [];
+
+					descriptionSet = true;
+				}
+
+				if(descriptionSet && charCount >= 900) {
+					embedObject.addField(`${embedObject.title} (Contd.)`, tempArray.join(', '), false);
+					charCount = 0;
+					tempArray = [];
+				}
+			}
+
+			let existsInEmbed = embedObject.fields.filter(field => field.includes(tempArray[0]));
+
+			if(tempArray.length > 0 && embedObject.description && !embedObject.description.includes(tempArray[0]) && existsInEmbed.length === 0) {
+				embedObject.addField(`${embedObject.title} (Contd.)`, tempArray.join(', '), false);
+			}
+		}
 	}
 };
