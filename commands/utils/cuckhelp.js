@@ -7,6 +7,7 @@ module.exports = class CuckHelp extends Command {
     super(client, {
       name: 'cuckhelp',
       group: 'utils',
+      aliases: ['help'],
       memberName: 'cuckhelp',
       description:
         'Send the user an embed with help information abotu the bot as a dm.',
@@ -102,8 +103,6 @@ module.exports = class CuckHelp extends Command {
 
     this.buildCommandString(allTextCommands, textEmbed);
 
-    // embed.addField('Text Commands', allTextCommands, false);
-
     // ----- IMAGE COMMANDS ----- //
 
     let loadedImageCommands = this.client.registry.resolveGroup('images')
@@ -156,8 +155,7 @@ module.exports = class CuckHelp extends Command {
       'Ex:\t\t*~createcommand ~test sound <youtube link> 00:00:43 07*\n' +
       '\t\t*~createcommand ~imagetest image http://i.imgur.com/kTRCbX0.gif*';
 
-    let deletingCommands =
-      '*~deletecommand ~[commandname]*\n' + 'Ex:\t\t*~deletecommand ~facepalm*';
+    let deletingCommands = `*~deletecommand ~[commandname]*\n' + 'Ex:\t\t*~deletecommand ~facepalm*`;
 
     let embed = new Embed();
 

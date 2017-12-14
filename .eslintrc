@@ -97,18 +97,6 @@
     ],
     // "indent": ["error", "tab", { "SwitchCase": 1 }],
     "key-spacing": "error",
-    "keyword-spacing": [
-      "error",
-      {
-        "overrides": {
-          // "if": { "after": false },
-          "for": { "after": false },
-          "while": { "after": false },
-          "catch": { "after": false },
-          "switch": { "after": false }
-        }
-      }
-    ],
     "max-depth": "warn",
     "max-len": ["error", 200, 2],
     "max-nested-callbacks": ["error", { "max": 4 }],
@@ -129,7 +117,7 @@
     "no-trailing-spaces": "error",
     "no-unneeded-ternary": "error",
     "no-whitespace-before-property": "error",
-    "object-curly-newline": "error",
+    // "object-curly-newline": "error",
     "object-curly-spacing": ["error", "always"],
     "operator-assignment": "error",
     "operator-linebreak": ["error", "after"],
