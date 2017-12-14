@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const Embed = require('discord.js').RichEmbed;
+const inspect = require('util').inspect;
 
 module.exports = class CuckHelp extends Command {
   constructor(client) {
@@ -40,6 +41,7 @@ module.exports = class CuckHelp extends Command {
             textCommands,
             soundCommands
           );
+
           msg.author.send('', embedList[0]).then(() => {
             msg.author.send('', embedList[1]).then(() => {
               msg.author.send('', embedList[2]).then(() => {
@@ -93,15 +95,20 @@ module.exports = class CuckHelp extends Command {
       textCommand => textCommand.memberName
     );
 
+    console.log(allTextCommands);
+    console.log(`from db count: ${textCommandsFromDb.length}`);
+
     if (textCommandsFromDb.length > 0) {
       let customTextCommands = textCommandsFromDb.map(customText =>
         customText.commandText.slice(1)
       );
 
-      allTextCommands = allTextCommands.concat(customTextCommands).join(', ');
+      allTextCommands = allTextCommands.concat(customTextCommands);
     }
 
-    this.buildCommandString(allTextCommands, textEmbed);
+    allTextCommands = allTextCommands.join(', ');
+
+    this.buildCommandString(allTextCommands, textEmbed, 'text');
 
     // ----- IMAGE COMMANDS ----- //
 
@@ -117,12 +124,12 @@ module.exports = class CuckHelp extends Command {
         customImage.commandText.slice(1)
       );
 
-      allImageCommands = allImageCommands
-        .concat(customImageCommands)
-        .join(', ');
+      allImageCommands = allImageCommands.concat(customImageCommands);
     }
 
-    this.buildCommandString(allImageCommands, imageEmbed);
+    allImageCommands = allImageCommands.join(', ');
+
+    this.buildCommandString(allImageCommands, imageEmbed, 'image');
 
     // ----- SOUND COMMANDS ----- //
 
@@ -138,12 +145,12 @@ module.exports = class CuckHelp extends Command {
         customSound.commandText.slice(1)
       );
 
-      allSoundCommands = allSoundCommands
-        .concat(customSoundCommands)
-        .join(', ');
+      allSoundCommands = allSoundCommands.concat(customSoundCommands);
     }
 
-    this.buildCommandString(allSoundCommands, soundEmbed);
+    allSoundCommands = allSoundCommands.join(', ');
+
+    this.buildCommandString(allSoundCommands, soundEmbed, 'sound');
 
     return [textEmbed, imageEmbed, soundEmbed];
   }
@@ -172,9 +179,9 @@ module.exports = class CuckHelp extends Command {
     return embed;
   }
 
-  buildCommandString(commandString, embedObject) {
+  buildCommandString(commandString, embedObject, commandType) {
     if (commandString.length <= 2048) {
-      embedObject.description = commandString;
+      embedObject.setDescription(commandString);
     } else {
       let commandArray = commandString.split(',');
       let tempArray = [];
@@ -186,7 +193,7 @@ module.exports = class CuckHelp extends Command {
         tempArray.push(commandName);
 
         if (charCount >= 1900) {
-          embedObject.description = tempArray.join(', ');
+          embedObject.setDescription(tempArray.join(', '));
           charCount = 0;
           tempArray = [];
 
