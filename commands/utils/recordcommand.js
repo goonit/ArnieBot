@@ -47,6 +47,8 @@ module.exports = class RecordCommand extends Command {
 			return;
 		}
 
+		args.commandtrigger = args.commandtrigger.toLowerCase();
+
 		let createDate = moment().format('MM/DD/YYYY hh:mm:ss');
 
 		let customCmd = new CustomCommand({
