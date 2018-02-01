@@ -56,7 +56,7 @@ module.exports = class RecordCommand extends Command {
 			commandText: args.commandtrigger,
 			createDate: createDate,
 			createUser: msg.author.username,
-			commandType: 'sound'
+			commandType: 'recorded'
 		});
 
 		let customCmdSlow = new CustomCommand({
@@ -64,7 +64,7 @@ module.exports = class RecordCommand extends Command {
 			commandText: args.commandtrigger + '-slow',
 			createDate: createDate,
 			createUser: msg.author.username,
-			commandType: 'sound'
+			commandType: 'recorded'
 		});
 
 		let customCmdFast = new CustomCommand({
@@ -72,7 +72,7 @@ module.exports = class RecordCommand extends Command {
 			commandText: args.commandtrigger + '-fast',
 			createDate: createDate,
 			createUser: msg.author.username,
-			commandType: 'sound'
+			commandType: 'recorded'
 		});
 
 		msg.delete();
