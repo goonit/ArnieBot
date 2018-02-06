@@ -166,9 +166,6 @@ module.exports = class RecordCommand extends Command {
 		let resourcesPath = path.resolve('resources/');
 		let tempFileDir = `${__dirname}/temp.raw`;
 
-		console.log(`path: ${resourcesPath}`);
-		console.log(`tempDir: ${tempFileDir}`);
-
 		let childProcess = exec(
 			`ffmpeg -f s16le -i ${tempFileDir} -filter:a "asetrate=${audioBitRate}" -c:a libmp3lame ${resourcesPath}/${cmdNoTrigger}${
 				msg.guild.id
@@ -192,9 +189,7 @@ module.exports = class RecordCommand extends Command {
 		childProcess.on('exit', code => {
 			if (code !== 0) {
 				console.log(`${errorC(`ffmpeg exited with an error. Uh oh.`)}`);
-				msg.reply(
-					`Shit hit the fan when trying to convert the video to an audio file`
-				);
+				msg.reply(`Shit hit the fan when trying to convert to an audio file`);
 
 				RecordCommand.removeFile(tempFileDir);
 				RecordCommand.removeFile(`${resourcesPath}\\${cmdNoTrigger}.mp3`);
@@ -244,7 +239,7 @@ module.exports = class RecordCommand extends Command {
 						);
 
 						msg.reply(
-							`New command '${cmdName}' was successfully created! '${cmdName}' is now ready to be used!`
+							`New command '${cmdName}' was successfully created and is now ready to be used!`
 						);
 					});
 				}
