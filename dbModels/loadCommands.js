@@ -5,39 +5,40 @@ const SoundCommand = require('../helpers/dbSoundCommand.js');
 const TextCommand = require('../helpers/dbTextCommand.js');
 
 let loadDbCommands = async client => {
-  let dbCommands = await CustomCommandModel.run({ readMode: 'majority' });
-  let dbCmdArr = [];
+	let dbCommands = await CustomCommandModel.run({ readMode: 'majority' });
+	let dbCmdArr = [];
 
-  for (let cmd of dbCommands) {
-    cmd.commandText = cmd.commandText.slice(1);
+	for (let cmd of dbCommands) {
+		cmd.commandText = cmd.commandText.slice(1);
 
-    let command = {};
+		let command = {};
 
-    switch (cmd.commandType) {
-      case 'image':
-        command = new ImageCommand(client, cmd);
+		switch (cmd.commandType) {
+			case 'image':
+				command = new ImageCommand(client, cmd);
 
-        dbCmdArr.push(command);
-        break;
+				dbCmdArr.push(command);
+				break;
 
-      case 'text':
-        command = new TextCommand(client, cmd);
+			case 'text':
+				command = new TextCommand(client, cmd);
 
-        dbCmdArr.push(command);
-        break;
+				dbCmdArr.push(command);
+				break;
 
-      case 'sound':
-        command = new SoundCommand(client, cmd);
+			case 'sound':
+			case 'recorded':
+				command = new SoundCommand(client, cmd);
 
-        dbCmdArr.push(command);
-        break;
-    }
-  }
+				dbCmdArr.push(command);
+				break;
+		}
+	}
 
-  if (dbCmdArr.length > 0) {
-    client.registry.registerGroup('custom');
-    client.registry.registerCommands(dbCmdArr);
-  }
+	if (dbCmdArr.length > 0) {
+		client.registry.registerGroup('custom');
+		client.registry.registerCommands(dbCmdArr);
+	}
 };
 
 exports.loadDbCommands = loadDbCommands;
