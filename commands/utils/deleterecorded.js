@@ -18,7 +18,7 @@ module.exports = class DeleteRecorded extends Command {
 				{
 					key: 'command',
 					label: 'command',
-					prompt: 'What commands would you like to delete?',
+					prompt: 'What recorded commands would you like to delete?',
 					type: 'string',
 					infinite: false
 				}
@@ -28,36 +28,44 @@ module.exports = class DeleteRecorded extends Command {
 
 	async run(msg, args) {
 		msg.delete().then(m => {
-			CustomCommand.filter(r.row('commandText').match(args.command))
+			CustomCommand.filter(
+				r
+					.row('commandText')
+					.match(args.command)
+					.and(r.row('commandType').eq('recorded'))
+			)
 				.run({ readMode: 'majority' })
 				.then(result => {
 					console.log(`result: ${JSON.stringify(result)}`);
-					if (result.length > 3) {
+					if (result.length !== 3) {
 						return msg.reply(
-							`More than 3 commands were found for the commandText provided. Make sure you have the correct command name.`
+							`Expected 3 commands to be found, ${
+								result.length
+							} commands were found to be associated with that name.`
 						);
-					} else if (result.length === 0) {
-						return msg.reply(`${args.command} was not found!`);
 					}
 
 					result.forEach(command => {
+						let commandName = command.commandText;
+						let commandNameNoTrigger = command.commandText.slice(1);
+
 						command
 							.delete()
 							.then(deleteResult => {
 								let cmd = this.client.registry.resolveCommand(
-									args.command.slice(1)
+									commandNameNoTrigger
 								);
 								this.client.registry.unregisterCommand(cmd);
 
 								DeleteRecorded.removeFile(
 									path.resolve(
 										'resources/',
-										`${args.command.slice(1)}${msg.guild.id}.mp3`
+										`${commandNameNoTrigger}${msg.guild.id}.mp3`
 									)
 								);
 
-								m.reply(
-									`Recorded command '${args.command}' was successfully deleted`
+								msg.reply(
+									`Recorded command '${commandName}' was successfully deleted`
 								);
 							})
 							.catch(err => {
