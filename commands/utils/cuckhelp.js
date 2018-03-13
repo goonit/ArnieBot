@@ -1,7 +1,6 @@
 const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const Embed = require('discord.js').RichEmbed;
-const inspect = require('util').inspect;
 
 module.exports = class CuckHelp extends Command {
 	constructor(client) {
@@ -106,16 +105,12 @@ module.exports = class CuckHelp extends Command {
 
 		let loadedTextCommands = this.client.registry.resolveGroup('text').commands;
 
-		// let allTextCommands = loadedTextCommands.map(
-		// 	textCommand => textCommand.memberName
-		// );
-
 		let allTextCommands = this.buildAllCommands(
 			loadedTextCommands,
 			textCommandsFromDb
 		);
 
-		this.buildCommandString(allTextCommands, textEmbed, 'text');
+		this.buildCommandString(allTextCommands, textEmbed);
 
 		// ----- IMAGE COMMANDS ----- //
 
@@ -127,7 +122,7 @@ module.exports = class CuckHelp extends Command {
 			imageCommandsFromDb
 		);
 
-		this.buildCommandString(allImageCommands, imageEmbed, 'image');
+		this.buildCommandString(allImageCommands, imageEmbed);
 
 		// ----- SOUND COMMANDS ----- //
 
@@ -139,7 +134,7 @@ module.exports = class CuckHelp extends Command {
 			soundCommandsFromDb
 		);
 
-		this.buildCommandString(allSoundCommands, soundEmbed, 'sound');
+		this.buildCommandString(allSoundCommands, soundEmbed);
 
 		// ----- RECORDED COMMANDS ----- //
 
@@ -152,7 +147,7 @@ module.exports = class CuckHelp extends Command {
 				.join(', ');
 		}
 
-		this.buildCommandString(recordedCommands, recordedEmbed, 'recorded');
+		this.buildCommandString(recordedCommands, recordedEmbed);
 
 		return [textEmbed, imageEmbed, soundEmbed, recordedEmbed];
 	}
@@ -201,7 +196,7 @@ module.exports = class CuckHelp extends Command {
 		return embed;
 	}
 
-	buildCommandString(commandString, embedObject, commandType) {
+	buildCommandString(commandString, embedObject) {
 		if (commandString.length <= 2048) {
 			embedObject.setDescription(commandString);
 		} else {

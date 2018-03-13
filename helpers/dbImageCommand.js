@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const util = require('util');
 
 module.exports = class DBImageCommand extends Command {
 	constructor(client, customCommandObject) {
@@ -23,8 +22,6 @@ module.exports = class DBImageCommand extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message =>
-				channel.send('', { files: [this.customCommand.imageUrl] })
-			);
+			.then(() => channel.send('', { files: [this.customCommand.imageUrl] }));
 	}
 };

@@ -1,5 +1,4 @@
 const CustomCommandModel = require('./customCommand');
-const util = require('util');
 const ImageCommand = require('../helpers/dbImageCommand.js');
 const SoundCommand = require('../helpers/dbSoundCommand.js');
 const TextCommand = require('../helpers/dbTextCommand.js');

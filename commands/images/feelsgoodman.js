@@ -15,6 +15,6 @@ module.exports = class FeelsGoodMan extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message => channel.send('', { files: [CONSTANTS.FEELSGOODMAN] }));
+			.then(() => channel.send('', { files: [CONSTANTS.FEELSGOODMAN] }));
 	}
 };

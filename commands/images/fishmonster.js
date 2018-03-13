@@ -15,6 +15,6 @@ module.exports = class FishMonster extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message => channel.send('', { files: [CONSTANTS.FISHMONSTER] }));
+			.then(() => channel.send('', { files: [CONSTANTS.FISHMONSTER] }));
 	}
 };

@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
-const ytdl = require('ytdl-core');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const path = require('path');
@@ -61,7 +60,7 @@ module.exports = class RecordCommand extends Command {
 
 		let customCmdSlow = new CustomCommand({
 			serverId: msg.guild.id,
-			commandText: args.commandtrigger + '-slow',
+			commandText: `${args.commandtrigger}-slow`,
 			createDate: createDate,
 			createUser: msg.author.username,
 			commandType: 'recorded'
@@ -69,7 +68,7 @@ module.exports = class RecordCommand extends Command {
 
 		let customCmdFast = new CustomCommand({
 			serverId: msg.guild.id,
-			commandText: args.commandtrigger + '-fast',
+			commandText: `${args.commandtrigger}-fast`,
 			createDate: createDate,
 			createUser: msg.author.username,
 			commandType: 'recorded'
@@ -88,8 +87,8 @@ module.exports = class RecordCommand extends Command {
 
 	async newRecordedCommand(msg, args, customCmd, customCmdSlow, customCmdFast) {
 		let cmdName = args.commandtrigger;
-		let cmdNameSlow = args.commandtrigger + '-slow';
-		let cmdNameFast = args.commandtrigger + '-fast';
+		let cmdNameSlow = `${args.commandtrigger}-slow`;
+		let cmdNameFast = `${args.commandtrigger}-fast`;
 		let cmdNoTrigger = cmdName.slice(1);
 		let cmdSlowNoTrigger = cmdNameSlow.slice(1);
 		let cmdFastNoTrigger = cmdNameFast.slice(1);
@@ -109,12 +108,13 @@ module.exports = class RecordCommand extends Command {
 
 		voiceChannel.join().then(connection => {
 			const receiver = connection.createReceiver();
-			if (!receiver)
+			if (!receiver) {
 				console.log(
 					`${errorC(
 						`There was an error trying to encode the command: ${cmdName}`
 					)}`
 				);
+			}
 
 			const writable = fs.createWriteStream(`${__dirname}/temp.raw`);
 			let stream = receiver.createPCMStream(msg.author);

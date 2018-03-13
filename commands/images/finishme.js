@@ -15,6 +15,6 @@ module.exports = class FinishMe extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message => channel.send('', { files: [CONSTANTS.FINISHME] }));
+			.then(() => channel.send('', { files: [CONSTANTS.FINISHME] }));
 	}
 };

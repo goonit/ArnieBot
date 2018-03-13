@@ -16,6 +16,6 @@ module.exports = class Woody extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message => channel.send('', { files: [woody[number]] }));
+			.then(() => channel.send('', { files: [woody[number]] }));
 	}
 };

@@ -15,6 +15,6 @@ module.exports = class Needful extends Command {
 		let channel = msg.channel;
 		return msg
 			.delete()
-			.then(message => channel.send('', { files: [CONSTANTS.NEEDFUL] }));
+			.then(() => channel.send('', { files: [CONSTANTS.NEEDFUL] }));
 	}
 };
