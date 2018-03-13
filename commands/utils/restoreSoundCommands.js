@@ -11,7 +11,7 @@ const c = new chalk.constructor({ enabled: true });
 let channelC = c.green.bold;
 let userC = c.cyan.bold;
 let warningC = c.yellow.bold;
-let errorC = c.red.bold;
+// let errorC = c.red.bold;
 let botC = c.magenta.bold;
 
 module.exports = class RestoreSoundCommands extends Command {
@@ -43,7 +43,7 @@ module.exports = class RestoreSoundCommands extends Command {
 					let commandName = file.substr(0, idStartIndex);
 
 					if (RestoreSoundCommands.commandExists(commandName)) {
-						msg.channel.send(`Command '${commandName}' already exists!`);
+						msg.channel.send(`Command '~${commandName}' already exists!`);
 					} else {
 						let customCmd = new CustomCommand({
 							serverId: guildId,
@@ -72,7 +72,9 @@ module.exports = class RestoreSoundCommands extends Command {
 							msg.reply(
 								`New command '~${
 									customCmd.commandText
-								}' was successfully created! '${commandName}' is now ready to be used!`
+								}' was successfully created! '${
+									customCmd.commandText
+								}' is now ready to be used!`
 							);
 						});
 					}
