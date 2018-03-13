@@ -3,6 +3,7 @@ const CustomCommand = require('../../dbModels/customCommand.js');
 const path = require('path');
 const fs = require('fs');
 const thinky = require('thinky')();
+const rql = thinky.r;
 
 module.exports = class DeleteRecorded extends Command {
 	constructor(client) {
