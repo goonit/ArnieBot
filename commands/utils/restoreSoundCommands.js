@@ -2,10 +2,8 @@ const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const SoundCommand = require('../../helpers/dbSoundCommand.js');
 const fs = require('fs');
-const exec = require('child_process').exec;
 const moment = require('moment');
 const path = require('path');
-const inspect = require('util').inspect;
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -32,16 +30,20 @@ module.exports = class RestoreSoundCommands extends Command {
 
 		fs.readdir(resourcePath, (err, files) => {
 			let guildId = msg.guild.id;
-			let file = files[0];
+
+			if (err) {
+				console.log(
+					errorC(`There was an error when trying to read the directory: ${err}`)
+				);
+			}
+
 			files.forEach(file => {
 				if (file.includes(guildId)) {
 					let idStartIndex = file.indexOf(guildId);
 					let commandName = file.substr(0, idStartIndex);
 
 					if (RestoreSoundCommands.commandExists(commandName)) {
-						msg.channel.send(
-							`Command '${args.commandtrigger}' already exists!`
-						);
+						msg.channel.send(`Command '${commandName}' already exists!`);
 					} else {
 						let customCmd = new CustomCommand({
 							serverId: guildId,
@@ -70,9 +72,7 @@ module.exports = class RestoreSoundCommands extends Command {
 							msg.reply(
 								`New command '~${
 									customCmd.commandText
-								}' was successfully created! '${
-									args.commandtrigger
-								}' is now ready to be used!`
+								}' was successfully created! '${commandName}' is now ready to be used!`
 							);
 						});
 					}

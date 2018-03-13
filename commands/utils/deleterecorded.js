@@ -3,8 +3,7 @@ const CustomCommand = require('../../dbModels/customCommand.js');
 const path = require('path');
 const fs = require('fs');
 const thinky = require('thinky')();
-const r = thinky.r;
-const auth = require('../../cuckbot-auth.json');
+const rql = thinky.r;
 
 module.exports = class DeleteRecorded extends Command {
 	constructor(client) {
@@ -27,12 +26,12 @@ module.exports = class DeleteRecorded extends Command {
 	}
 
 	async run(msg, args) {
-		msg.delete().then(m => {
+		msg.delete().then(() => {
 			CustomCommand.filter(
-				r
+				rql
 					.row('commandText')
 					.match(args.command)
-					.and(r.row('commandType').eq('recorded'))
+					.and(rql.row('commandType').eq('recorded'))
 			)
 				.run({ readMode: 'majority' })
 				.then(result => {
@@ -51,7 +50,7 @@ module.exports = class DeleteRecorded extends Command {
 
 						command
 							.delete()
-							.then(deleteResult => {
+							.then(() => {
 								let cmd = this.client.registry.resolveCommand(
 									commandNameNoTrigger
 								);
