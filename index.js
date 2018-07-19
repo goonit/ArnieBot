@@ -14,7 +14,11 @@ client
 	.on('warn', console.warn)
 	.on('debug', console.log)
 	.on('ready', () => {
-		console.log(`Client ready; logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+		console.log(
+			`Client ready; logged in as ${client.user.username}#${
+				client.user.discriminator
+			} (${client.user.id})`
+		);
 
 		commandLoader.loadDbCommands(client);
 	})
@@ -24,8 +28,25 @@ client
 	.on('reconnect', () => {
 		console.warn('Reconnecting...');
 	})
+	.on('guildMemberAdd', (member) => {
+		console.log(
+			`new member ${member.displayName} has joined. Assigning new role`
+		);
+		let role = member.guild.roles.find('name', 'Member');
+		if (!role) {
+			console.log(`Member role was not found`);
+			return;
+		}
+
+		member
+			.addRole(role)
+			.then((withRole) => {
+				console.log(`Added Member role to ${withRole.displayName}`);
+			})
+			.catch((err) => console.log(err));
+	})
 	.on('commandError', (cmd, err) => {
-		if(err instanceof Commando.FriendlyError) {
+		if (err instanceof Commando.FriendlyError) {
 			return;
 		}
 		console.error(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
@@ -43,13 +64,5 @@ client.registry
 		help: false
 	})
 	.registerCommandsIn(path.join(__dirname, 'commands'));
-
-// client.setProvider(
-//     sqlite.open(path.join(__dirname, 'database.sqlite3'))
-//         .then((db) => {
-//             return new Commando.SQLiteProvider(db);
-//         })
-//         .catch(console.error)
-// );
 
 client.login(auth.token);
