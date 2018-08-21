@@ -1,7 +1,7 @@
 const CustomCommandModel = require('./customCommand');
-const ImageCommand = require('../helpers/dbImageCommand.js');
-const SoundCommand = require('../helpers/dbSoundCommand.js');
-const TextCommand = require('../helpers/dbTextCommand.js');
+import SoundCommand from '../helpers/dbSoundCommand';
+import ImageCommand from '../helpers/dbImageCommand';
+import TextCommand from '../helpers/dbTextCommand';
 import { CommandoClient, Command } from 'discord.js-commando';
 
 export async function loadDbCommands(client: CommandoClient) {
@@ -17,22 +17,37 @@ export async function loadDbCommands(client: CommandoClient) {
 
 		switch (cmd.commandType) {
 			case 'image':
-				command = new ImageCommand(client, cmd);
+				try {
+					command = new ImageCommand(client, cmd);
 
-				dbCmdArr.push(command);
+					dbCmdArr.push(command);
+				} catch (e) {
+					console.error('exeption: ', e);
+				}
+
 				break;
 
 			case 'text':
-				command = new TextCommand(client, cmd);
+				try {
+					command = new TextCommand(client, cmd);
 
-				dbCmdArr.push(command);
+					dbCmdArr.push(command);
+				} catch (e) {
+					console.error('exeption: ', e);
+				}
+
 				break;
 
 			case 'sound':
 			case 'recorded':
-				command = new SoundCommand(client, cmd);
+				try {
+					command = new SoundCommand(client, cmd);
 
-				dbCmdArr.push(command);
+					dbCmdArr.push(command);
+				} catch (e) {
+					console.error('exeption: ', e);
+				}
+
 				break;
 		}
 	}

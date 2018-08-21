@@ -4,7 +4,7 @@ import { Message } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 import { PlaySound } from '../helpers/playsound.js';
 
-export class DbSoundCommand extends Command {
+export default class DbSoundCommand extends Command {
 	public customCommand: any;
 	public constructor(client: CommandoClient, customCommandObject: any) {
 		super(client, {

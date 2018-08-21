@@ -3,7 +3,7 @@
 import { Message } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
-export class DbTextCommand extends Command {
+export default class DbTextCommand extends Command {
 	public customCommand: any;
 	public constructor(client: CommandoClient, customCommandObject: any) {
 		super(client, {
