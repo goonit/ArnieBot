@@ -16,19 +16,19 @@ export class PlaySound {
 
 		voiceChannel
 			.join()
-			.then(connection => {
+			.then((connection) => {
 				const dispatcher = connection.playFile(args.sound, args.options);
 
 				dispatcher.on('end', () => {
 					voiceChannel.leave();
 				});
 
-				dispatcher.on('error', err => {
+				dispatcher.on('error', (err) => {
 					console.log(`Playback Error: ${util.inspect(err)}`);
 					voiceChannel.leave();
 				});
 			})
-			.catch(err => {
+			.catch((err) => {
 				console.error(`error: ${err}`);
 			});
 

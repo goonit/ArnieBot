@@ -13,7 +13,7 @@ export async function loadDbCommands(client: CommandoClient) {
 	for (let cmd of dbCommands) {
 		cmd.commandText = cmd.commandText.slice(1);
 
-		let command: any = {};
+		let command: Command;
 
 		switch (cmd.commandType) {
 			case 'image':

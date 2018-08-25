@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
 export class Lenny extends Command {
@@ -13,7 +13,7 @@ export class Lenny extends Command {
 	}
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
-		let channel = msg.channel;
+		let channel: TextChannel = msg.channel as TextChannel;
 		return msg.delete().then(() => channel.send('( ͡° ͜ʖ ͡°)'));
 	}
 }

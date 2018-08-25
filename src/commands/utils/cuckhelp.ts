@@ -1,9 +1,12 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
-// const Embed = require('discord.js').RichEmbed;
 
-import { Message, RichEmbed as Embed } from 'discord.js';
-import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
+import { Message, RichEmbed as Embed, Collection } from 'discord.js';
+import {
+	CommandoClient,
+	Command,
+	CommandMessage,
+	CommandGroup
+} from 'discord.js-commando';
 
 export class CuckHelp extends Command {
 	public constructor(client: CommandoClient) {
@@ -33,23 +36,23 @@ export class CuckHelp extends Command {
 	): Promise<Message | Message[]> {
 		CustomCommand.filter({ serverId: msg.guild.id })
 			.run({ readMode: 'majority' })
-			.then((result: any) => {
-				let imageCommands = result.filter(
+			.then((result: any[]) => {
+				let imageCommands: any[] = result.filter(
 					(cmd: any) => cmd.commandType === 'image'
 				);
-				let textCommands = result.filter(
+				let textCommands: any[] = result.filter(
 					(cmd: any) => cmd.commandType === 'text'
 				);
-				let soundCommands = result.filter(
+				let soundCommands: any[] = result.filter(
 					(cmd: any) => cmd.commandType === 'sound'
 				);
-				let recordedCommands = result.filter(
+				let recordedCommands: any[] = result.filter(
 					(cmd: any) =>
 						cmd.commandType === 'recorded' &&
 						!cmd.commandText.includes('-slow') &&
 						!cmd.commandText.includes('-fast')
 				);
-				let embed = {};
+				let embed: Embed;
 				let embedList: Embed[] = [];
 
 				if (args.type === 'commands') {
@@ -76,7 +79,7 @@ export class CuckHelp extends Command {
 						.then(() => {
 							msg.reply(`Check your DM's`);
 						})
-						.catch(err => {
+						.catch((err) => {
 							console.log(err);
 						});
 				} else {
@@ -117,8 +120,10 @@ export class CuckHelp extends Command {
 
 		// ----- TEXT COMMANDS ----- //
 
-		let loadedTextCommands: any = this.client.registry.resolveGroup('text')
-			.commands;
+		let loadedTextCommands: Collection<
+			string,
+			Command
+		> = this.client.registry.resolveGroup('text').commands;
 
 		let allTextCommands = this.buildAllCommands(
 			loadedTextCommands,
@@ -129,8 +134,10 @@ export class CuckHelp extends Command {
 
 		// ----- IMAGE COMMANDS ----- //
 
-		let loadedImageCommands: any = this.client.registry.resolveGroup('images')
-			.commands;
+		let loadedImageCommands: Collection<
+			string,
+			Command
+		> = this.client.registry.resolveGroup('images').commands;
 
 		let allImageCommands = this.buildAllCommands(
 			loadedImageCommands,
@@ -141,8 +148,10 @@ export class CuckHelp extends Command {
 
 		// ----- SOUND COMMANDS ----- //
 
-		let loadedSoundCommands: any = this.client.registry.resolveGroup('sounds')
-			.commands;
+		let loadedSoundCommands: Collection<
+			string,
+			Command
+		> = this.client.registry.resolveGroup('sounds').commands;
 
 		let allSoundCommands = this.buildAllCommands(
 			loadedSoundCommands,
@@ -157,7 +166,7 @@ export class CuckHelp extends Command {
 
 		if (recordedCommandsFromDb.length > 0) {
 			recordedCommands = recordedCommandsFromDb
-				.map(recordedCommand => recordedCommand.commandText.slice(1))
+				.map((recordedCommand) => recordedCommand.commandText.slice(1))
 				.sort()
 				.join(', ');
 		}
@@ -167,8 +176,13 @@ export class CuckHelp extends Command {
 		return [textEmbed, imageEmbed, soundEmbed, recordedEmbed];
 	}
 
-	private buildAllCommands(loadedCommands: any, commandsFromDb: any) {
-		let allCommands = loadedCommands.map((command: any) => command.memberName);
+	private buildAllCommands(
+		loadedCommands: Collection<string, Command>,
+		commandsFromDb: any
+	): string {
+		let allCommands: string[] = loadedCommands.map(
+			(command: Command) => command.memberName
+		);
 
 		if (commandsFromDb.length > 0) {
 			let customCommands = commandsFromDb.map((custom: any) =>
@@ -178,13 +192,13 @@ export class CuckHelp extends Command {
 			allCommands = allCommands.concat(customCommands);
 		}
 
-		allCommands = allCommands.sort().join(', ');
+		let commandString: string = allCommands.sort().join(', ');
 
-		return allCommands;
+		return commandString;
 	}
 
 	private buildCreationHelp(): Embed {
-		let creatingCommands =
+		let creatingCommands: string =
 			'For creating commands, use the following format:\n' +
 			'*~createcommand ~[commandname] [commandtype (image, text, sound)] [imageurl, text, yturl] [starttime (format: 00:00:00)] [duration (seconds)*\n' +
 			'Ex:\t\t*~createcommand ~test sound <youtube link> 00:00:43 07*\n' +
@@ -194,9 +208,9 @@ export class CuckHelp extends Command {
 			'This will create 3 different commands, slow/regular/fast versions of what the bot recorded you saying. To play these commands you would use:\n' +
 			'Examples:\t\t*~recordtest-slow*, *~recordtest*, *~recordtest-fast*';
 
-		let deletingCommands = `*~deletecommand ~[commandname]*\n' + 'Ex:\t\t*~deletecommand ~facepalm*`;
+		let deletingCommands: string = `*~deletecommand ~[commandname]*\n' + 'Ex:\t\t*~deletecommand ~facepalm*`;
 
-		let embed = new Embed();
+		let embed: Embed = new Embed();
 
 		embed.title = 'Cuckbot Commands';
 		embed.color = 0x4286f4;
@@ -211,12 +225,12 @@ export class CuckHelp extends Command {
 		return embed;
 	}
 
-	private buildCommandString(commandString: string, embedObject: Embed) {
+	private buildCommandString(commandString: string, embedObject: Embed): void {
 		if (commandString.length <= 2048) {
 			embedObject.setDescription(commandString);
 		} else {
 			let commandArray = commandString.split(',');
-			let tempArray: any[] = [];
+			let tempArray: string[] = [];
 			let charCount = 0;
 			let descriptionSet = false;
 

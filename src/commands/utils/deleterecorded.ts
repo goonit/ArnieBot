@@ -1,11 +1,9 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const path = require('path');
 const fs = require('fs');
 const thinky = require('thinky')();
 const rql = thinky.r;
 
-// import { Message } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 import { Message } from 'discord.js';
 
@@ -40,7 +38,7 @@ export class DeleteRecorded extends Command {
 				.and(rql.row('commandType').eq('recorded'))
 		)
 			.run({ readMode: 'majority' })
-			.then((result: any) => {
+			.then((result: any[]) => {
 				console.log(`result: ${JSON.stringify(result)}`);
 				if (result.length !== 3) {
 					return msg.reply(
@@ -57,7 +55,7 @@ export class DeleteRecorded extends Command {
 					command
 						.delete()
 						.then(() => {
-							let cmd = this.client.registry.resolveCommand(
+							let cmd: Command = this.client.registry.resolveCommand(
 								commandNameNoTrigger
 							);
 							this.client.registry.unregisterCommand(cmd);
@@ -83,7 +81,7 @@ export class DeleteRecorded extends Command {
 		return await msg.delete();
 	}
 
-	private static removeFile(file: any): void {
+	private static removeFile(file: string): void {
 		fs.unlinkSync(file);
 	}
 }

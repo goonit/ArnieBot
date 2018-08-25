@@ -34,10 +34,9 @@ export class Urban extends Command {
 			let result = JSON.parse(json.res.text).list[0];
 
 			if (result === null) {
-				msg.channel.send(
+				return msg.channel.send(
 					`\`\`\`\n${args.searchTerm} has no definition!\n\`\`\``
 				);
-				return;
 			}
 
 			let embed = new Embed();

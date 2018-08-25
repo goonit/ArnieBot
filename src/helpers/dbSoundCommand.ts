@@ -3,20 +3,19 @@ const path = require('path');
 import { Message } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 import { PlaySound } from '../helpers/playsound.js';
+import { ICustomCommand } from './ICustomCommand';
 
 export default class DbSoundCommand extends Command {
 	public customCommand: any;
-	public constructor(client: CommandoClient, customCommandObject: any) {
+	public constructor(client: CommandoClient, cmd: ICustomCommand) {
 		super(client, {
-			name: customCommandObject.commandText,
+			name: cmd.commandText,
 			group: 'custom',
-			memberName: customCommandObject.commandText,
-			description: `Plays a ${
-				customCommandObject.commandText
-			} in a voice channel`
+			memberName: cmd.commandText,
+			description: `Plays a ${cmd.commandText} in a voice channel`
 		});
 
-		this.customCommand = customCommandObject;
+		this.customCommand = cmd;
 	}
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {

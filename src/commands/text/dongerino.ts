@@ -1,6 +1,6 @@
 const dongerino = require('../../resources/dongerinos.json').dongerino;
 
-import { Message } from 'discord.js';
+import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
 export class Dongerino extends Command {
@@ -16,7 +16,7 @@ export class Dongerino extends Command {
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let num: number = Math.floor(Math.random() * dongerino.length) as number;
 
-		let channel = msg.channel;
+		let channel: TextChannel = msg.channel as TextChannel;
 		return msg.delete().then(() => channel.send(dongerino[num]));
 	}
 }

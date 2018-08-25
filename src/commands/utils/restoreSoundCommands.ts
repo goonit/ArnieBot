@@ -1,4 +1,3 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const SoundCommand = require('../../helpers/dbSoundCommand.js');
 const fs = require('fs');
@@ -7,6 +6,7 @@ const path = require('path');
 
 import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
+import { ICustomCommand } from '../../helpers/ICustomCommand';
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -29,7 +29,7 @@ export class RestoreSoundCommands extends Command {
 	}
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
-		let resourcePath = path.resolve('resources/');
+		let resourcePath: string = path.resolve('resources/');
 		let channel: TextChannel = msg.channel as TextChannel;
 
 		return msg.delete().then(() => {
@@ -99,6 +99,6 @@ export class RestoreSoundCommands extends Command {
 	public static commandExists(trigger: string, serverId: string): Boolean {
 		return CustomCommand.filter({ serverId, commandText: trigger })
 			.run({ readMode: 'majority' })
-			.then((result: any) => result.length > 0);
+			.then((result: ICustomCommand[]) => result.length > 0);
 	}
 }

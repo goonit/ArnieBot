@@ -7,6 +7,7 @@ const SoundCommand = require('../../helpers/dbSoundCommand.js');
 
 import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
+import { ICustomCommand } from '../../helpers/ICustomCommand';
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -55,7 +56,7 @@ export class RecordCommand extends Command {
 
 		let createDate = moment().format('MM/DD/YYYY hh:mm:ss');
 
-		let customCmd = new CustomCommand({
+		let customCmd: ICustomCommand = new CustomCommand({
 			serverId: msg.guild.id,
 			commandText: args.commandtrigger,
 			createDate: createDate,
@@ -63,7 +64,7 @@ export class RecordCommand extends Command {
 			commandType: 'recorded'
 		});
 
-		let customCmdSlow = new CustomCommand({
+		let customCmdSlow: ICustomCommand = new CustomCommand({
 			serverId: msg.guild.id,
 			commandText: `${args.commandtrigger}-slow`,
 			createDate: createDate,
@@ -71,7 +72,7 @@ export class RecordCommand extends Command {
 			commandType: 'recorded'
 		});
 
-		let customCmdFast = new CustomCommand({
+		let customCmdFast: ICustomCommand = new CustomCommand({
 			serverId: msg.guild.id,
 			commandText: `${args.commandtrigger}-fast`,
 			createDate: createDate,
@@ -93,16 +94,16 @@ export class RecordCommand extends Command {
 	private async newRecordedCommand(
 		msg: CommandMessage,
 		args: any,
-		customCmd: any,
-		customCmdSlow: any,
-		customCmdFast: any
+		customCmd: ICustomCommand,
+		customCmdSlow: ICustomCommand,
+		customCmdFast: ICustomCommand
 	) {
-		let cmdName = args.commandtrigger;
-		let cmdNameSlow = `${args.commandtrigger}-slow`;
-		let cmdNameFast = `${args.commandtrigger}-fast`;
-		let cmdNoTrigger = cmdName.slice(1);
-		let cmdSlowNoTrigger = cmdNameSlow.slice(1);
-		let cmdFastNoTrigger = cmdNameFast.slice(1);
+		let cmdName: string = args.commandtrigger;
+		let cmdNameSlow: string = `${args.commandtrigger}-slow`;
+		let cmdNameFast: string = `${args.commandtrigger}-fast`;
+		let cmdNoTrigger: string = cmdName.slice(1);
+		let cmdSlowNoTrigger: string = cmdNameSlow.slice(1);
+		let cmdFastNoTrigger: string = cmdNameFast.slice(1);
 
 		// download the video via ytdl, then write that to a video file.
 		// After that is done, then we run that video file through the ffmpeg
@@ -117,7 +118,7 @@ export class RecordCommand extends Command {
 			return msg.reply(`Please be in a voice channel first`);
 		}
 
-		voiceChannel.join().then(connection => {
+		voiceChannel.join().then((connection) => {
 			const receiver = connection.createReceiver();
 			if (!receiver) {
 				console.log(
@@ -130,7 +131,7 @@ export class RecordCommand extends Command {
 			const writable = fs.createWriteStream(`${__dirname}/temp.raw`);
 			let stream = receiver.createPCMStream(msg.author);
 
-			stream.on('data', chunk => {
+			stream.on('data', (chunk) => {
 				writable.write(chunk, () => {
 					console.log(`Wrote ${chunk.length} bytes of data to output file`);
 				});
@@ -168,7 +169,7 @@ export class RecordCommand extends Command {
 		cmdName: string,
 		cmdNoTrigger: string,
 		audioBitRate: string,
-		customCmdObj: any,
+		customCmdObj: any, // * has to stay as any because no ts support from thinky :(
 		msg: CommandMessage
 	) {
 		// 96k bitrate for normal voice. (half the 'regular' rate with is low-pitched to begin with) ffmpeg -f s16le -i input.raw -filter:a "asetrate=96k" -c:a libmp3lame output.mp3
@@ -180,8 +181,8 @@ export class RecordCommand extends Command {
 		console.log(
 			`calling ffempegwork with name: ${cmdName} and bitrate: ${audioBitRate}`
 		);
-		let resourcesPath = path.resolve('resources/');
-		let tempFileDir = `${__dirname}/temp.raw`;
+		let resourcesPath: string = path.resolve('resources/');
+		let tempFileDir: string = `${__dirname}/temp.raw`;
 		let channel: TextChannel = msg.channel as TextChannel;
 
 		let childProcess = exec(
@@ -266,10 +267,10 @@ export class RecordCommand extends Command {
 	private static commandExists(trigger: string, serverId: string) {
 		CustomCommand.filter({ serverId, commandText: trigger })
 			.run({ readMode: 'majority' })
-			.then((result: any[]) => result.length > 0);
+			.then((result: ICustomCommand[]) => result.length > 0);
 	}
 
-	private static removeFile(file: any) {
+	private static removeFile(file: string) {
 		fs.unlinkSync(file);
 	}
 }

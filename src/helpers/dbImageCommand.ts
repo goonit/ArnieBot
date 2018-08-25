@@ -2,24 +2,23 @@
 
 import { Message } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
+import { ICustomCommand } from './ICustomCommand';
 
 export default class DBImageCommand extends Command {
-	public customCommand: any;
-	public constructor(client: CommandoClient, customCommandObject: any) {
+	public customCommand: ICustomCommand;
+	public constructor(client: CommandoClient, cmd: ICustomCommand) {
 		super(client, {
-			name: customCommandObject.commandText,
+			name: cmd.commandText,
 			group: 'custom',
-			memberName: customCommandObject.commandText,
-			description: `Posts a ${
-				customCommandObject.commandText
-			} image to the chat`,
+			memberName: cmd.commandText,
+			description: `Posts a ${cmd.commandText} image to the chat`,
 			throttling: {
 				usages: 2,
 				duration: 7
 			}
 		});
 
-		this.customCommand = customCommandObject;
+		this.customCommand = cmd;
 	}
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {

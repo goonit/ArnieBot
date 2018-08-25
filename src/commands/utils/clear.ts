@@ -1,6 +1,4 @@
-// const { Command } = require('discord.js-commando');
-
-import { Message } from 'discord.js';
+import { Message, Collection } from 'discord.js';
 import { CommandoClient, CommandMessage, Command } from 'discord.js-commando';
 
 export class Clear extends Command {
@@ -28,8 +26,13 @@ export class Clear extends Command {
 		args: any
 	): Promise<Message | Message[]> {
 		let deleteNum = args.clearnum + 1;
-		let messages: any = await msg.channel.fetchMessages({ limit: deleteNum });
-		let msgCollection = await msg.channel.bulkDelete(messages);
+		let messages: Collection<string, Message> = await msg.channel.fetchMessages(
+			{ limit: deleteNum }
+		);
+		let msgCollection: Collection<
+			string,
+			Message
+		> = await msg.channel.bulkDelete(messages);
 
 		return msgCollection.array();
 	}

@@ -21,7 +21,7 @@ export class Watermalone extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let num: number = Math.floor(Math.random() * watermalone.length);
-		let file = path.resolve('resources/', watermalone[num]);
+		let file: string = path.resolve('resources/', watermalone[num]);
 
 		let soundArgs = {
 			sound: file,

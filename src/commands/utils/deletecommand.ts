@@ -1,4 +1,3 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const path = require('path');
 const fs = require('fs');
@@ -35,12 +34,12 @@ export class DeleteCommand extends Command {
 			commandText: args.command
 		})
 			.run({ readMode: 'majority' })
-			.then((result: any) => {
+			.then((result: any[]) => {
 				if (result.length > 0) {
 					result[0]
 						.delete()
 						.then((deleteResult: any) => {
-							let cmd = this.client.registry.resolveCommand(
+							let cmd: Command = this.client.registry.resolveCommand(
 								args.command.slice(1)
 							);
 							this.client.registry.unregisterCommand(cmd);
@@ -69,7 +68,7 @@ export class DeleteCommand extends Command {
 		return await msg.delete();
 	}
 
-	private static removeFile(file: any) {
+	private static removeFile(file: string) {
 		fs.unlinkSync(file);
 	}
 }

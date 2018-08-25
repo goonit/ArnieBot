@@ -4,8 +4,8 @@ const auth = require('./cuckbot-auth.json');
 const util = require('util');
 
 import { loadDbCommands } from './dbModels/loadCommands';
-import { CommandMessage } from 'discord.js-commando';
-import { GuildMember } from 'discord.js';
+import { CommandMessage, Command } from 'discord.js-commando';
+import { GuildMember, Role } from 'discord.js';
 
 const client = new Commando.Client({
 	selfBot: false,
@@ -36,7 +36,7 @@ client
 		console.log(
 			`new member ${member.displayName} has joined. Assigning new role`
 		);
-		let role = member.guild.roles.find('name', 'Member');
+		let role: Role = member.guild.roles.find('name', 'Member');
 		if (!role) {
 			console.log(`Member role was not found`);
 			return;
@@ -49,7 +49,7 @@ client
 			})
 			.catch((err) => console.log(err));
 	})
-	.on('commandError', (cmd: any, err: any) => {
+	.on('commandError', (cmd: Command, err: any) => {
 		if (err instanceof Commando.FriendlyError) {
 			return;
 		}

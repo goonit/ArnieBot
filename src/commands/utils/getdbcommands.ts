@@ -1,4 +1,3 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const util = require('util');
 

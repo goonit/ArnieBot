@@ -1,4 +1,3 @@
-// const { Command } = require('discord.js-commando');
 const CustomCommand = require('../../dbModels/customCommand.js');
 const ytdl = require('ytdl-core');
 const fs = require('fs');
@@ -108,7 +107,7 @@ export class CreateCommand extends Command {
 			createUser: msg.author.username
 		});
 
-		let registerCmd: any = {};
+		let registerCmd: Command;
 		let channel: TextChannel = msg.channel as TextChannel;
 
 		msg.delete();
@@ -176,16 +175,17 @@ export class CreateCommand extends Command {
 		}
 	}
 
+	// todo: make this return a promise so that we can actually await the call to this method.
 	private async newSoundCommand(
 		msg: CommandMessage,
 		args: any,
 		customCmd: any
 	) {
-		let cmdName = args.commandtrigger;
-		let cmdNoTrigger = cmdName.slice(1);
-		let ytUrl = args.commandresponse;
-		let startTime = args.starttime;
-		let seconds = args.duration;
+		let cmdName: string = args.commandtrigger;
+		let cmdNoTrigger: string = cmdName.slice(1);
+		let ytUrl: string = args.commandresponse;
+		let startTime: string = args.starttime;
+		let seconds: string = args.duration;
 		let channel: TextChannel = msg.channel as TextChannel;
 
 		// download the video via ytdl, then write that to a video file.
