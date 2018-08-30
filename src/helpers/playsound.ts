@@ -1,5 +1,5 @@
 const util = require('util');
-import { Message } from 'discord.js';
+import { Message, VoiceConnection } from 'discord.js';
 import { CommandMessage } from 'discord.js-commando';
 
 export class PlaySound {
@@ -14,23 +14,22 @@ export class PlaySound {
 			return;
 		}
 
-		voiceChannel
-			.join()
-			.then((connection) => {
-				const dispatcher = connection.playFile(args.sound, args.options);
+		try {
+			let connection: VoiceConnection = await voiceChannel.join();
 
-				dispatcher.on('end', () => {
-					voiceChannel.leave();
-				});
+			const dispatcher = connection.playFile(args.sound, args.options);
 
-				dispatcher.on('error', (err) => {
-					console.log(`Playback Error: ${util.inspect(err)}`);
-					voiceChannel.leave();
-				});
-			})
-			.catch((err) => {
-				console.error(`error: ${err}`);
+			dispatcher.on('end', () => {
+				voiceChannel.leave();
 			});
+
+			dispatcher.on('error', (err) => {
+				console.log(`Playback Error: ${util.inspect(err)}`);
+				voiceChannel.leave();
+			});
+		} catch (err) {
+			console.error(`error: ${err}`);
+		}
 
 		return msg.delete();
 	}

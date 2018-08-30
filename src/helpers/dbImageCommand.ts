@@ -23,8 +23,9 @@ export default class DBImageCommand extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let channel = msg.channel;
-		return msg
-			.delete()
-			.then(() => channel.send('', { files: [this.customCommand.imageUrl] }));
+
+		await msg.delete();
+
+		return channel.send('', { files: [this.customCommand.imageUrl] });
 	}
 }

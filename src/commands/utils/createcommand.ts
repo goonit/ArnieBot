@@ -75,7 +75,7 @@ export class CreateCommand extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		if (CreateCommand.commandExists(args.commandtrigger, msg.guild.id)) {
+		if (await this.commandExists(args.commandtrigger, msg.guild.id)) {
 			msg.reply(`Command '${args.commandtrigger}' already exists!`);
 			return;
 		}
@@ -116,19 +116,19 @@ export class CreateCommand extends Command {
 			customCmd.commandType = 'text';
 			customCmd.commandResponse = args.commandresponse;
 
-			customCmd.save().then((result: any) => {
-				console.log(
-					`${channelC(` # ${channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(
-						result.commandText
-					)} was created by ${userC(msg.author.username)}`
-				);
+			let result: any = await customCmd.save();
 
-				msg.reply(
-					`New command '${args.commandtrigger}' was successfully created! '${
-						args.commandtrigger
-					} is now ready to be used!`
-				);
-			});
+			console.log(
+				`${channelC(` # ${channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(
+					result.commandText
+				)} was created by ${userC(msg.author.username)}`
+			);
+
+			msg.reply(
+				`New command '${args.commandtrigger}' was successfully created! '${
+					args.commandtrigger
+				} is now ready to be used!`
+			);
 
 			// Chop off the leading ~ for commando
 			customCmd.commandText = customCmd.commandText.slice(1);
@@ -152,19 +152,19 @@ export class CreateCommand extends Command {
 			customCmd.commandType = 'image';
 			customCmd.imageUrl = args.commandresponse;
 
-			customCmd.save().then((result: any) => {
-				console.log(
-					`${channelC(` # ${channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(
-						result.commandText
-					)} was created by ${userC(msg.author.username)}`
-				);
+			let result: any = await customCmd.save();
 
-				msg.reply(
-					`New command '${args.commandtrigger}' was successfully created! '${
-						args.commandtrigger
-					} is now ready to be used!`
-				);
-			});
+			console.log(
+				`${channelC(` # ${channel.name}`)}: ${botC(`@CuckBot`)} - ${warningC(
+					result.commandText
+				)} was created by ${userC(msg.author.username)}`
+			);
+
+			msg.reply(
+				`New command '${args.commandtrigger}' was successfully created! '${
+					args.commandtrigger
+				} is now ready to be used!`
+			);
 
 			// Chop off the leading ~ for commando
 			customCmd.commandText = customCmd.commandText.slice(1);
@@ -246,7 +246,7 @@ export class CreateCommand extends Command {
 				// making sure the file was created successfully
 				fs.stat(
 					`${resourcesPath}/${cmdNoTrigger}${msg.guild.id}.mp3`,
-					(err: any, stats: any) => {
+					async (err: any, stats: any) => {
 						if (err || !stats.isFile()) {
 							console.log(
 								`${channelC(` # ${channel.name}`)}: ${botC(
@@ -277,38 +277,44 @@ export class CreateCommand extends Command {
 							});
 						}
 
-						customCmd.save().then((result: any) => {
-							console.log(
-								`${channelC(` # ${channel.name}`)}: ${botC(
-									`@CuckBot`
-								)} - ${warningC(result.commandText)} was created by ${userC(
-									msg.author.username
-								)}`
-							);
+						let result: any = await customCmd.save();
 
-							// Chop off the leading ~ for commando
-							customCmd.commandText = customCmd.commandText.slice(1);
+						console.log(
+							`${channelC(` # ${channel.name}`)}: ${botC(
+								`@CuckBot`
+							)} - ${warningC(result.commandText)} was created by ${userC(
+								msg.author.username
+							)}`
+						);
 
-							this.client.registry.registerCommand(
-								new SoundCommand(this.client, customCmd)
-							);
+						// Chop off the leading ~ for commando
+						customCmd.commandText = customCmd.commandText.slice(1);
 
-							msg.reply(
-								`New command '${cmdName}' was successfully created! '${
-									args.commandtrigger
-								}' is now ready to be used!`
-							);
-						});
+						this.client.registry.registerCommand(
+							new SoundCommand(this.client, customCmd)
+						);
+
+						msg.reply(
+							`New command '${cmdName}' was successfully created! '${
+								args.commandtrigger
+							}' is now ready to be used!`
+						);
 					}
 				);
 			});
 		});
 	}
 
-	public static commandExists(trigger: string, serverId: string): Boolean {
-		return CustomCommand.filter({ serverId, commandText: trigger })
-			.run({ readMode: 'majority' })
-			.then((result: any) => result.length > 0);
+	private async commandExists(
+		trigger: string,
+		serverId: string
+	): Promise<Boolean> {
+		let result: any = await CustomCommand.filter({
+			serverId,
+			commandText: trigger
+		}).run({ readMode: 'majority' });
+
+		return result.length > 0;
 	}
 
 	public static removeFile(file: any): void {

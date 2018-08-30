@@ -42,7 +42,7 @@ export class RecordCommand extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		if (RecordCommand.commandExists(args.commandtrigger, msg.guild.id)) {
+		if (await this.commandExists(args.commandtrigger, msg.guild.id)) {
 			msg.reply(`Command '${args.commandtrigger}' already exists!`);
 			return;
 		}
@@ -118,50 +118,50 @@ export class RecordCommand extends Command {
 			return msg.reply(`Please be in a voice channel first`);
 		}
 
-		voiceChannel.join().then((connection) => {
-			const receiver = connection.createReceiver();
-			if (!receiver) {
-				console.log(
-					`${errorC(
-						`There was an error trying to encode the command: ${cmdName}`
-					)}`
-				);
-			}
+		let connection = await voiceChannel.join();
 
-			const writable = fs.createWriteStream(`${__dirname}/temp.raw`);
-			let stream = receiver.createPCMStream(msg.author);
+		const receiver = connection.createReceiver();
+		if (!receiver) {
+			console.log(
+				`${errorC(
+					`There was an error trying to encode the command: ${cmdName}`
+				)}`
+			);
+		}
 
-			stream.on('data', (chunk) => {
-				writable.write(chunk, () => {
-					console.log(`Wrote ${chunk.length} bytes of data to output file`);
-				});
+		const writable = fs.createWriteStream(`${__dirname}/temp.raw`);
+		let stream = receiver.createPCMStream(msg.author);
+
+		stream.on('data', (chunk) => {
+			writable.write(chunk, () => {
+				console.log(`Wrote ${chunk.length} bytes of data to output file`);
 			});
+		});
 
-			writable.on('error', (error: any) => {
-				console.error(`error has occurred: ${error}`);
-			});
+		writable.on('error', (error: any) => {
+			console.error(`error has occurred: ${error}`);
+		});
 
-			stream.on('end', () => {
-				connection.disconnect();
-				msg.reply(`Converting command -> audio`);
-				Promise.all([
-					this.doFfmpegWork(
-						cmdNameSlow,
-						cmdSlowNoTrigger,
-						'48k',
-						customCmdSlow,
-						msg
-					),
-					this.doFfmpegWork(cmdName, cmdNoTrigger, '96k', customCmd, msg),
-					this.doFfmpegWork(
-						cmdNameFast,
-						cmdFastNoTrigger,
-						'192k',
-						customCmdFast,
-						msg
-					)
-				]);
-			});
+		stream.on('end', () => {
+			connection.disconnect();
+			msg.reply(`Converting command -> audio`);
+			Promise.all([
+				this.doFfmpegWork(
+					cmdNameSlow,
+					cmdSlowNoTrigger,
+					'48k',
+					customCmdSlow,
+					msg
+				),
+				this.doFfmpegWork(cmdName, cmdNoTrigger, '96k', customCmd, msg),
+				this.doFfmpegWork(
+					cmdNameFast,
+					cmdFastNoTrigger,
+					'192k',
+					customCmdFast,
+					msg
+				)
+			]);
 		});
 	}
 
@@ -217,7 +217,7 @@ export class RecordCommand extends Command {
 			// making sure the file was created successfully
 			fs.stat(
 				`${resourcesPath}/${cmdNoTrigger}${msg.guild.id}.mp3`,
-				(err: any, stats: any) => {
+				async (err: any, stats: any) => {
 					if (err || !stats.isFile()) {
 						console.log(
 							`${channelC(` # ${channel.name}`)}: ${botC(
@@ -239,35 +239,41 @@ export class RecordCommand extends Command {
 						return;
 					}
 
-					customCmdObj.save().then((result: any) => {
-						console.log(
-							`${channelC(` # ${channel.name}`)}: ${botC(
-								`@CuckBot`
-							)} - ${warningC(result.commandText)} was created by ${userC(
-								msg.author.username
-							)}`
-						);
+					let result = await customCmdObj.save();
 
-						// Chop off the leading ~ for commando
-						customCmdObj.commandText = customCmdObj.commandText.slice(1);
+					console.log(
+						`${channelC(` # ${channel.name}`)}: ${botC(
+							`@CuckBot`
+						)} - ${warningC(result.commandText)} was created by ${userC(
+							msg.author.username
+						)}`
+					);
 
-						this.client.registry.registerCommand(
-							new SoundCommand(this.client, customCmdObj)
-						);
+					// Chop off the leading ~ for commando
+					customCmdObj.commandText = customCmdObj.commandText.slice(1);
 
-						msg.reply(
-							`New command '${cmdName}' was successfully created and is now ready to be used!`
-						);
-					});
+					this.client.registry.registerCommand(
+						new SoundCommand(this.client, customCmdObj)
+					);
+
+					msg.reply(
+						`New command '${cmdName}' was successfully created and is now ready to be used!`
+					);
 				}
 			);
 		});
 	}
 
-	private static commandExists(trigger: string, serverId: string) {
-		CustomCommand.filter({ serverId, commandText: trigger })
-			.run({ readMode: 'majority' })
-			.then((result: ICustomCommand[]) => result.length > 0);
+	private async commandExists(
+		trigger: string,
+		serverId: string
+	): Promise<Boolean> {
+		let result: ICustomCommand[] = CustomCommand.filter({
+			serverId,
+			commandText: trigger
+		}).run({ readMode: 'majority' });
+
+		return result.length > 0;
 	}
 
 	private static removeFile(file: string) {

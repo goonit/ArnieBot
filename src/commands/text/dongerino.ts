@@ -17,6 +17,9 @@ export class Dongerino extends Command {
 		let num: number = Math.floor(Math.random() * dongerino.length) as number;
 
 		let channel: TextChannel = msg.channel as TextChannel;
-		return msg.delete().then(() => channel.send(dongerino[num]));
+
+		await msg.delete();
+
+		return channel.send(dongerino[num]);
 	}
 }

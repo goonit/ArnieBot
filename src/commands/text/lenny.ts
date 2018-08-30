@@ -14,6 +14,9 @@ export class Lenny extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let channel: TextChannel = msg.channel as TextChannel;
-		return msg.delete().then(() => channel.send('( ͡° ͜ʖ ͡°)'));
+
+		await msg.delete();
+
+		return channel.send('( ͡° ͜ʖ ͡°)');
 	}
 }

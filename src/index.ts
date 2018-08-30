@@ -32,7 +32,7 @@ client
 	.on('reconnect', () => {
 		console.warn('Reconnecting...');
 	})
-	.on('guildMemberAdd', (member: GuildMember) => {
+	.on('guildMemberAdd', async (member: GuildMember) => {
 		console.log(
 			`new member ${member.displayName} has joined. Assigning new role`
 		);
@@ -42,12 +42,13 @@ client
 			return;
 		}
 
-		member
-			.addRole(role)
-			.then((withRole: GuildMember) => {
-				console.log(`Added Member role to ${withRole.nickname}`);
-			})
-			.catch((err) => console.log(err));
+		try {
+			let withRole: GuildMember = await member.addRole(role);
+
+			console.log(`Added Member role to ${withRole.nickname}`);
+		} catch (err) {
+			console.log(err);
+		}
 	})
 	.on('commandError', (cmd: Command, err: any) => {
 		if (err instanceof Commando.FriendlyError) {

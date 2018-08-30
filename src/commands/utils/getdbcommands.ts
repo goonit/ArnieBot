@@ -28,14 +28,12 @@ export class GetDBCommands extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		CustomCommand.filter({
+		let result: any = await CustomCommand.filter({
 			serverId: msg.guild.id,
 			commandType: args.type
-		})
-			.run({ readMode: 'majority' })
-			.then((result: any) => {
-				console.log(`commands in database: ${util.inspect(result)}`);
-			});
+		}).run({ readMode: 'majority' });
+
+		console.log(`commands in database: ${util.inspect(result)}`);
 
 		return msg.delete();
 	}

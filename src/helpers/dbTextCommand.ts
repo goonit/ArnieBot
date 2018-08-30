@@ -19,8 +19,9 @@ export default class DbTextCommand extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let channel = msg.channel;
-		return msg
-			.delete()
-			.then(() => channel.send(this.customCommand.commandResponse));
+
+		await msg.delete();
+
+		return channel.send(this.customCommand.commandResponse);
 	}
 }

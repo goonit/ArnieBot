@@ -31,52 +31,53 @@ export class DeleteRecorded extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		CustomCommand.filter(
+		let result: any[] = await CustomCommand.filter(
 			rql
 				.row('commandText')
 				.match(args.command)
 				.and(rql.row('commandType').eq('recorded'))
-		)
-			.run({ readMode: 'majority' })
-			.then((result: any[]) => {
-				console.log(`result: ${JSON.stringify(result)}`);
-				if (result.length !== 3) {
-					return msg.reply(
-						`Expected 3 commands to be found, ${
-							result.length
-						} commands were found to be associated with that name.`
-					);
-				}
+		).run({ readMode: 'majority' });
 
-				result.forEach((command: any) => {
-					let commandName = command.commandText;
-					let commandNameNoTrigger = command.commandText.slice(1);
+		console.log(`result: ${JSON.stringify(result)}`);
+		if (result.length !== 3) {
+			return msg.reply(
+				`Expected 3 commands to be found, ${
+					result.length
+				} commands were found to be associated with that name.`
+			);
+		}
 
-					command
-						.delete()
-						.then(() => {
-							let cmd: Command = this.client.registry.resolveCommand(
-								commandNameNoTrigger
-							);
-							this.client.registry.unregisterCommand(cmd);
+		result.forEach(async (command: any) => {
+			let commandName = command.commandText;
+			let commandNameNoTrigger = command.commandText.slice(1);
 
-							DeleteRecorded.removeFile(
-								path.resolve(
-									'resources/',
-									`${commandNameNoTrigger}${msg.guild.id}.mp3`
-								)
-							);
+			try {
+				await command.delete();
 
-							return msg.reply(
-								`Recorded command '${commandName}' was successfully deleted`
-							);
-						})
-						.catch((err: any) => {
-							console.log(`error: ${err}`);
-							return msg.reply('');
-						});
-				});
-			});
+				let cmd: Command = this.client.registry.resolveCommand(
+					commandNameNoTrigger
+				);
+				this.client.registry.unregisterCommand(cmd);
+
+				DeleteRecorded.removeFile(
+					path.resolve(
+						'resources/',
+						`${commandNameNoTrigger}${msg.guild.id}.mp3`
+					)
+				);
+
+				return msg.reply(
+					`Recorded command '${commandName}' was successfully deleted`
+				);
+			} catch (err) {
+				console.log(`error: ${err}`);
+				return msg.reply(
+					`There was a problem when attempting to delete the ${
+						command.commandText
+					} command.`
+				);
+			}
+		});
 
 		return await msg.delete();
 	}

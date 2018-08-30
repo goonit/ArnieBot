@@ -15,8 +15,9 @@ export class FeelsBadMan extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let channel: TextChannel = msg.channel as TextChannel;
-		return msg
-			.delete()
-			.then(() => channel.send('', { files: [CONSTANTS.FEELSBADMAN] }));
+
+		await msg.delete();
+
+		return channel.send('', { files: [CONSTANTS.FEELSBADMAN] });
 	}
 }

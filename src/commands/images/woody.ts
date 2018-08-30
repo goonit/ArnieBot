@@ -17,6 +17,8 @@ export class Woody extends Command {
 		let num: number = Math.floor(Math.random() * woody.length);
 		let channel: TextChannel = msg.channel as TextChannel;
 
-		return msg.delete().then(() => channel.send('', { files: [woody[num]] }));
+		await msg.delete();
+
+		return channel.send('', { files: [woody[num]] });
 	}
 }

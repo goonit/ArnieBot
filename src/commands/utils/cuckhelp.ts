@@ -1,12 +1,7 @@
 const CustomCommand = require('../../dbModels/customCommand.js');
 
 import { Message, RichEmbed as Embed, Collection } from 'discord.js';
-import {
-	CommandoClient,
-	Command,
-	CommandMessage,
-	CommandGroup
-} from 'discord.js-commando';
+import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
 export class CuckHelp extends Command {
 	public constructor(client: CommandoClient) {
@@ -34,58 +29,53 @@ export class CuckHelp extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		CustomCommand.filter({ serverId: msg.guild.id })
-			.run({ readMode: 'majority' })
-			.then((result: any[]) => {
-				let imageCommands: any[] = result.filter(
-					(cmd: any) => cmd.commandType === 'image'
-				);
-				let textCommands: any[] = result.filter(
-					(cmd: any) => cmd.commandType === 'text'
-				);
-				let soundCommands: any[] = result.filter(
-					(cmd: any) => cmd.commandType === 'sound'
-				);
-				let recordedCommands: any[] = result.filter(
-					(cmd: any) =>
-						cmd.commandType === 'recorded' &&
-						!cmd.commandText.includes('-slow') &&
-						!cmd.commandText.includes('-fast')
-				);
-				let embed: Embed;
-				let embedList: Embed[] = [];
+		let result: any[] = await CustomCommand.filter({
+			serverId: msg.guild.id
+		}).run({ readMode: 'majority' });
 
-				if (args.type === 'commands') {
-					embedList = this.buildCommandsHelp(
-						imageCommands,
-						textCommands,
-						soundCommands,
-						recordedCommands
-					);
+		let imageCommands: any[] = result.filter(
+			(cmd: any) => cmd.commandType === 'image'
+		);
+		let textCommands: any[] = result.filter(
+			(cmd: any) => cmd.commandType === 'text'
+		);
+		let soundCommands: any[] = result.filter(
+			(cmd: any) => cmd.commandType === 'sound'
+		);
+		let recordedCommands: any[] = result.filter(
+			(cmd: any) =>
+				cmd.commandType === 'recorded' &&
+				!cmd.commandText.includes('-slow') &&
+				!cmd.commandText.includes('-fast')
+		);
+		let embed: Embed;
+		let embedList: Embed[] = [];
 
-					msg.author.send('', embedList[0]).then(() => {
-						msg.author.send('', embedList[1]).then(() => {
-							msg.author.send('', embedList[2]).then(() => {
-								msg.author.send('', embedList[3]).then(() => {
-									msg.reply(`Check your DM's`);
-								});
-							});
-						});
-					});
-				} else if (args.type === 'creation') {
-					embed = this.buildCreationHelp();
-					msg.author
-						.send('', embed)
-						.then(() => {
-							msg.reply(`Check your DM's`);
-						})
-						.catch((err) => {
-							console.log(err);
-						});
-				} else {
-					msg.reply(`That help command is not supported`);
-				}
-			});
+		if (args.type === 'commands') {
+			embedList = this.buildCommandsHelp(
+				imageCommands,
+				textCommands,
+				soundCommands,
+				recordedCommands
+			);
+
+			await msg.author.send('', embedList[0]);
+			await msg.author.send('', embedList[1]);
+			await msg.author.send('', embedList[2]);
+			await msg.author.send('', embedList[3]);
+			await msg.reply(`Check your DM's`);
+		} else if (args.type === 'creation') {
+			embed = this.buildCreationHelp();
+
+			try {
+				await msg.author.send('', embed);
+				msg.reply(`Check your DM's`);
+			} catch (err) {
+				console.log(err);
+			}
+		} else {
+			msg.reply(`That help command is not supported`);
+		}
 
 		return await msg.delete();
 	}

@@ -30,24 +30,24 @@ export class Urban extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		request('GET', `${urbanApi}${args.searchTerm}`).then(async (json: any) => {
-			let result = JSON.parse(json.res.text).list[0];
+		let json: any = await request('GET', `${urbanApi}${args.searchTerm}`);
 
-			if (result === null) {
-				return msg.channel.send(
-					`\`\`\`\n${args.searchTerm} has no definition!\n\`\`\``
-				);
-			}
+		let result = JSON.parse(json.res.text).list[0];
 
-			let embed = new Embed();
-			embed.color = 0x00ff00;
-			embed.addField(args.searchTerm, result.definition);
-			embed.addField('Example', result.example);
-			embed.addField('Link', `<${result.permalink}>`);
+		if (result === null) {
+			return msg.channel.send(
+				`\`\`\`\n${args.searchTerm} has no definition!\n\`\`\``
+			);
+		}
 
-			let channel: TextChannel = msg.channel as TextChannel;
-			channel.send('', embed);
-		});
+		let embed = new Embed();
+		embed.color = 0x00ff00;
+		embed.addField(args.searchTerm, result.definition);
+		embed.addField('Example', result.example);
+		embed.addField('Link', `<${result.permalink}>`);
+
+		let channel: TextChannel = msg.channel as TextChannel;
+		channel.send('', embed);
 
 		return await msg.delete();
 	}

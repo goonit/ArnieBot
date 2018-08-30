@@ -32,73 +32,77 @@ export class RestoreSoundCommands extends Command {
 		let resourcePath: string = path.resolve('resources/');
 		let channel: TextChannel = msg.channel as TextChannel;
 
-		return msg.delete().then(() => {
-			fs.readdir(resourcePath, (err: any, files: any[]) => {
-				let guildId = msg.guild.id;
+		await msg.delete();
 
-				if (err) {
-					console.log(
-						errorC(
-							`There was an error when trying to read the directory: ${err}`
-						)
-					);
-					return msg.channel.send(
-						`Something went wrong with restoring sound commands. Check logs`
-					);
-				}
+		fs.readdir(resourcePath, (err: any, files: any[]) => {
+			let guildId = msg.guild.id;
 
-				files.forEach((file: any) => {
-					if (file.includes(guildId)) {
-						let idStartIndex = file.indexOf(guildId);
-						let commandName = file.substr(0, idStartIndex);
+			if (err) {
+				console.log(
+					errorC(`There was an error when trying to read the directory: ${err}`)
+				);
+				return msg.channel.send(
+					`Something went wrong with restoring sound commands. Check logs`
+				);
+			}
 
-						if (RestoreSoundCommands.commandExists(commandName, guildId)) {
-							msg.channel.send(`Command '~${commandName}' already exists!`);
-						} else {
-							let customCmd = new CustomCommand({
-								serverId: guildId,
-								commandText: `~${commandName}`,
-								createDate: moment().format('MM/DD/YYYY hh:mm:ss'),
-								createUser: msg.author.username,
-								commandType: 'sound'
-							});
+			files.forEach(async (file: any) => {
+				if (file.includes(guildId)) {
+					let idStartIndex = file.indexOf(guildId);
+					let commandName = file.substr(0, idStartIndex);
 
-							customCmd.save().then((result: any) => {
-								console.log(
-									`${channelC(` # ${channel.name}`)}: ${botC(
-										`@CuckBot`
-									)} - ${warningC(result.commandText)} was created by ${userC(
-										msg.author.username
-									)}`
-								);
+					if (await this.commandExists(commandName, guildId)) {
+						msg.channel.send(`Command '~${commandName}' already exists!`);
+					} else {
+						let customCmd = new CustomCommand({
+							serverId: guildId,
+							commandText: `~${commandName}`,
+							createDate: moment().format('MM/DD/YYYY hh:mm:ss'),
+							createUser: msg.author.username,
+							commandType: 'sound'
+						});
 
-								// Chop off the leading ~ for commando
-								customCmd.commandText = customCmd.commandText.slice(1);
+						customCmd.save().then((result: any) => {
+							console.log(
+								`${channelC(` # ${channel.name}`)}: ${botC(
+									`@CuckBot`
+								)} - ${warningC(result.commandText)} was created by ${userC(
+									msg.author.username
+								)}`
+							);
 
-								this.client.registry.registerCommand(
-									new SoundCommand(this.client, customCmd)
-								);
+							// Chop off the leading ~ for commando
+							customCmd.commandText = customCmd.commandText.slice(1);
 
-								msg.reply(
-									`New command '~${
-										customCmd.commandText
-									}' was successfully created! '${
-										customCmd.commandText
-									}' is now ready to be used!`
-								);
-							});
-						}
+							this.client.registry.registerCommand(
+								new SoundCommand(this.client, customCmd)
+							);
+
+							msg.reply(
+								`New command '~${
+									customCmd.commandText
+								}' was successfully created! '${
+									customCmd.commandText
+								}' is now ready to be used!`
+							);
+						});
 					}
-				});
+				}
 			});
-
-			return msg.reply(`Sound Commands were successfully restored!`);
 		});
+
+		return msg.reply(`Sound Commands were successfully restored!`);
 	}
 
-	public static commandExists(trigger: string, serverId: string): Boolean {
-		return CustomCommand.filter({ serverId, commandText: trigger })
-			.run({ readMode: 'majority' })
-			.then((result: ICustomCommand[]) => result.length > 0);
+	private async commandExists(
+		trigger: string,
+		serverId: string
+	): Promise<Boolean> {
+		let result: ICustomCommand[] = await CustomCommand.filter({
+			serverId,
+			commandText: trigger
+		}).run({ readMode: 'majority' });
+
+		return result.length > 0;
 	}
 }

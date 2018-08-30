@@ -15,8 +15,9 @@ export class Needful extends Command {
 
 	public async run(msg: CommandMessage): Promise<Message | Message[]> {
 		let channel: TextChannel = msg.channel as TextChannel;
-		return msg
-			.delete()
-			.then(() => channel.send('', { files: [CONSTANTS.NEEDFUL] }));
+
+		await msg.delete();
+
+		return channel.send('', { files: [CONSTANTS.NEEDFUL] });
 	}
 }
