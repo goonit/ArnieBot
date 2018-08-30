@@ -62,30 +62,30 @@ export class RestoreSoundCommands extends Command {
 							commandType: 'sound'
 						});
 
-						customCmd.save().then((result: any) => {
-							console.log(
-								`${channelC(` # ${channel.name}`)}: ${botC(
-									`@CuckBot`
-								)} - ${warningC(result.commandText)} was created by ${userC(
-									msg.author.username
-								)}`
-							);
+						let result: any = await customCmd.save();
 
-							// Chop off the leading ~ for commando
-							customCmd.commandText = customCmd.commandText.slice(1);
+						console.log(
+							`${channelC(` # ${channel.name}`)}: ${botC(
+								`@CuckBot`
+							)} - ${warningC(result.commandText)} was created by ${userC(
+								msg.author.username
+							)}`
+						);
 
-							this.client.registry.registerCommand(
-								new SoundCommand(this.client, customCmd)
-							);
+						// Chop off the leading ~ for commando
+						customCmd.commandText = customCmd.commandText.slice(1);
 
-							msg.reply(
-								`New command '~${
-									customCmd.commandText
-								}' was successfully created! '${
-									customCmd.commandText
-								}' is now ready to be used!`
-							);
-						});
+						this.client.registry.registerCommand(
+							new SoundCommand(this.client, customCmd)
+						);
+
+						msg.reply(
+							`New command '~${
+								customCmd.commandText
+							}' was successfully created! '${
+								customCmd.commandText
+							}' is now ready to be used!`
+						);
 					}
 				}
 			});
