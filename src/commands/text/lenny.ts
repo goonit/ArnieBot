@@ -1,4 +1,4 @@
-import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
 export class Lenny extends Command {

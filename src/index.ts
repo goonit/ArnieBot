@@ -75,6 +75,10 @@ client.registry
 	.registerDefaultCommands({
 		help: false
 	})
-	.registerCommandsIn(path.join(__dirname, 'commands'));
+	.registerCommandsIn(path.join(__dirname, 'commands/images'))
+	.registerCommandsIn(path.join(__dirname, 'commands/misc'))
+	.registerCommandsIn(path.join(__dirname, 'commands/sounds'))
+	.registerCommandsIn(path.join(__dirname, 'commands/text'))
+	.registerCommandsIn(path.join(__dirname, 'commands/utils'));
 
 client.login(auth.token);

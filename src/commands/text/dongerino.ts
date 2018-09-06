@@ -1,6 +1,6 @@
 const dongerino = require('../../resources/dongerinos.json').dongerino;
 
-import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 
 export class Dongerino extends Command {
