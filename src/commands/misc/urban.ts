@@ -1,4 +1,4 @@
-const request = require('superagent-promise')(require('superagent'), Promise);
+const axios = require('axios');
 const Embed = require('discord.js').RichEmbed;
 
 import { Message, TextChannel } from 'discord.js';
@@ -30,7 +30,7 @@ export class Urban extends Command {
 		msg: CommandMessage,
 		args: any
 	): Promise<Message | Message[]> {
-		let json: any = await request('GET', `${urbanApi}${args.searchTerm}`);
+		let json: any = await axios.get(`${urbanApi}${args.searchTerm}`);
 
 		let result = JSON.parse(json.res.text).list[0];
 
