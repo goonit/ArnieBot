@@ -2,12 +2,12 @@ const CustomCommand = require('../../dbModels/customCommand.js');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const path = require('path');
-const moment = require('moment');
 const SoundCommand = require('../../helpers/dbSoundCommand.js');
 
 import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 import { ICustomCommand } from '../../helpers/ICustomCommand';
+import { format } from 'date-fns';
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -54,7 +54,7 @@ export class RecordCommand extends Command {
 
 		args.commandtrigger = args.commandtrigger.toLowerCase();
 
-		let createDate = moment().format('MM/DD/YYYY hh:mm:ss');
+		let createDate = format(new Date(), 'MM/DD/YYYY hh:mm:ss');
 
 		let customCmd: ICustomCommand = new CustomCommand({
 			serverId: msg.guild.id,

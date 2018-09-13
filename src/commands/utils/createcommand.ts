@@ -3,13 +3,13 @@ const ytdl = require('ytdl-core');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const path = require('path');
-const moment = require('moment');
 const ImageCommand = require('../../helpers/dbImageCommand.js');
 const SoundCommand = require('../../helpers/dbSoundCommand.js');
 const TextCommand = require('../../helpers/dbTextCommand.js');
 
 import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
+import { format } from 'date-fns';
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -103,7 +103,7 @@ export class CreateCommand extends Command {
 		let customCmd = new CustomCommand({
 			serverId: msg.guild.id,
 			commandText: args.commandtrigger,
-			createDate: moment().format('MM/DD/YYYY hh:mm:ss'),
+			createDate: format(new Date(), 'MM/DD/YYYY hh:mm:ss'),
 			createUser: msg.author.username
 		});
 

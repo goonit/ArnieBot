@@ -1,12 +1,12 @@
 const CustomCommand = require('../../dbModels/customCommand.js');
 const SoundCommand = require('../../helpers/dbSoundCommand.js');
 const fs = require('fs');
-const moment = require('moment');
 const path = require('path');
 
 import { Message, TextChannel } from 'discord.js';
 import { CommandoClient, Command, CommandMessage } from 'discord.js-commando';
 import { ICustomCommand } from '../../helpers/ICustomCommand';
+import { format } from 'date-fns';
 
 const chalk = require('chalk');
 const c = new chalk.constructor({ enabled: true });
@@ -57,7 +57,7 @@ export class RestoreSoundCommands extends Command {
 						let customCmd = new CustomCommand({
 							serverId: guildId,
 							commandText: `~${commandName}`,
-							createDate: moment().format('MM/DD/YYYY hh:mm:ss'),
+							createDate: format(new Date(), 'MM/DD/YYYY hh:mm:ss'),
 							createUser: msg.author.username,
 							commandType: 'sound'
 						});
