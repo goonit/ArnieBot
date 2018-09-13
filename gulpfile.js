@@ -32,5 +32,7 @@ gulp.task('build', () => {
 	tsCompile.pipe(gulp.dest('dist/'));
 	gulp.src('./src/**/*.js').pipe(gulp.dest('dist/'));
 	gulp.src('./src/**.json').pipe(gulp.dest('dist/'));
+	gulp.src('./package.json').pipe(gulp.dest('dist/'));
+	gulp.src('./resources/**').pipe(gulp.dest('dist/resources/'));
 	return tsCompile.js.pipe(gulp.dest('dist/'));
 });
